@@ -206,8 +206,13 @@ export default class Store {
     const {type, id} = obj;
     let record = this._findRecord(type, id);
     if (record) {
-      extendObservable(record.attributes, obj.attributes || {});
-      extendObservable(record.relationships, obj.relationships || {});
+      if (record.attributes) {
+        extendObservable(record.attributes, obj.attributes || {});
+      }
+      
+      if (record.relationships) {
+        extendObservable(record.relationships, obj.relationships || {});
+      }
     } else {
       record = this._initRecord(obj);
       this.records.push(record);
