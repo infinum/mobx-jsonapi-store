@@ -3,8 +3,7 @@
 import {expect} from 'chai';
 import {autorun, toJS, computed} from 'mobx';
 
-import JsonApiStore from '../src/JsonApiStore';
-import JsonApiRecord from '../src/JsonApiRecord';
+import {JsonApiStore, JsonApiRecord} from '../src/JsonApiStore';
 
 class User extends JsonApiRecord {
   @computed get fullName() {

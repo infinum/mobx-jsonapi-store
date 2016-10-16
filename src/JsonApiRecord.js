@@ -35,7 +35,7 @@ export default class JsonApiRecord {
     const updatedData = {[key]: value};
     if (key in this._record) {
       this._record.attributes[key] = value;
-    } else {
+    } else if (this._record && this._record.attributes) {
       extendObservable(this._record.attributes, updatedData);
     }
     return this._update(updatedData);

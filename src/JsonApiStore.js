@@ -22,7 +22,7 @@ function mapItems(data, fn) {
 /**
  * Class used as abstraction for the JSON API
  */
-export default class Store {
+class JsonApiStore {
 
   /**
    * Observable store
@@ -209,7 +209,7 @@ export default class Store {
       if (record.attributes) {
         extendObservable(record.attributes, obj.attributes || {});
       }
-      
+
       if (record.relationships) {
         extendObservable(record.relationships, obj.relationships || {});
       }
@@ -236,3 +236,8 @@ export default class Store {
     return result;
   }
 }
+
+module.exports = {
+  JsonApiRecord,
+  JsonApiStore
+};
