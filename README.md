@@ -104,7 +104,7 @@ const selectedPhotos = photos.filter((photo) => photo.selected);
 
 ## JSON API support
 * `data`
-* `includes`
+* `included`
 * `relationships.data`
 * `relationships.links`
 
