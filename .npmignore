@@ -1,0 +1,6 @@
+src
+tests
+.babelrc
+.eslintrc
+webpack.*
+.travis.yml

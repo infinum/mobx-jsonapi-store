@@ -1,0 +1,53 @@
+{
+  "name": "mobx-jsonapi-store",
+  "version": "0.9.0",
+  "description": "JSON API Store for MobX",
+  "main": "dist/JsonApiStore.js",
+  "scripts": {
+    "build": "NODE_ENV=production webpack",
+    "build:test": "webpack --config webpack.test.js",
+    "build:add": "npm run build && git add dist/JsonApiStore.js",
+    "run:test": "mocha --require source-map-support/register dist/test.js",
+    "lint": "eslint src/* tests/* webpack.*",
+    "test": "npm run build:test && npm run run:test",
+    "precommit": "npm run lint && npm test && npm run build:add"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinum/mobx-jsonapi-store.git"
+  },
+  "keywords": [
+    "mobx",
+    "jsonapi",
+    "store",
+    "observable"
+  ],
+  "bugs": {
+    "url": "https://github.com/infinum/mobx-jsonapi-store/issues"
+  },
+  "homepage": "https://github.com/infinum/mobx-jsonapi-store#readme",
+  "author": "Infinum <javascript.team@infinum.co>",
+  "contributors": [
+    {
+      "name": "Darko Kukovec",
+      "email": "darko@infinum.co"
+    }
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-eslint": "^7.0.0",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.16.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.8.0",
+    "husky": "^0.11.9",
+    "mocha": "^3.1.2",
+    "source-map-support": "^0.4.3",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {
+    "mobx": "^2.6.0"
+  }
+}
