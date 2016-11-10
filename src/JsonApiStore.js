@@ -105,7 +105,7 @@ class JsonApiStore {
         const {data, links} = record.relationships[key];
         const modelLinks = links ? {links} : null;
         modelInstance[key] = mapItems(data || links, ({type, id} = {}) => {
-          const resolvedModel = this.find(type, id, models);
+          const resolvedModel = this._find(type, id, models);
           return resolvedModel
             ? Object.assign(resolvedModel, modelLinks || {})
             : modelLinks;
@@ -153,7 +153,7 @@ class JsonApiStore {
    * @param {Object} [models={}] - Model Object
    * @return {Record|null} Found record or null
    */
-  find(type, id, models = {}) {
+  _find(type, id, models = {}) {
     const record = this._findRecord(type, id);
     if (record) {
       models[type] = models[type] || {};
@@ -164,6 +164,22 @@ class JsonApiStore {
   }
 
   /**
+   * Find record
+   *
+   * @param {String} type - Record type
+   * @param {Number} id - Record ID
+   * @param {Object} [models={}] - Model Object
+   * @return {Record|null} Found record or null
+   */
+  find(type, id, models = {}) {
+    let data;
+    transaction(() => {
+      data = this._find(type, id, models);
+    });
+    return data;
+  }
+
+  /**
    * Find records
    *
    * @param {String} type - Record type
@@ -171,9 +187,13 @@ class JsonApiStore {
    * @return {Record[]} List of found records
    */
   findAll(type, models = {}) {
-    const records = this._findRecords(type);
-    records.forEach((record) => this._toModel(record, type, models));
-    return Object.keys(models[type] || {}).map((key) => models[type][key]);
+    let data;
+    transaction(() => {
+      const records = this._findRecords(type);
+      records.forEach((record) => this._toModel(record, type, models));
+      data = Object.keys(models[type] || {}).map((key) => models[type][key]);
+    });
+    return data;
   }
 
   /**
