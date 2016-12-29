@@ -1,4 +1,4 @@
-import {action, extendObservable, isObservable} from 'mobx';
+import {action, computed, extendObservable, isObservable} from 'mobx';
 
 export default class JsonApiRecord {
 
@@ -14,7 +14,7 @@ export default class JsonApiRecord {
     if (originalRecord) {
       const computedVals = {};
       Object.keys(originalRecord.attributes || {}).forEach((key) => {
-        computedVals[key] = () => originalRecord.attributes[key];
+        computedVals[key] = computed(() => originalRecord.attributes[key]);
       });
       const props = Object.assign(initialState, computedVals, {_record: originalRecord, _store: store});
       extendObservable(this, props);
