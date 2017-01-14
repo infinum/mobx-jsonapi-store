@@ -62,6 +62,6 @@
   },
   "dependencies": {
     "mobx": "^2.6.0 || ^3",
-    "mobx-collection-store": "^0.2.0"
+    "mobx-collection-store": "^0.3.0"
   }
 }
