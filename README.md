@@ -15,32 +15,6 @@ npm install mobx-jsonapi-store
 
 ## Usage (JsonApiStore)
 
-### Constructor
-
-The constructor can receive an object with four keys:
-
-#### `records`
-* Array, default value: `[]`
-* List of saved records
-* Used for serialization/deserialization
-
-#### `relations`
-* Object, default value: `{}`
-* Saved relations
-* Used for serialization/deserialization
-
-#### `models`
-* Object, default value: `{}`
-* Mapped overriden objects
-* The keys in the objects are data types (e.g. `user` or `photo`)
-* The values are classes that extend the `JsonApiRecord`
-
-#### `defaults`
-* Object, default value: `{}`
-* Values that will be added to the model if the original data doesn't have the properties
-* The keys in the objects are data types (e.g. `user` or `photo`)
-* The values are object which will be assigned to the record attributes
-
 ### Methods
 
 #### `sync(body)`
@@ -50,7 +24,7 @@ The constructor can receive an object with four keys:
 #### `findAll(type)`
 * Returns an array of models of the given type
 
-#### `find(type, id)`
+#### `find(type, [id])`
 * Returns a model with the given type and id or undefined
 
 #### `remove(type, [id])`
