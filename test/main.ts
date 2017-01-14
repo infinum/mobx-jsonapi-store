@@ -19,7 +19,7 @@ class Event extends Record {
   static type: string = 'events';
   static refs = {
     organisers: 'organisers',
-    images: 'images', // TODO Missing reference to arrays
+    images: 'images',
     image: 'images'
   };
 
@@ -47,7 +47,7 @@ class Organiser extends User {
 
 class Photo extends Record {
   static type = 'photo';
-  static defaults = { // TODO Add support for defaults
+  static defaults = {
     selected: false
   };
 
@@ -134,7 +134,7 @@ describe('MobX JsonApi Store', function() {
     event.set('name', 'Foo');
   });
 
-  xit('should handle relationships with duplicates', function() {
+  it('should handle relationships with duplicates', function() {
     const store = new TestStore();
     store.sync({
       data: {
@@ -203,7 +203,7 @@ describe('MobX JsonApi Store', function() {
     expect(event.image).to.equal(null);
   });
 
-  xit('should handle circular relations', function() {
+  it('should handle circular relations', function() {
     const store = new TestStore();
     store.sync({
       data: {
@@ -244,7 +244,7 @@ describe('MobX JsonApi Store', function() {
     expect(event.images[0].event.id).to.equal(1);
   });
 
-  xit('should return a event with all associated objects', function() {
+  it('should return a event with all associated objects', function() {
     const store = new TestStore();
     store.sync({
       data: {
@@ -371,7 +371,7 @@ describe('MobX JsonApi Store', function() {
     expect(events2).to.deep.equal([]);
   });
 
-  xit('should reset', function() {
+  it('should reset', function() {
     const store = new TestStore();
     store.sync({
       data: [{
@@ -414,7 +414,7 @@ describe('MobX JsonApi Store', function() {
     expect(events.length).to.equal(2);
     expect(images.length).to.equal(1);
 
-    // store.reset(); // TODO: Add a reset method
+    store.reset();
 
     const events2 = store.findAll('events');
     const images2 = store.findAll('images');
@@ -492,7 +492,7 @@ describe('MobX JsonApi Store', function() {
     expect(user.fullName).to.equal('John Doe');
   });
 
-  xit('should support default properties', function() {
+  it('should support default properties', function() {
     const store = new TestStore();
 
     store.sync({
