@@ -104,7 +104,7 @@ describe('MobX JsonApi Store', function() {
     expect(event.name).to.equal('Demo');
   });
 
-  xit('should trigger autorun on change', function(done) {
+  it('should trigger autorun on change', function(done) {
     const store = new TestStore();
     store.sync({
       data: {

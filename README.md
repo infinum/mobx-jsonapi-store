@@ -13,58 +13,65 @@ Inspired by [yayson](https://github.com/confetti/yayson).
 npm install mobx-jsonapi-store
 ```
 
-## Usage (JsonApiStore)
+## Usage (Store)
 
 ### Methods
 
 #### `sync(body)`
 * Sync the JSON API response with the store
-* Return value will be either a model or an array of models that were parsed from the response
-
-#### `findAll(type)`
-* Returns an array of models of the given type
+* Return value will be either a record or an array of records that were parsed from the response
 
 #### `find(type, [id])`
-* Returns a model with the given type and id or undefined
+* Returns a record with the given type and id or undefined
+
+#### `findAll(type)`
+* Returns an array of records of the given type
 
 #### `remove(type, [id])`
-* Returns all records of a certain type or only a single model with the given id
+* Remove the selected record (or first record of type if id not given)
+
+#### `removeAll(type)`
+* Remove all records of the given type
 
 #### `reset()`
 * Clears all records and relationships from the store
 
-## Usage (JsonApiRecord)
+## Usage (Record)
 
-JsonApiRecord shouldn't be used directly. It should only be used to extend the model overrides.
+JsonApiRecord shouldn't be used directly. It should only be used to extend the record overrides.
 
 ### Methods
 
 #### `set(key, value)`
 
-Method used to update the value of a specific model property. Properties can't be updated directly because they're only getters.
+Method used to update the value of a specific record property. Properties can't be updated directly because they're only getters.
 
 ## Examples
 
 ```javascript
 import {computed} from 'mobx';
-import {JsonApiStore, JsonApiRecord} from 'mobx-jsonapi-store';
+import {Store, Record} from 'mobx-jsonapi-store';
 
-class User extends JsonApiRecord {
+class User extends Record {
+  static type = 'user';
+
   @computed get fullName() {
     return this.firstName + ' ' + this.lastName;
   }
 }
 
-const store = new JsonApiStore({
-  models: {
-    user: User
-  },
-  defaults: {
-    photo: {
-      selected: false
-    }
-  }
-});
+class Photo extends Record {
+  static type = 'photo';
+  static defaults = {
+    selected: false
+  };
+}
+
+class ExampleStore extends Store {
+  static types = [User, Photo];
+}
+
+const store = new ExampleStore();
 
 // Get some data (e.g. API call)
 store.sync(data);
