@@ -546,4 +546,22 @@ describe('MobX JsonApi Store', function() {
     expect(selected.length).to.equal(1);
     expect(selected[0].id).to.equal(2);
   });
+
+  xit('should support generic records', function() {
+    const store = new Store();
+    const user = store.sync({
+      data: {
+        id: 1,
+        type: 'user',
+        attributes: {
+          name: 'John'
+        }
+      }
+    }) as Record;
+
+    console.log(user, user.type);
+    // expect(user instanceof Record).to.equal(true);
+    expect(user['name']).to.equal('John');
+    expect(store.findAll('user').length).to.equal(1);
+  });
 });
