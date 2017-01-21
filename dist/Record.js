@@ -13,3 +13,4 @@ var Record = (function (_super) {
     return Record;
 }(mobx_collection_store_1.Model));
 exports.Record = Record;
+Record.typeAttribute = 'type';

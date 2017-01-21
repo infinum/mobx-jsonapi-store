@@ -30,7 +30,6 @@ export function flattenRecord(record: IJsonApiRecord): IDictionary<any> {
   });
 
   objectForEach(record.relationships, (key) => {
-    data[key] = mapItems<number|string>(record.relationships[key].data, (item) => item && item.id);
     if (record.relationships[key].links) {
       data[`${key}Links`] = record.relationships[key].links;
     }

@@ -131,7 +131,7 @@ describe('MobX JsonApi Store', function() {
     });
 
     name = 'Foo';
-    event.set('name', 'Foo');
+    event.name = 'Foo';
   });
 
   it('should handle relationships with duplicates', function() {
@@ -200,6 +200,7 @@ describe('MobX JsonApi Store', function() {
 
     const event = store.find<Event>('events', 1);
     expect(event.name).to.equal('Demo');
+    console.log(event.image);
     expect(event.image).to.equal(null);
   });
 
@@ -547,7 +548,7 @@ describe('MobX JsonApi Store', function() {
     expect(selected[0].id).to.equal(2);
   });
 
-  xit('should support generic records', function() {
+  it('should support generic records', function() {
     const store = new Store();
     const user = store.sync({
       data: {
@@ -555,13 +556,20 @@ describe('MobX JsonApi Store', function() {
         type: 'user',
         attributes: {
           name: 'John'
+        },
+        relationships: {
+          self: {
+            data: {
+              id: 1,
+              type: 'user'
+            }
+          }
         }
       }
     }) as Record;
 
-    console.log(user, user.type);
-    // expect(user instanceof Record).to.equal(true);
     expect(user['name']).to.equal('John');
+    expect(user['self'].id).to.equal(1);
     expect(store.findAll('user').length).to.equal(1);
   });
 });

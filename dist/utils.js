@@ -25,7 +25,6 @@ function flattenRecord(record) {
         data[key] = record.attributes[key];
     });
     objectForEach(record.relationships, function (key) {
-        data[key] = mapItems(record.relationships[key].data, function (item) { return item && item.id; });
         if (record.relationships[key].links) {
             data[key + "Links"] = record.relationships[key].links;
         }

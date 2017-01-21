@@ -49,19 +49,20 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/mocha": "^2.2.37",
+    "@types/mocha": "^2.2.38",
     "@types/node": "^7.0.0",
     "chai": "^3.5.0",
     "husky": "^0.12.0",
-    "mobx-collection-store": "^0.3.1",
+    "mobx": "^3.0.2",
+    "mobx-collection-store": "^0.6.1",
     "mocha": "^3.2.0",
     "ntypescript": "^1.201609302242.1",
-    "nyc": "^10.0.0",
+    "nyc": "^10.1.2",
     "ts-node": "^2.0.0",
     "typescript": "^2.1.5"
   },
-  "dependencies": {
+  "peerDependencies": {
     "mobx": "^2.6.0 || ^3",
-    "mobx-collection-store": "^0.3.1"
+    "mobx-collection-store": "^0.6.1"
   }
 }

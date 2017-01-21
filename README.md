@@ -11,17 +11,11 @@ Inspired by [yayson](https://github.com/confetti/yayson).
 ## Basic example
 
 ```javascript
-import {Record, Store} from 'mobx-jsonapi-store';
+import {Store} from 'mobx-jsonapi-store';
 
-class User extends Record {}
-User.type = 'user';
-
-class ExampleStore extends Store {}
-ExampleStore.types = [User];
-
-const store = new ExampleStore();
-const users = store.sync(usersResponse); // Assumption: usersResponse was received from some API call and it's a valid JSON API response
-console.log(users.name); // "John"
+const store = new Store();
+const user = store.sync(userResponse); // Assumption: userResponse was received from some API call and it's a valid JSON API response
+console.log(user.name); // "John"
 ```
 
 For more, check out the [advanced example](#advanced-example).
@@ -38,8 +32,6 @@ Two main differences: It's more *robust* and *lightweight*. This might sound wei
 
 ### Breaking
 
-* All models need to be explicitely defined
-* All repationships between models need to be defined explicitely
 * Initial setup of the store is different - the class should be extended and `types` should be added as a static prop
 * Initial setup of records is also by extending the `Record` and adding static `type`, `refs` and `defaults` props
 * Constructor properties are completely different (compatible with the `toJS()` method)
@@ -84,14 +76,16 @@ Two main differences: It's more *robust* and *lightweight*. This might sound wei
 * `static type` - Type of the record
 * `static defaults` - An object with default record properties
 * `update(data)` - Update the record with new data (object)
-* `set(key, value)` - Method used to update the value of a specific record property. Properties can't be updated directly because they're only getters.
+* `assign(key, value)` - Method used to add a new property or update an existing one
+* `assignRef(key, value, [type])` - Assign a new reference to the record
 * `toJS()` - Convert the record into a plain JS Object in order to be serialized
 
-*Note:* If a field is an array of references, dont' modify it directly - use `set` method instead.
+*Note:* If adding a new property, use `assign` or `assignRef` methods. Don't assign the properties directly to the record.
 
 ## Advanced example
 
 *Note:* Static class props and decorators are not standard JavaScript features, but they have valid alternatives (see [basic example](#basic-example) and [MobX documentation](https://mobx.js.org/))
+
 ```javascript
 import {computed} from 'mobx';
 import {Store, Record} from 'mobx-jsonapi-store';
