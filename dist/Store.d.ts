@@ -1,6 +1,6 @@
 import { Collection, IModel } from 'mobx-collection-store';
 import IJsonApiResponse from './interfaces/IJsonApiResponse';
-import { Record } from './record';
+import { Record } from './Record';
 declare class Store extends Collection {
     static types: typeof Record[];
     /**

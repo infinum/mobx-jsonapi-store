@@ -13,7 +13,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var mobx_1 = require("mobx");
 var mobx_collection_store_1 = require("mobx-collection-store");
 var utils_1 = require("./utils");
-var record_1 = require("./record");
+var Record_1 = require("./Record");
 var Store = (function (_super) {
     __extends(Store, _super);
     function Store() {
@@ -40,7 +40,7 @@ var Store = (function (_super) {
             record = this.add(flattened, obj.type);
         }
         else {
-            record = new record_1.Record(flattened);
+            record = new Record_1.Record(flattened);
             this.add(record);
         }
         return record;
@@ -102,7 +102,7 @@ var Store = (function (_super) {
     return Store;
 }(mobx_collection_store_1.Collection));
 exports.Store = Store;
-Store.types = [record_1.Record];
+Store.types = [Record_1.Record];
 __decorate([
     mobx_1.action
 ], Store.prototype, "sync", null);

@@ -6,7 +6,7 @@ import IJsonApiResponse from './interfaces/IJsonApiResponse';
 import IJsonApiRecord from './interfaces/IJsonApiRecord';
 import IJsonApiIdentifier from './interfaces/IJsonApiIdentifier';
 import {mapItems, flattenRecord} from './utils';
-import {Record} from './record';
+import {Record} from './Record';
 
 class Store extends Collection {
 
