@@ -1,16 +1,15 @@
 {
   "name": "mobx-jsonapi-store",
-  "version": "1.1.2",
+  "version": "2.0.0-beta.1",
   "description": "JSON API Store for MobX",
-  "main": "dist/JsonApiStore.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
-    "build": "NODE_ENV=production webpack",
-    "build:test": "webpack --config webpack.test.js",
-    "build:add": "npm run build && git add dist/JsonApiStore.js",
-    "run:test": "mocha --require source-map-support/register dist/test.js",
-    "lint": "eslint src/* tests/* webpack.*",
-    "test": "npm run build:test && npm run run:test",
-    "precommit": "npm run lint && npm test && npm run build:add"
+    "build": "ntsc --outDir ./dist --experimentalDecorators --target es5 --module commonjs --declaration --pretty src/index.ts",
+    "test": "NODE_ENV=test nyc mocha",
+    "lint": "tslint './src/**/*.ts'",
+    "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha",
+    "precommit": "npm run lint && npm test && npm run build && git add dist/"
   },
   "repository": {
     "type": "git",
@@ -33,21 +32,39 @@
       "email": "darko@infinum.co"
     }
   ],
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "cache": false,
+    "reporter": [
+      "lcov",
+      "text",
+      "text-summary"
+    ]
+  },
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.17.0",
-    "babel-eslint": "^7.0.0",
-    "babel-loader": "^6.2.5",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-es2015": "^6.16.0",
+    "@types/mocha": "^2.2.38",
+    "@types/node": "^7.0.4",
     "chai": "^3.5.0",
-    "eslint": "^3.8.0",
-    "husky": "^0.13.0",
-    "mocha": "^3.1.2",
-    "source-map-support": "^0.4.3",
-    "webpack": "^1.13.2"
+    "husky": "^0.13.1",
+    "mobx": "^3.0.2",
+    "mobx-collection-store": "^0.8.0",
+    "mocha": "^3.2.0",
+    "ntypescript": "^1.201609302242.1",
+    "nyc": "^10.1.2",
+    "ts-node": "^2.0.0",
+    "tslint": "^4.4.2",
+    "typescript": "^2.1.5"
   },
-  "dependencies": {
-    "mobx": "^2.6.0 || ^3"
+  "peerDependencies": {
+    "mobx": "^2.6.0 || ^3",
+    "mobx-collection-store": "^0.8.0"
   }
 }

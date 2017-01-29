@@ -1,0 +1,6 @@
+--compilers ts-node/register
+--full-trace
+--check-leaks
+--recursive
+--bail
+src/**/*.ts test/**/*.ts

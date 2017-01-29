@@ -1,0 +1,8 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "array-type": [true, "generic"],
+    "quotemark": [true, "single", "avoid-escape"],
+    "variable-name": [true, "ban-keywords"]
+  }
+}
