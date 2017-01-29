@@ -35,7 +35,7 @@ exports.mapItems = mapItems;
 function flattenRecord(record) {
     var data = {
         id: record.id,
-        type: record.type
+        type: record.type,
     };
     objectForEach(record.attributes, function (key) {
         data[key] = record.attributes[key];

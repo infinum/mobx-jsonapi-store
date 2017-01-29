@@ -2,19 +2,17 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "declaration": false,
+    "declaration": true,
     "noImplicitAny": false,
     "removeComments": false,
     "experimentalDecorators": true,
     "noLib": false,
+    "outDir": "../dist",
     "inlineSourceMap": true,
     "inlineSources": true
   },
-  "include": [
-    "src/**/*",
-    "test/**/*"
-  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "test"
   ]
 }

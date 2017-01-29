@@ -1,8 +1,8 @@
 import {Model} from 'mobx-collection-store';
 
 export class Record extends Model {
-  id: number|string;
-  type: string;
+  public static typeAttribute = 'type';
 
-  static typeAttribute = 'type';
+  public id: number|string;
+  public type: string;
 }

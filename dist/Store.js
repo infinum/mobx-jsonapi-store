@@ -12,13 +12,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var mobx_1 = require("mobx");
 var mobx_collection_store_1 = require("mobx-collection-store");
-var utils_1 = require("./utils");
 var Record_1 = require("./Record");
+var utils_1 = require("./utils");
 var Store = (function (_super) {
     __extends(Store, _super);
     function Store() {
         return _super.apply(this, arguments) || this;
     }
+    /**
+     * Import the JSON API data into the store
+     *
+     * @param {IJsonApiResponse} body - JSON API response
+     * @returns {(IModel|Array<IModel>)} - Models parsed from body.data
+     *
+     * @memberOf Store
+     */
+    Store.prototype.sync = function (body) {
+        var data = this.__iterateEntries(body, this.__addRecord.bind(this));
+        this.__iterateEntries(body, this.__updateRelationships.bind(this));
+        return data;
+    };
     /**
      * Add a new JSON API record to the store
      *
@@ -86,22 +99,16 @@ var Store = (function (_super) {
         utils_1.mapItems(body.included || [], fn);
         return utils_1.mapItems(body.data, fn);
     };
-    /**
-     * Import the JSON API data into the store
-     *
-     * @param {IJsonApiResponse} body - JSON API response
-     * @returns {(IModel|Array<IModel>)} - Models parsed from body.data
-     *
-     * @memberOf Store
-     */
-    Store.prototype.sync = function (body) {
-        var data = this.__iterateEntries(body, this.__addRecord.bind(this));
-        this.__iterateEntries(body, this.__updateRelationships.bind(this));
-        return data;
-    };
     return Store;
 }(mobx_collection_store_1.Collection));
 exports.Store = Store;
+/**
+ * List of Models that will be used in the collection
+ *
+ * @static
+ *
+ * @memberOf Store
+ */
 Store.types = [Record_1.Record];
 __decorate([
     mobx_1.action

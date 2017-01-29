@@ -1,8 +1,24 @@
 import { Collection, IModel } from 'mobx-collection-store';
 import IJsonApiResponse from './interfaces/IJsonApiResponse';
 import { Record } from './Record';
-declare class Store extends Collection {
+export declare class Store extends Collection {
+    /**
+     * List of Models that will be used in the collection
+     *
+     * @static
+     *
+     * @memberOf Store
+     */
     static types: typeof Record[];
+    /**
+     * Import the JSON API data into the store
+     *
+     * @param {IJsonApiResponse} body - JSON API response
+     * @returns {(IModel|Array<IModel>)} - Models parsed from body.data
+     *
+     * @memberOf Store
+     */
+    sync(body: IJsonApiResponse): IModel | Array<IModel>;
     /**
      * Add a new JSON API record to the store
      *
@@ -34,14 +50,4 @@ declare class Store extends Collection {
      * @memberOf Store
      */
     private __iterateEntries(body, fn);
-    /**
-     * Import the JSON API data into the store
-     *
-     * @param {IJsonApiResponse} body - JSON API response
-     * @returns {(IModel|Array<IModel>)} - Models parsed from body.data
-     *
-     * @memberOf Store
-     */
-    sync(body: IJsonApiResponse): IModel | Array<IModel>;
 }
-export { Store };

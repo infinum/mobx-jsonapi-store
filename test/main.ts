@@ -1,14 +1,16 @@
-import {computed, extendObservable, autorun, observable} from 'mobx';
+import {expect} from 'chai';
+import {autorun, computed, extendObservable, observable} from 'mobx';
 
-const expect = require('chai').expect;
+import {IDictionary, Record, Store} from '../src';
 
-import {Store, Record, IDictionary} from '../src';
+// tslint:disable:max-classes-per-file
+// tslint:disable:no-string-literal
 
 class User extends Record {
-  static type: string = 'user';
+  public static type: string = 'user';
 
-  firstName: string;
-  lastName: string;
+  public firstName: string;
+  public lastName: string;
 
   @computed get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
@@ -16,86 +18,86 @@ class User extends Record {
 }
 
 class Event extends Record {
-  static type: string = 'events';
-  static refs = {
-    organisers: 'organisers',
+  public static type: string = 'events';
+  public static refs = {
+    image: 'images',
     images: 'images',
-    image: 'images'
+    organisers: 'organisers',
   };
 
-  name: string;
-  organisers: Array<Organiser>;
-  images: Array<Image>;
-  image: Image;
-  imagesLinks: IDictionary<string>;
+  public name: string;
+  public organisers: Array<Organiser>;
+  public images: Array<Image>;
+  public image: Image;
+  public imagesLinks: IDictionary<string>;
 }
 
 class Image extends Record {
-  static type: string = 'images';
-  static refs = {event: 'events'};
+  public static type: string = 'images';
+  public static refs = {event: 'events'};
 
-  name: string;
-  event: Event;
+  public name: string;
+  public event: Event;
 }
 
 class Organiser extends User {
-  static type = 'organisers';
-  static refs = {image: 'images'};
+  public static type = 'organisers';
+  public static refs = {image: 'images'};
 
-  image: Image;
+  public image: Image;
 }
 
 class Photo extends Record {
-  static type = 'photo';
-  static defaults = {
-    selected: false
+  public static type = 'photo';
+  public static defaults = {
+    selected: false,
   };
 
-  selected: boolean;
+  public selected: boolean;
 }
 
 class TestStore extends Store {
-  static types = [User, Event, Image, Organiser, Photo];
+  public static types = [User, Event, Image, Organiser, Photo];
 
-  user: Array<User>;
-  events: Array<Event>;
-  images: Array<Image>;
+  public user: Array<User>;
+  public events: Array<Event>;
+  public images: Array<Image>;
 
-  organisers: Array<Organiser>;
-  photo: Array<Photo>;
+  public organisers: Array<Organiser>;
+  public photo: Array<Photo>;
 }
 
-describe('MobX JsonApi Store', function() {
-  it('should initialize', function() {
+describe('MobX JsonApi Store', () => {
+  it('should initialize', () => {
     const store = new TestStore();
     expect(store).to.be.an('object');
   });
 
-  it('should sync an event', function() {
+  it('should sync an event', () => {
     const store = new TestStore();
     const event = store.sync({
       data: {
-        type: 'events',
-        id: 1,
         attributes: {
-          name: 'Demo'
-        }
-      }
+          name: 'Demo',
+        },
+        id: 1,
+        type: 'events',
+      },
     }) as Event;
 
     expect(event.name).to.equal('Demo');
   });
 
-  it('should find an event', function() {
+  it('should find an event', () => {
     const store = new TestStore();
     store.sync({
       data: {
-        type: 'events',
-        id: 1,
         attributes: {
-          name: 'Demo'
-        }
-      }
+          name: 'Demo',
+        },
+        id: 1,
+        type: 'events',
+      },
     });
 
     const event = store.find<Event>('events', 1);
@@ -104,16 +106,16 @@ describe('MobX JsonApi Store', function() {
     expect(event.name).to.equal('Demo');
   });
 
-  it('should trigger autorun on change', function(done) {
+  it('should trigger autorun on change', (done) => {
     const store = new TestStore();
     store.sync({
       data: {
-        type: 'events',
-        id: 1,
         attributes: {
-          name: 'Demo'
-        }
-      }
+          name: 'Demo',
+        },
+        id: 1,
+        type: 'events',
+      },
     });
 
     let name = 'Demo';
@@ -122,7 +124,7 @@ describe('MobX JsonApi Store', function() {
     expect(event.name).to.equal('Demo');
 
     // TODO: It seems autorun is not running on value change - check mobx-collection-store
-    autorun(function() {
+    autorun(() => {
       expect(event.name).to.equal(name);
 
       if (name === 'Foo') {
@@ -134,37 +136,37 @@ describe('MobX JsonApi Store', function() {
     event.name = 'Foo';
   });
 
-  it('should handle relationships with duplicates', function() {
+  it('should handle relationships with duplicates', () => {
     const store = new TestStore();
     store.sync({
       data: {
-        type: 'events',
-        id: 1,
         attributes: {
-          name: 'Demo'
+          name: 'Demo',
         },
+        id: 1,
         relationships: {
           images: {
             data: [{
+              id: 2,
               type: 'images',
-              id: 2
-            }]
-          }
-        }
+            }],
+          },
+        },
+        type: 'events',
       },
       included: [{
-        type: 'images',
-        id: 2,
         attributes: {
-          name: 'Header'
-        }
+          name: 'Header',
+        },
+        id: 2,
+        type: 'images',
       }, {
-        type: 'images',
-        id: 2,
         attributes: {
-          name: 'Header'
-        }
-      }]
+          name: 'Header',
+        },
+        id: 2,
+        type: 'images',
+      }],
     });
 
     const event = store.find<Event>('events', 1);
@@ -178,65 +180,64 @@ describe('MobX JsonApi Store', function() {
     expect(foo.length).to.eq(0);
   });
 
-  it('should handle relationship elements without links attribute', function() {
+  it('should handle relationship elements without links attribute', () => {
     const store = new TestStore();
     store.sync({
       data: {
-        type: 'events',
-        id: 1,
         attributes: {
-          name: 'Demo'
+          name: 'Demo',
         },
+        id: 1,
         relationships: {
           image: {
             data: {
+              id: 2,
               type: 'images',
-              id: 2
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+        type: 'events',
+      },
     });
 
     const event = store.find<Event>('events', 1);
     expect(event.name).to.equal('Demo');
-    console.log(event.image);
     expect(event.image).to.equal(null);
   });
 
-  it('should handle circular relations', function() {
+  it('should handle circular relations', () => {
     const store = new TestStore();
     store.sync({
       data: {
-        type: 'events',
-        id: 1,
         attributes: {
-          name: 'Demo'
+          name: 'Demo',
         },
+        id: 1,
         relationships: {
           images: {
             data: [{
+              id: 2,
               type: 'images',
-              id: 2
-            }]
-          }
-        }
+            }],
+          },
+        },
+        type: 'events',
       },
       included: [{
-        type: 'images',
-        id: 2,
         attributes: {
-          name: 'Header'
+          name: 'Header',
         },
+        id: 2,
         relationships: {
           event: {
             data: {
+              id: 1,
               type: 'events',
-              id: 1
-            }
-          }
-        }
-      }]
+            },
+          },
+        },
+        type: 'images',
+      }],
     });
 
     const event = store.find<Event>('events', 1);
@@ -245,93 +246,93 @@ describe('MobX JsonApi Store', function() {
     expect(event.images[0].event.id).to.equal(1);
   });
 
-  it('should return a event with all associated objects', function() {
+  it('should return a event with all associated objects', () => {
     const store = new TestStore();
     store.sync({
       data: {
-        type: 'events',
-        id: 1,
         attributes: {
           name: 'Nordic.js',
-          slug: 'nordicjs'
+          slug: 'nordicjs',
         },
+        id: 1,
         relationships: {
           images: {
             data: [
               {type: 'images', id: 1},
               {type: 'images', id: 2},
-              {type: 'images', id: 3}
-            ]
+              {type: 'images', id: 3},
+            ],
           },
           organisers: {
             data: [
               {type: 'organisers', id: 1},
-              {type: 'organisers', id: 2}
-            ]
-          }
-        }
+              {type: 'organisers', id: 2},
+            ],
+          },
+        },
+        type: 'events',
       }, included: [{
-        type: 'organisers',
-        id: 1,
         attributes: {
-          firstName: 'Jonny'
+          firstName: 'Jonny',
         },
+        id: 1,
         relationships: {
           event: {
-            data: {type: 'events', id: 1}
+            data: {type: 'events', id: 1},
           },
           image: {
-            data: {type: 'images', id: 2}
-          }
-        }
-      }, {
-        type: 'organisers',
-        id: 2,
-        attributes: {
-          firstName: 'Martina'
+            data: {type: 'images', id: 2},
+          },
         },
+        type: 'organisers',
+      }, {
+        attributes: {
+          firstName: 'Martina',
+        },
+        id: 2,
         relationships: {
           event: {
-            data: {type: 'events', id: 1}
+            data: {type: 'events', id: 1},
           },
           image: {
-            data: {type: 'images', id: 3}
-          }
-        }
+            data: {type: 'images', id: 3},
+          },
+        },
+        type: 'organisers',
       }, {
-        type: 'images',
+        attributes: {
+          name: 'Header',
+        },
         id: 1,
-        attributes: {
-          name: 'Header'
-        },
         relationships: {
           event: {
-            data: {type: 'events', id: 1}
-          }
-        }
-      }, {
+            data: {type: 'events', id: 1},
+          },
+        },
         type: 'images',
+      }, {
+        attributes: {
+          name: 'Organiser Johannes',
+        },
         id: 2,
-        attributes: {
-          name: 'Organiser Johannes'
-        },
         relationships: {
           event: {
-            data: {type: 'events', id: 1}
-          }
-        }
-      }, {
+            data: {type: 'events', id: 1},
+          },
+        },
         type: 'images',
+      }, {
+        attributes: {
+          name: 'Organiser Martina',
+        },
         id: 3,
-        attributes: {
-          name: 'Organiser Martina'
-        },
         relationships: {
           event: {
-            data: {type: 'events', id: 1}
-          }
-        }
-      }]
+            data: {type: 'events', id: 1},
+          },
+        },
+        type: 'images',
+      }],
     });
 
     const event = store.find<Event>('events', 1);
@@ -340,13 +341,13 @@ describe('MobX JsonApi Store', function() {
     expect(event.organisers[0].image.id).to.equal(2);
   });
 
-  it('should remove an event', function() {
+  it('should remove an event', () => {
     const store = new TestStore();
     store.sync({
       data: [
         {id: 1, type: 'events', attributes: {}},
-        {id: 2, type: 'events', attributes: {}}
-      ]
+        {id: 2, type: 'events', attributes: {}},
+      ],
     });
 
     const event = store.find<Event>('events', 1);
@@ -356,13 +357,13 @@ describe('MobX JsonApi Store', function() {
     expect(event2).to.equal(null);
   });
 
-  it('should remove all events', function() {
+  it('should remove all events', () => {
     const store = new TestStore();
     store.sync({
       data: [
         {id: 1, type: 'events', attributes: {}},
-        {id: 2, type: 'events', attributes: {}}
-      ]
+        {id: 2, type: 'events', attributes: {}},
+      ],
     });
 
     const events = store.findAll<Event>('events');
@@ -372,42 +373,42 @@ describe('MobX JsonApi Store', function() {
     expect(events2).to.deep.equal([]);
   });
 
-  it('should reset', function() {
+  it('should reset', () => {
     const store = new TestStore();
     store.sync({
       data: [{
-        type: 'events',
-        id: 1,
         attributes: {
-          name: 'Demo'
+          name: 'Demo',
         },
+        id: 1,
         relationships: {
           images: {
             data: [{
+              id: 2,
               type: 'images',
-              id: 2
-            }]
-          }
-        }
-      }, {
+            }],
+          },
+        },
         type: 'events',
-        id: 2,
+      }, {
         attributes: {
-          name: 'Demo 2'
-        }
+          name: 'Demo 2',
+        },
+        id: 2,
+        type: 'events',
       }],
       included: [{
-        type: 'images',
-        id: 2,
         attributes: {
-          name: 'Header'
+          name: 'Header',
         },
+        id: 2,
         relationships: {
           event: {
-            data: {type: 'events', id: 1}
-          }
-        }
-      }]
+            data: {type: 'events', id: 1},
+          },
+        },
+        type: 'images',
+      }],
     });
 
     const events = store.findAll('events');
@@ -423,23 +424,23 @@ describe('MobX JsonApi Store', function() {
     expect(images2).to.deep.equal([]);
   });
 
-  it('should handle circular relations', function() {
+  it('should handle circular relations', () => {
     const store = new TestStore();
     store.sync({
       data: {
-        type: 'events',
-        id: 1,
         attributes: {
-          name: 'Demo'
+          name: 'Demo',
         },
+        id: 1,
         relationships: {
           images: {
             links: {
-              self: 'http://example.com/events/1/relationships/images'
-            }
-          }
-        }
-      }
+              self: 'http://example.com/events/1/relationships/images',
+            },
+          },
+        },
+        type: 'events',
+      },
     });
 
     const event = store.find<Event>('events', 1);
@@ -447,23 +448,23 @@ describe('MobX JsonApi Store', function() {
     expect(event.imagesLinks).to.deep.equal({self: 'http://example.com/events/1/relationships/images'});
   });
 
-  it('should handle serialization/deserialization with circular relations', function() {
+  it('should handle serialization/deserialization with circular relations', () => {
     const store = new TestStore();
     store.sync({
       data: {
-        type: 'events',
-        id: 1,
         attributes: {
-          name: 'Demo'
+          name: 'Demo',
         },
+        id: 1,
         relationships: {
           images: {
             links: {
-              self: 'http://example.com/events/1/relationships/images'
-            }
-          }
-        }
-      }
+              self: 'http://example.com/events/1/relationships/images',
+            },
+          },
+        },
+        type: 'events',
+      },
     });
 
     const data = JSON.stringify(store.toJS());
@@ -475,58 +476,58 @@ describe('MobX JsonApi Store', function() {
     expect(event.imagesLinks).to.deep.equal({self: 'http://example.com/events/1/relationships/images'});
   });
 
-  it('should support custom models', function() {
+  it('should support custom models', () => {
     const store = new TestStore();
 
     store.sync({
       data: {
-        type: 'user',
-        id: 1,
         attributes: {
           firstName: 'John',
-          lastName: 'Doe'
-        }
-      }
+          lastName: 'Doe',
+        },
+        id: 1,
+        type: 'user',
+      },
     });
 
     const user = store.find<User>('user', 1);
     expect(user.fullName).to.equal('John Doe');
   });
 
-  it('should support default properties', function() {
+  it('should support default properties', () => {
     const store = new TestStore();
 
     store.sync({
       data: [
         {
-          type: 'user',
-          id: 1,
           attributes: {
             firstName: 'John',
-            lastName: 'Doe'
-          }
-        }, {
-          type: 'photo',
+            lastName: 'Doe',
+          },
           id: 1,
-          attributes: {
-            filename: 'foo.jpg'
-          }
+          type: 'user',
         }, {
+          attributes: {
+            filename: 'foo.jpg',
+          },
+          id: 1,
           type: 'photo',
-          id: 2,
+        }, {
           attributes: {
             filename: 'bar.png',
-            selected: true
-          }
-        }, {
+            selected: true,
+          },
+          id: 2,
           type: 'photo',
-          id: 3,
+        }, {
           attributes: {
             filename: 'baz.png',
-            selected: false
-          }
-        }
-      ]
+            selected: false,
+          },
+          id: 3,
+          type: 'photo',
+        },
+      ],
     });
 
     const user = store.find<User>('user', 1);
@@ -548,24 +549,24 @@ describe('MobX JsonApi Store', function() {
     expect(selected[0].id).to.equal(2);
   });
 
-  it('should support generic records', function() {
+  it('should support generic records', () => {
     const store = new Store();
     const user = store.sync({
       data: {
-        id: 1,
-        type: 'user',
         attributes: {
-          name: 'John'
+          name: 'John',
         },
+        id: 1,
         relationships: {
           self: {
             data: {
               id: 1,
-              type: 'user'
-            }
-          }
-        }
-      }
+              type: 'user',
+            },
+          },
+        },
+        type: 'user',
+      },
     }) as Record;
 
     expect(user['name']).to.equal('John');

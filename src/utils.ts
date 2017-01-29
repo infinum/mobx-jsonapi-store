@@ -1,5 +1,5 @@
-import IJsonApiRecord from './interfaces/IJsonApiRecord';
 import IDictionary from './interfaces/IDictionary';
+import IJsonApiRecord from './interfaces/IJsonApiRecord';
 
 /**
  * Iterate trough object keys
@@ -38,7 +38,7 @@ export function mapItems<T>(data: Object|Array<Object>, fn: Function): T|Array<T
 export function flattenRecord(record: IJsonApiRecord): IDictionary<any> {
   const data: IDictionary<any> = {
     id: record.id,
-    type: record.type
+    type: record.type,
   };
 
   objectForEach(record.attributes, (key) => {

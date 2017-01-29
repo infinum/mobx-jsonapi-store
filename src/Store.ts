@@ -2,15 +2,37 @@ import {action} from 'mobx';
 
 import {Collection, IModel} from 'mobx-collection-store';
 
-import IJsonApiResponse from './interfaces/IJsonApiResponse';
-import IJsonApiRecord from './interfaces/IJsonApiRecord';
 import IJsonApiIdentifier from './interfaces/IJsonApiIdentifier';
-import {mapItems, flattenRecord} from './utils';
+import IJsonApiRecord from './interfaces/IJsonApiRecord';
+import IJsonApiResponse from './interfaces/IJsonApiResponse';
+
 import {Record} from './Record';
+import {flattenRecord, mapItems} from './utils';
 
-class Store extends Collection {
+export class Store extends Collection {
 
-  static types = [Record];
+  /**
+   * List of Models that will be used in the collection
+   *
+   * @static
+   *
+   * @memberOf Store
+   */
+  public static types = [Record];
+
+  /**
+   * Import the JSON API data into the store
+   *
+   * @param {IJsonApiResponse} body - JSON API response
+   * @returns {(IModel|Array<IModel>)} - Models parsed from body.data
+   *
+   * @memberOf Store
+   */
+  @action public sync(body: IJsonApiResponse): IModel|Array<IModel> {
+    const data = this.__iterateEntries(body, this.__addRecord.bind(this));
+    this.__iterateEntries(body, this.__updateRelationships.bind(this));
+    return data;
+  }
 
   /**
    * Add a new JSON API record to the store
@@ -76,20 +98,4 @@ class Store extends Collection {
     mapItems(body.included || [], fn);
     return mapItems<IModel>(body.data, fn);
   }
-
-  /**
-   * Import the JSON API data into the store
-   *
-   * @param {IJsonApiResponse} body - JSON API response
-   * @returns {(IModel|Array<IModel>)} - Models parsed from body.data
-   *
-   * @memberOf Store
-   */
-  @action sync(body: IJsonApiResponse): IModel|Array<IModel> {
-    const data = this.__iterateEntries(body, this.__addRecord.bind(this));
-    this.__iterateEntries(body, this.__updateRelationships.bind(this));
-    return data;
-  }
 }
-
-export {Store};

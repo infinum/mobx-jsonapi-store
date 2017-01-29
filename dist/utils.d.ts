@@ -1,5 +1,5 @@
-import IJsonApiRecord from './interfaces/IJsonApiRecord';
 import IDictionary from './interfaces/IDictionary';
+import IJsonApiRecord from './interfaces/IJsonApiRecord';
 /**
  * Iterate trough one item or array of items and call the defined function
  *

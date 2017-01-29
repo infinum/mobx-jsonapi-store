@@ -6,7 +6,7 @@ interface IJsonApiRecord {
   type: string;
   attributes: IDictionary<any>;
 
-  relationships?: IDictionary<IJsonApiRelationship>
+  relationships?: IDictionary<IJsonApiRelationship>;
 }
 
 export default IJsonApiRecord;
