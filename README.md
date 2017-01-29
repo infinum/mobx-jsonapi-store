@@ -2,7 +2,10 @@
 JSON API Store for MobX
 
 [![npm version](https://badge.fury.io/js/mobx-jsonapi-store.svg)](https://badge.fury.io/js/mobx-jsonapi-store)
+
 [![Build Status](https://travis-ci.org/infinum/mobx-jsonapi-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-jsonapi-store)
+[![Test Coverage](https://codeclimate.com/github/infinum/mobx-jsonapi-store/badges/coverage.svg)](https://codeclimate.com/github/infinum/mobx-jsonapi-store/coverage)
+
 [![Dependency Status](https://david-dm.org/infinum/mobx-jsonapi-store.svg)](https://david-dm.org/infinum/mobx-jsonapi-store)
 [![devDependency Status](https://david-dm.org/infinum/mobx-jsonapi-store/dev-status.svg)](https://david-dm.org/infinum/mobx-jsonapi-store#info=devDependencies)
 
