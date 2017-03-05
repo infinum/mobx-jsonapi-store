@@ -34,6 +34,7 @@ exports.mapItems = mapItems;
  */
 function flattenRecord(record) {
     var data = {
+        __internal: {},
         id: record.id,
         type: record.type,
     };
@@ -42,9 +43,11 @@ function flattenRecord(record) {
     });
     objectForEach(record.relationships, function (key) {
         if (record.relationships[key].links) {
-            data[key + "Links"] = record.relationships[key].links;
+            data.__internal.relationships = data.__internal.relationships || {};
+            data.__internal.relationships[key] = record.relationships[key].links;
         }
     });
     return data;
 }
 exports.flattenRecord = flattenRecord;
+exports.isBrowser = (typeof window !== 'undefined');

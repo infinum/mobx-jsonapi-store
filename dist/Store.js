@@ -11,7 +11,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var mobx_1 = require("mobx");
-var mobx_collection_store_1 = require("mobx-collection-store");
+var NetworkStore_1 = require("./NetworkStore");
 var Record_1 = require("./Record");
 var utils_1 = require("./utils");
 var Store = (function (_super) {
@@ -100,7 +100,7 @@ var Store = (function (_super) {
         return utils_1.mapItems(body.data, fn);
     };
     return Store;
-}(mobx_collection_store_1.Collection));
+}(NetworkStore_1.NetworkStore));
 exports.Store = Store;
 /**
  * List of Models that will be used in the collection

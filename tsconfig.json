@@ -9,7 +9,13 @@
     "noLib": false,
     "outDir": "../dist",
     "inlineSourceMap": true,
-    "inlineSources": true
+    "inlineSources": true,
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "es2015.promise"
+    ]
   },
   "exclude": [
     "node_modules",

@@ -1,7 +1,8 @@
-import { Collection, IModel } from 'mobx-collection-store';
-import IJsonApiResponse from './interfaces/IJsonApiResponse';
+import { IModel } from 'mobx-collection-store';
+import * as JsonApi from './interfaces/JsonApi';
+import { NetworkStore } from './NetworkStore';
 import { Record } from './Record';
-export declare class Store extends Collection {
+export declare class Store extends NetworkStore {
     /**
      * List of Models that will be used in the collection
      *
@@ -18,7 +19,7 @@ export declare class Store extends Collection {
      *
      * @memberOf Store
      */
-    sync(body: IJsonApiResponse): IModel | Array<IModel>;
+    sync(body: JsonApi.IResponse): IModel | Array<IModel>;
     /**
      * Add a new JSON API record to the store
      *

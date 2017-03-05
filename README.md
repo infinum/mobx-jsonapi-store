@@ -29,32 +29,28 @@ For more, check out the [advanced example](#advanced-example).
 npm install mobx-jsonapi-store
 ```
 
-## Changes since v1
+## Requirements
 
-Two main differences: It's more *robust* and *lightweight*. This might sound weird, but v1 had signifficant overhead because of the way records were handled internally.
+* ES2015 Promises
+* `window.fetch`
+  * if using an alternative fetch implementation (e.g. `isomorphic-fetch`), assign it to the `fetchReference` property in the config
+  * alternatively, override the `baseFetch` method in the config to use own network implementation
+
+## Changes since v2
 
 ### Breaking
 
-* Initial setup of the store is different - the class should be extended and `types` should be added as a static prop
-* Initial setup of records is also by extending the `Record` and adding static `type`, `refs` and `defaults` props
-* Constructor properties are completely different (compatible with the `toJS()` method)
-* `remove` was separated into `remove` and `removeAll` so it works in the same way `find` and `findAll` work
-* There shouldn't be more than one instance of a model anymore (in v1, a new instance was created every time it was retreived)
-* Links are not available on the exact key name, instead, a "Links" part is appended, e.g. if the link relationship `details` is present, it will be available in the record as `detailsLinks` instead of `details`
+* Links are not available directly anymore. Instead, a `getRelationshipLinks()` function can be used.
+* New [requirements](#Requirements)
 
-### Minor
+### New stuff
 
-* The references can be either a single model or an array of models (more flexible)
-* The references are computed properties so the circular references can be handled in a more robust way
-* The reference ids can be retreived without using the reference model using the "Id" sufix, e.g. `photos` reference will also create a `photosId` property
-* TypeScript typings are available
-* A list of all models of a certain type is available as `collection[type]`
-* `find` works without the record `id`, by returning the first result
-
-### Internal
-
-* The lib is internally using the [`mobx-collection-store`](https://github.com/infinum/mobx-collection-store) library and adds some JSON API specific functionality. Since `Store` and `Record` are extending the `Collection` and `Model` classes, all the same methods work.
-* The lib was rewritten in TypeScript
+* `getMeta()` and `getLinks()` functions on the model
+* `toJsonapi()` method on the model - serializes the model into the JSON API structure
+* WIP - Networking layer compatible with the JSON API specification
+  * Pagination
+  * Search
+  * Sort
 
 ## Usage
 
@@ -82,6 +78,7 @@ Two main differences: It's more *robust* and *lightweight*. This might sound wei
 * `assign(key, value)` - Method used to add a new property or update an existing one
 * `assignRef(key, value, [type])` - Assign a new reference to the record
 * `toJS()` - Convert the record into a plain JS Object in order to be serialized
+* `toJsonapi()` - Convert the record into a JSON API structured plain JS object
 
 *Note:* If adding a new property, use `assign` or `assignRef` methods. Don't assign the properties directly to the record.
 

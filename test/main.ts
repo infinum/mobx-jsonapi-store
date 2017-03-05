@@ -1,10 +1,13 @@
 import {expect} from 'chai';
+import * as fetch from 'isomorphic-fetch';
 import {autorun, computed, extendObservable, observable} from 'mobx';
 
-import {IDictionary, Record, Store} from '../src';
+import {config, IDictionary, Record, Store} from '../src';
 
 // tslint:disable:max-classes-per-file
 // tslint:disable:no-string-literal
+
+config.fetchReference = fetch;
 
 class User extends Record {
   public static type: string = 'user';
@@ -205,7 +208,7 @@ describe('MobX JsonApi Store', () => {
     expect(event.image).to.equal(null);
   });
 
-  it('should handle circular relations', () => {
+  it('should handle basic circular relations', () => {
     const store = new TestStore();
     store.sync({
       data: {
@@ -445,7 +448,8 @@ describe('MobX JsonApi Store', () => {
 
     const event = store.find<Event>('events', 1);
     expect(event.name).to.equal('Demo');
-    expect(event.imagesLinks).to.deep.equal({self: 'http://example.com/events/1/relationships/images'});
+    expect(event.getRelationshipLinks()['images'])
+      .to.deep.equal({self: 'http://example.com/events/1/relationships/images'});
   });
 
   it('should handle serialization/deserialization with circular relations', () => {
@@ -473,7 +477,8 @@ describe('MobX JsonApi Store', () => {
 
     const event = newStore.find<Event>('events', 1);
     expect(event.name).to.equal('Demo');
-    expect(event.imagesLinks).to.deep.equal({self: 'http://example.com/events/1/relationships/images'});
+    expect(event.getRelationshipLinks()['images'])
+      .to.deep.equal({self: 'http://example.com/events/1/relationships/images'});
   });
 
   it('should support custom models', () => {

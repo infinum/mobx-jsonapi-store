@@ -1,11 +1,11 @@
 {
   "name": "mobx-jsonapi-store",
-  "version": "2.0.0",
+  "version": "3.0.0-alpha.1",
   "description": "JSON API Store for MobX",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "build": "ntsc --outDir ./dist --experimentalDecorators --target es5 --module commonjs --declaration --pretty src/index.ts",
+    "build": "ntsc --outDir ./dist --experimentalDecorators --target es5 --module commonjs --declaration --pretty --lib 'dom','es5','scripthost','es2015.promise' src/index.ts",
     "test": "NODE_ENV=test nyc mocha",
     "lint": "tslint './src/**/*.ts'",
     "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha",
@@ -54,18 +54,20 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/mocha": "^2.2.38",
-    "@types/node": "^7.0.4",
+    "@types/mocha": "^2.2.39",
+    "@types/node": "^7.0.5",
     "chai": "^3.5.0",
-    "husky": "^0.13.1",
-    "mobx": "^3.0.2",
-    "mobx-collection-store": "^0.8.0",
+    "husky": "^0.13.2",
+    "isomorphic-fetch": "^2.2.1",
+    "mobx": "^3.1.2",
+    "mobx-collection-store": "^0.8.1",
     "mocha": "^3.2.0",
+    "nock": "^9.0.9",
     "ntypescript": "^1.201609302242.1",
     "nyc": "^10.1.2",
-    "ts-node": "^2.0.0",
-    "tslint": "^4.4.2",
-    "typescript": "^2.1.5"
+    "ts-node": "^2.1.0",
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.1"
   },
   "peerDependencies": {
     "mobx": "^2.6.0 || ^3",
