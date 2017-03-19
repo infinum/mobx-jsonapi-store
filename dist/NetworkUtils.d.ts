@@ -1,7 +1,7 @@
 import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
 import IRequestOptions from './interfaces/IRequestOptions';
-import { Response } from './Response';
+import { Response as LibResponse } from './Response';
 import { Store } from './Store';
 export declare type FetchType = (method: string, url: string, body?: Object, requestHeaders?: IHeaders) => Promise<IRawResponse>;
 export declare type ConfigType = {
@@ -21,7 +21,7 @@ export declare const config: ConfigType;
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export declare function read(store: Store, url: string, headers?: IHeaders, options?: IRequestOptions): Promise<Response>;
+export declare function read(store: Store, url: string, headers?: IHeaders, options?: IRequestOptions): Promise<LibResponse>;
 /**
  * API call used to create data on the server
  *
@@ -33,7 +33,7 @@ export declare function read(store: Store, url: string, headers?: IHeaders, opti
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export declare function create(store: Store, url: string, data?: Object, headers?: IHeaders, options?: IRequestOptions): Promise<Response>;
+export declare function create(store: Store, url: string, data?: Object, headers?: IHeaders, options?: IRequestOptions): Promise<LibResponse>;
 /**
  * API call used to update data on the server
  *
@@ -45,7 +45,7 @@ export declare function create(store: Store, url: string, data?: Object, headers
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export declare function update(store: Store, url: string, data?: Object, headers?: IHeaders, options?: IRequestOptions): Promise<Response>;
+export declare function update(store: Store, url: string, data?: Object, headers?: IHeaders, options?: IRequestOptions): Promise<LibResponse>;
 /**
  * API call used to remove data from the server
  *
@@ -56,4 +56,4 @@ export declare function update(store: Store, url: string, data?: Object, headers
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export declare function remove(store: Store, url: string, headers?: IHeaders, options?: IRequestOptions): Promise<Response>;
+export declare function remove(store: Store, url: string, headers?: IHeaders, options?: IRequestOptions): Promise<LibResponse>;
