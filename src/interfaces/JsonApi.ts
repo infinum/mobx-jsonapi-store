@@ -1,7 +1,7 @@
 import IDictionary from './IDictionary';
 
 interface IIdentifier {
-  id: number|string;
+  id?: number|string;
   type: string;
 };
 
@@ -16,11 +16,11 @@ interface IError {
   code?: string;
   title?: string;
   details?: string;
-  source: {
+  source?: {
     pointer?: string,
     parameter?: string,
   };
-  meta: IDictionary<any>;
+  meta?: IDictionary<any>;
 }
 
 interface IRelationship {
@@ -32,17 +32,21 @@ interface IRecord extends IIdentifier {
   attributes: IDictionary<any>;
 
   relationships?: IDictionary<IRelationship>;
+  links?: IDictionary<ILink>;
+  meta?: IDictionary<ILink>;
 }
 
 interface IResponse {
   data?: IRecord|Array<IRecord>;
-  error?: Array<IError>;
+  errors?: Array<IError>;
 
   included?: Array<IRecord>;
 
   meta?: Object;
   links?: IDictionary<ILink>;
 }
+
+type IRequest = IResponse; // Not sure if this is correct, but it's ok for now
 
 export {
   IIdentifier,
@@ -51,4 +55,5 @@ export {
   IRelationship,
   IRecord,
   IResponse,
+  IRequest,
 };

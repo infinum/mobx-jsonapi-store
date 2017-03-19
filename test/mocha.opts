@@ -3,4 +3,4 @@
 --check-leaks
 --recursive
 --bail
-src/**/*.ts test/**/*.ts
+src/**/*.ts test/main.ts

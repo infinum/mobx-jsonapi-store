@@ -2,10 +2,13 @@ import {action} from 'mobx';
 
 import {Collection, IModel} from 'mobx-collection-store';
 
+import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
 
 import {NetworkStore} from './NetworkStore';
+import {read, remove} from './NetworkUtils';
 import {Record} from './Record';
+import {Response} from './Response';
 import {flattenRecord, mapItems} from './utils';
 
 export class Store extends NetworkStore {
@@ -34,6 +37,71 @@ export class Store extends NetworkStore {
   }
 
   /**
+   * Fetch the records with the given type and id
+   *
+   * @param {string} type Record type
+   * @param {number|string} type Record id
+   * @param {boolean} [force] Force fetch (currently not used)
+   * @param {IRequestOptions} [options] Server options
+   * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
+   *
+   * @memberOf Store
+   */
+  public fetch(type: string, id: number|string, force?: boolean, options?: IRequestOptions): Promise<Response> {
+    const query = this.__prepareQuery(type, id, null, options);
+    return read(this, query.url, query.headers, options).then(this.__handleErrors);
+  }
+
+  /**
+   * Fetch the first page of records of the given type
+   *
+   * @param {string} type Record type
+   * @param {boolean} [force] Force fetch (currently not used)
+   * @param {IRequestOptions} [options] Server options
+   * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
+   *
+   * @memberOf Store
+   */
+  public fetchAll(type: string, force?: boolean, options?: IRequestOptions): Promise<Response> {
+    const query = this.__prepareQuery(type, null, null, options);
+    return read(this, query.url, query.headers, options).then(this.__handleErrors);
+  }
+
+  /**
+   * Destroy a record (API & store)
+   *
+   * @param {string} type Record type
+   * @param {(number|string)} id Record id
+   * @param {IRequestOptions} [options] Server options
+   * @returns {Promise<boolean>} Resolves true or rejects with an error
+   *
+   * @memberOf Store
+   */
+  public destroy(type: string, id: number|string, options?: IRequestOptions): Promise<boolean> {
+    const model = this.find(type, id) as Record;
+    if (model) {
+      return model.remove(options);
+    }
+    return Promise.resolve(true);
+  }
+
+  /**
+   * Function used to handle response errors
+   *
+   * @private
+   * @param {Response} response API response
+   * @returns API response
+   *
+   * @memberOf Store
+   */
+  private __handleErrors(response: Response) {
+    if (response.error) {
+      throw response.error;
+    }
+    return response;
+  }
+
+  /**
    * Add a new JSON API record to the store
    *
    * @private
@@ -42,20 +110,21 @@ export class Store extends NetworkStore {
    *
    * @memberOf Store
    */
-  private __addRecord(obj: JsonApi.IRecord): IModel {
+  private __addRecord(obj: JsonApi.IRecord): Record {
     const {type, id} = obj;
-    let record = this.find(type, id);
+    let record: Record = this.find(type, id) as Record;
     const flattened = flattenRecord(obj);
     const availableModels = this.static.types.map((item) => item.type);
 
     if (record) {
       record.update(flattened);
     } else if (availableModels.indexOf(obj.type) !== -1) {
-      record = this.add(flattened, obj.type);
+      record = this.add(flattened, obj.type) as Record;
     } else {
       record = new Record(flattened);
       this.add(record);
     }
+    record.setPersisted(true);
     return record;
   }
 
@@ -94,7 +163,7 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   private __iterateEntries(body: JsonApi.IResponse, fn: Function) {
-    mapItems(body.included || [], fn);
-    return mapItems<IModel>(body.data, fn);
+    mapItems((body && body.included) || [], fn);
+    return mapItems<IModel>((body && body.data) || [], fn);
   }
 }

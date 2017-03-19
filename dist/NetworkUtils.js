@@ -2,9 +2,9 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
@@ -34,18 +34,40 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+var Response_1 = require("./Response");
 var utils_1 = require("./utils");
 exports.config = {
-    defaultHeaders: {},
+    /** Base URL for all API calls */
+    baseUrl: '/',
+    /** Default headers that will be sent to the server */
+    defaultHeaders: {
+        'content-type': 'application/vnd.api+json',
+    },
+    /** Reference of the fetch method that should be used */
     fetchReference: utils_1.isBrowser && window.fetch,
+    /**
+     * Base implementation of the fetch function (can be overriden)
+     *
+     * @param {string} method API call method
+     * @param {string} url API call URL
+     * @param {Object} [body] API call body
+     * @param {IHeaders} [requestHeaders] Headers that will be sent
+     * @returns {Promise<IRawResponse>} Resolves with a raw response object
+     */
     baseFetch: function (method, url, body, requestHeaders) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, status, headers, response, error_1;
+            var data, status, headers, response, reqHeaders, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, this.fetchReference(url, { body: body, method: method, headers: requestHeaders })];
+                        reqHeaders = utils_1.assign({}, exports.config.defaultHeaders, requestHeaders);
+                        return [4 /*yield*/, this.fetchReference(url, {
+                                body: JSON.stringify(body),
+                                headers: reqHeaders,
+                                method: method,
+                            })];
                     case 1:
                         response = _a.sent();
                         status = response.status;
@@ -53,6 +75,9 @@ exports.config = {
                         return [4 /*yield*/, response.json()];
                     case 2:
                         data = _a.sent();
+                        if (status >= 400) {
+                            throw new Error("Invalid HTTP status: " + status);
+                        }
                         return [2 /*return*/, { data: data, headers: headers, requestHeaders: requestHeaders, status: status }];
                     case 3:
                         error_1 = _a.sent();
@@ -63,7 +88,65 @@ exports.config = {
         });
     },
 };
-function fetch(method, url, body, requestHeaders) {
-    return exports.config.baseFetch(method, url, body, requestHeaders);
+/**
+ * API call used to get data from the server
+ *
+ * @export
+ * @param {Store} store Related Store
+ * @param {string} url API call URL
+ * @param {IHeaders} [headers] Headers to be sent
+ * @param {IRequestOptions} [options] Server options
+ * @returns {Promise<Response>} Resolves with a Response object
+ */
+function read(store, url, headers, options) {
+    return exports.config.baseFetch('GET', url, null, headers)
+        .then(function (response) { return new Response_1.Response(response, store, options); });
 }
-exports.fetch = fetch;
+exports.read = read;
+/**
+ * API call used to create data on the server
+ *
+ * @export
+ * @param {Store} store Related Store
+ * @param {string} url API call URL
+ * @param {Object} [data] Request body
+ * @param {IHeaders} [headers] Headers to be sent
+ * @param {IRequestOptions} [options] Server options
+ * @returns {Promise<Response>} Resolves with a Response object
+ */
+function create(store, url, data, headers, options) {
+    return exports.config.baseFetch('POST', url, data, headers)
+        .then(function (response) { return new Response_1.Response(response, store, options); });
+}
+exports.create = create;
+/**
+ * API call used to update data on the server
+ *
+ * @export
+ * @param {Store} store Related Store
+ * @param {string} url API call URL
+ * @param {Object} [data] Request body
+ * @param {IHeaders} [headers] Headers to be sent
+ * @param {IRequestOptions} [options] Server options
+ * @returns {Promise<Response>} Resolves with a Response object
+ */
+function update(store, url, data, headers, options) {
+    return exports.config.baseFetch('PUT', url, data, headers)
+        .then(function (response) { return new Response_1.Response(response, store, options); });
+}
+exports.update = update;
+/**
+ * API call used to remove data from the server
+ *
+ * @export
+ * @param {Store} store Related Store
+ * @param {string} url API call URL
+ * @param {IHeaders} [headers] Headers to be sent
+ * @param {IRequestOptions} [options] Server options
+ * @returns {Promise<Response>} Resolves with a Response object
+ */
+function remove(store, url, headers, options) {
+    return exports.config.baseFetch('DELETE', url, null, headers)
+        .then(function (response) { return new Response_1.Response(response, store, options); });
+}
+exports.remove = remove;

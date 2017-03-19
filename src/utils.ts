@@ -53,7 +53,44 @@ export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
     }
   });
 
+  objectForEach(record.links, (key) => {
+    if (record.links[key]) {
+      data.__internal.links = data.__internal.links || {};
+      data.__internal.links[key] = record.links[key];
+    }
+  });
+
+  objectForEach(record.meta, (key) => {
+    if (record.meta[key]) {
+      data.__internal.meta = data.__internal.meta || {};
+      data.__internal.meta[key] = record.meta[key];
+    }
+  });
+
   return data;
 }
 
 export const isBrowser = (typeof window !== 'undefined');
+
+/**
+ * Assign objects to the target object
+ * Not a complete implementation (Object.assign)
+ * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
+ *
+ * @private
+ * @param {Object} target - Target object
+ * @param {Array<Object>} args - Objects to be assigned
+ * @returns
+ */
+export function assign(target: Object, ...args: Array<Object>) {
+  args.forEach((nextSource) => {
+    if (nextSource != null) {
+      for (let nextKey in nextSource) {
+        if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+          target[nextKey] = nextSource[nextKey];
+        }
+      }
+    }
+  });
+  return target;
+}
