@@ -45,8 +45,8 @@ npm install mobx-jsonapi-store
 
 ### New stuff
 
-* `getMeta()` and `getLinks()` functions on the model
-* `toJsonapi()` method on the model - serializes the model into the JSON API structure
+* `getRelationshipLinks()`, `getMeta()`, and `getLinks()` functions on the model
+* `toJsonApi()` method on the model - serializes the model into the JSON API structure
 * WIP - Networking layer compatible with the JSON API specification
   * Pagination
   * Search
@@ -67,6 +67,9 @@ npm install mobx-jsonapi-store
 * `removeAll(type)` - Remove all records of the given type
 * `reset()` - Clears all records and relationships from the store
 * `toJS()` - Convert the store into a plain JS Object array in order to be serialized
+* `fetch(type, id, [force], [options]) => Response` - Get a record from the server
+* `fetchAll(type, [force], [options]) => Response` - Get a list of records from the server
+* `destroy(type, id, [options])` - Remove a record from the server and store
 
 ### Record
 
@@ -78,9 +81,39 @@ npm install mobx-jsonapi-store
 * `assign(key, value)` - Method used to add a new property or update an existing one
 * `assignRef(key, value, [type])` - Assign a new reference to the record
 * `toJS()` - Convert the record into a plain JS Object in order to be serialized
-* `toJsonapi()` - Convert the record into a JSON API structured plain JS object
+* `toJsonApi()` - Convert the record into a JSON API structured plain JS object
+* `save([options])` - Save the record to the API
+* `remove([options])` - Remove the record from the API and store
 
 *Note:* If adding a new property, use `assign` or `assignRef` methods. Don't assign the properties directly to the record.
+
+### Response
+
+* `data` - A record or a list of records from the API response
+* `meta` - API response metadata
+* `links` - API response links
+* `error` - API response error (either an JSON API error or a JS Error)
+* `headers` - Headers sent to the server
+* `responseHeaders` - `Headers` object received from the API
+* Link getters (availability depends on the API response). Some getters that might exist:
+  * `first` - Promise that resolves to a `Response` object with the first page
+  * `prev` - Promise that resolves to a `Response` object with the previous page
+  * `next` - Promise that resolves to a `Response` object with the next page
+  * `last` - Promise that resolves to a `Response` object with the last page
+
+### Network configuration
+
+The network configuration is exposed in the `config` object that can be imported and parts of it can be replaced:
+
+* `baseUrl` - Base URL for API calls. Record type, id and other options will be appended to it
+* `defaultHeaders` - Default headers that will be sent to the server every time. It will be merged with headers objects given directly to the function making an API call
+* `fetchReference` - A reference to the `fetch` method. Will default to `window.fetch` if in browser. `isomorphic-fetch` can be used for the server.
+* `baseFetch(method, url, body, requestHeaders)` - If you don't want to use Fetch API, you can override this function. It needs to return a promise that resolves to an object with the following properties:
+  * `data` - Response body
+  * `status` - HTTP status
+  * `headers` - Headers received from the API
+  * `requestHeaders` - Headers sent to the server
+  * `error` - Error object if something haas failed in the process
 
 ## Advanced example
 
@@ -175,6 +208,28 @@ console.log(user.photos[0].extension); // 'jpg'
 
 const photos = store.photo; // alternative: store.findAll<Photo>('photo')
 const selectedPhotos = photos.filter((photo) => photo.selected);
+```
+
+## Pagination example
+
+```typescript
+import {config, Store, Record} from 'mobx-jsonapi-store';
+
+config.baseUrl = 'https://example.com/';
+const store = new Store();
+
+// Get a list of all users if the API requires pagination
+// Note: In normal usage, you should also have some error handling
+async function getAllUsers() {
+  const users = [];
+  let response = await store.findAll('user'); // GET https://example.com/user
+  users.push(...response.data);
+  while (response.next) {
+    response = await response.next;
+    users.push(...response.data);
+  }
+  return users;
+}
 ```
 
 ## JSON API support
