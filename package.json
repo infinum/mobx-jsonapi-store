@@ -55,23 +55,23 @@
   "license": "MIT",
   "devDependencies": {
     "@types/mocha": "^2.2.40",
-    "@types/node": "^7.0.8",
+    "@types/node": "^7.0.12",
     "chai": "^3.5.0",
-    "husky": "^0.13.2",
+    "husky": "^0.13.3",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
-    "mobx": "^3.1.7",
-    "mobx-collection-store": "^0.8.1",
+    "mobx": "^3.1.8",
+    "mobx-collection-store": "^1.0.0",
     "mocha": "^3.2.0",
-    "nock": "^9.0.9",
+    "nock": "^9.0.11",
     "ntypescript": "^1.201609302242.1",
-    "nyc": "^10.1.2",
-    "ts-node": "^2.1.0",
+    "nyc": "^10.2.0",
+    "ts-node": "^2.1.2",
     "tslint": "^4.5.1",
-    "typescript": "^2.2.1"
+    "typescript": "^2.2.2"
   },
   "peerDependencies": {
     "mobx": "^2.6.0 || ^3",
-    "mobx-collection-store": "^0.8.0"
+    "mobx-collection-store": "^1.0.0"
   }
 }
