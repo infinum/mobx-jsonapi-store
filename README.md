@@ -9,7 +9,7 @@ JSON API Store for MobX
 [![Dependency Status](https://david-dm.org/infinum/mobx-jsonapi-store.svg)](https://david-dm.org/infinum/mobx-jsonapi-store)
 [![devDependency Status](https://david-dm.org/infinum/mobx-jsonapi-store/dev-status.svg)](https://david-dm.org/infinum/mobx-jsonapi-store#info=devDependencies)
 
-Inspired by [yayson](https://github.com/confetti/yayson).
+Don't need any [JSON API](http://jsonapi.org/) specific features? Check out [mobx-collection-store](https://github.com/infinum/mobx-collection-store).
 
 ## Basic example
 
@@ -237,6 +237,9 @@ async function getAllUsers() {
 * `included`
 * `relationships.data`
 * `relationships.links`
+* `meta`
+* `links`
+* `errors`
 
 ## License
 
