@@ -3,6 +3,7 @@
   "rules": {
     "array-type": [true, "generic"],
     "quotemark": [true, "single", "avoid-escape"],
-    "variable-name": [true, "ban-keywords"]
+    "variable-name": [true, "ban-keywords"],
+    "ban-types": [false]
   }
 }

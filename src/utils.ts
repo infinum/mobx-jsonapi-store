@@ -1,5 +1,5 @@
 import IDictionary from './interfaces/IDictionary';
-import IJsonApiRecord from './interfaces/IJsonApiRecord';
+import * as JsonApi from './interfaces/JsonApi';
 
 /**
  * Iterate trough object keys
@@ -35,8 +35,9 @@ export function mapItems<T>(data: Object|Array<Object>, fn: Function): T|Array<T
  * @param {IJsonApiRecord} record - original JSON API record
  * @returns {IDictionary<any>} - Flattened object
  */
-export function flattenRecord(record: IJsonApiRecord): IDictionary<any> {
+export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   const data: IDictionary<any> = {
+    __internal: {},
     id: record.id,
     type: record.type,
   };
@@ -47,9 +48,49 @@ export function flattenRecord(record: IJsonApiRecord): IDictionary<any> {
 
   objectForEach(record.relationships, (key) => {
     if (record.relationships[key].links) {
-      data[`${key}Links`] = record.relationships[key].links;
+      data.__internal.relationships = data.__internal.relationships || {};
+      data.__internal.relationships[key] = record.relationships[key].links;
+    }
+  });
+
+  objectForEach(record.links, (key) => {
+    if (record.links[key]) {
+      data.__internal.links = data.__internal.links || {};
+      data.__internal.links[key] = record.links[key];
+    }
+  });
+
+  objectForEach(record.meta, (key) => {
+    if (record.meta[key]) {
+      data.__internal.meta = data.__internal.meta || {};
+      data.__internal.meta[key] = record.meta[key];
     }
   });
 
   return data;
+}
+
+export const isBrowser = (typeof window !== 'undefined');
+
+/**
+ * Assign objects to the target object
+ * Not a complete implementation (Object.assign)
+ * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
+ *
+ * @private
+ * @param {Object} target - Target object
+ * @param {Array<Object>} args - Objects to be assigned
+ * @returns
+ */
+export function assign(target: Object, ...args: Array<Object>) {
+  args.forEach((nextSource) => {
+    if (nextSource != null) {
+      for (const nextKey in nextSource) {
+        if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+          target[nextKey] = nextSource[nextKey];
+        }
+      }
+    }
+  });
+  return target;
 }

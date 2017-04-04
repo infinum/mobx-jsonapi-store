@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/1b30c8e5c2aa0e179a1b82d7f337124721be2aa6/isomorphic-fetch/index.d.ts",
+    "raw": "registry:dt/isomorphic-fetch#0.0.0+20170223183302",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/1b30c8e5c2aa0e179a1b82d7f337124721be2aa6/isomorphic-fetch/index.d.ts"
+  }
+}

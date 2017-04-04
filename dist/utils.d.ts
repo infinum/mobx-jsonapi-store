@@ -1,5 +1,5 @@
 import IDictionary from './interfaces/IDictionary';
-import IJsonApiRecord from './interfaces/IJsonApiRecord';
+import * as JsonApi from './interfaces/JsonApi';
 /**
  * Iterate trough one item or array of items and call the defined function
  *
@@ -17,4 +17,16 @@ export declare function mapItems<T>(data: Object | Array<Object>, fn: Function):
  * @param {IJsonApiRecord} record - original JSON API record
  * @returns {IDictionary<any>} - Flattened object
  */
-export declare function flattenRecord(record: IJsonApiRecord): IDictionary<any>;
+export declare function flattenRecord(record: JsonApi.IRecord): IDictionary<any>;
+export declare const isBrowser: boolean;
+/**
+ * Assign objects to the target object
+ * Not a complete implementation (Object.assign)
+ * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
+ *
+ * @private
+ * @param {Object} target - Target object
+ * @param {Array<Object>} args - Objects to be assigned
+ * @returns
+ */
+export declare function assign(target: Object, ...args: Array<Object>): Object;
