@@ -5,6 +5,9 @@
     "attributes": {
       "title": "Test 1",
       "date": "2017-03-19"
+    },
+    "links": {
+      "self": "http://example.com/event/1234"
     }
   }
 }

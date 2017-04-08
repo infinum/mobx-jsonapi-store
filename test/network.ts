@@ -32,7 +32,7 @@ describe('Networking', () => {
 
     it('should fetch one item', async () => {
       mockApi({
-        name: 'event-1',
+        name: 'event-1b',
         url: 'event/1',
       });
 
@@ -44,7 +44,7 @@ describe('Networking', () => {
       expect(record).to.be.an('object');
       expect(record['title']).to.equal('Test 1');
       expect(record.getLinks()).to.be.an('object');
-      expect(record.getLinks().self).to.equal('http://example.com/event/1');
+      expect(record.getLinks().self).to.equal('http://example.com/event/1234');
     });
 
     it('should support pagination', async () => {
@@ -112,6 +112,31 @@ describe('Networking', () => {
         method: 'PATCH',
         name: 'event-1',
         url: 'event/1',
+      });
+
+      const updated = await record.save();
+      expect(updated['title']).to.equal('Test 1');
+      expect(updated).to.equal(record);
+    });
+
+    it('should update a record with self link', async () => {
+      mockApi({
+        name: 'event-1b',
+        url: 'event/1',
+      });
+
+      const store = new Store();
+      const events = await store.fetch('event', 1);
+
+      const record = events.data as Record;
+
+      mockApi({
+        data: JSON.stringify({
+          data: record.toJsonApi(),
+        }),
+        method: 'PATCH',
+        name: 'event-1b',
+        url: 'event/1234',
       });
 
       const updated = await record.save();

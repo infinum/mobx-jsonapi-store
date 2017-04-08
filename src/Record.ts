@@ -196,6 +196,13 @@ export class Record extends Model {
    * @memberOf Record
    */
   private __getUrl(): string {
+
+    const links = this.getLinks();
+    if (links && links.self) {
+      const self: JsonApi.ILink = links.self;
+      return typeof self === 'string' ? self : self.href;
+    }
+
     return this.__persisted
       ? `${config.baseUrl}${this.type}/${this.id}`
       : `${config.baseUrl}${this.type}`;

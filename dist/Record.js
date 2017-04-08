@@ -156,6 +156,11 @@ var Record = (function (_super) {
      * @memberOf Record
      */
     Record.prototype.__getUrl = function () {
+        var links = this.getLinks();
+        if (links && links.self) {
+            var self_1 = links.self;
+            return typeof self_1 === 'string' ? self_1 : self_1.href;
+        }
         return this.__persisted
             ? "" + NetworkUtils_1.config.baseUrl + this.type + "/" + this.id
             : "" + NetworkUtils_1.config.baseUrl + this.type;
