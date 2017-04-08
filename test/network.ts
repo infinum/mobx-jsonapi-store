@@ -250,7 +250,11 @@ describe('Networking', () => {
 
       return fetch.then(
         () => expect(true).to.equal(false),
-        (err) => expect(err).to.be.an('error'),
+        (err) => {
+          expect(err).to.be.an('object');
+          expect(err.status).to.equal(404);
+          expect(err.message).to.equal('Invalid HTTP status: 404');
+        },
       );
     });
 

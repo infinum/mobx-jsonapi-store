@@ -73,7 +73,10 @@ export const config: IConfigType = {
       .then((responseData) => {
         data = responseData;
         if (status >= 400) {
-          throw new Error(`Invalid HTTP status: ${status}`);
+          throw {
+            status,
+            message: `Invalid HTTP status: ${status}`,
+          };
         }
 
         return {data, headers, requestHeaders, status};

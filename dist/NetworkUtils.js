@@ -43,7 +43,10 @@ exports.config = {
             .then(function (responseData) {
             data = responseData;
             if (status >= 400) {
-                throw new Error("Invalid HTTP status: " + status);
+                throw {
+                    status: status,
+                    message: "Invalid HTTP status: " + status,
+                };
             }
             return { data: data, headers: headers, requestHeaders: requestHeaders, status: status };
         })
