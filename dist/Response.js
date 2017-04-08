@@ -18,6 +18,7 @@ var Response = (function () {
         this.data = store.sync(response.data);
         this.meta = (response.data && response.data.meta) || {};
         this.links = (response.data && response.data.links) || {};
+        this.jsonapi = response.data.jsonapi;
         this.headers = response.headers;
         this.requestHeaders = response.requestHeaders;
         this.error = (response.data && response.data.errors) || response.error;

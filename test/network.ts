@@ -30,6 +30,22 @@ describe('Networking', () => {
       expect(events.data[0].getMeta().createdAt).to.equal('2017-03-19T16:00:00.000Z');
     });
 
+    it('should save the jsonapi data', async () => {
+      mockApi({
+        name: 'jsonapi-object',
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event');
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+      expect(events.jsonapi).to.be.an('object');
+      expect(events.jsonapi.version).to.equal('1.0');
+      expect(events.jsonapi.meta.foo).to.equal('bar');
+    });
+
     it('should fetch one item', async () => {
       mockApi({
         name: 'event-1b',

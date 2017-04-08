@@ -40,6 +40,14 @@ export class Response {
   public links?: Object;
 
   /**
+   * The JSON API object returned by the server
+   *
+   * @type {JsonApi.IJsonApiObject}
+   * @memberOf Response
+   */
+  public jsonapi?: JsonApi.IJsonApiObject;
+
+  /**
    * Headers received from the API call
    *
    * @type {IResponseHeaders}
@@ -128,6 +136,7 @@ export class Response {
     this.data = store.sync(response.data);
     this.meta = (response.data && response.data.meta) || {};
     this.links = (response.data && response.data.links) || {};
+    this.jsonapi = response.data.jsonapi;
     this.headers = response.headers;
     this.requestHeaders = response.requestHeaders;
     this.error = (response.data && response.data.errors) || response.error;

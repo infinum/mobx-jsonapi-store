@@ -3,6 +3,10 @@ interface IIdentifier {
     id?: number | string;
     type: string;
 }
+interface IJsonApiObject {
+    version?: string;
+    meta?: IDictionary<any>;
+}
 declare type ILink = string | {
     href: string;
     meta: IDictionary<any>;
@@ -38,6 +42,7 @@ interface IResponse {
     included?: Array<IRecord>;
     meta?: IDictionary<any>;
     links?: IDictionary<ILink>;
+    jsonapi?: IJsonApiObject;
 }
 declare type IRequest = IResponse;
-export { IIdentifier, ILink, IError, IRelationship, IRecord, IResponse, IRequest };
+export { IIdentifier, IJsonApiObject, ILink, IError, IRelationship, IRecord, IResponse, IRequest };

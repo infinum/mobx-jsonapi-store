@@ -5,6 +5,11 @@ interface IIdentifier {
   type: string;
 }
 
+interface IJsonApiObject {
+  version?: string;
+  meta?: IDictionary<any>;
+}
+
 type ILink = string | {href: string, meta: IDictionary<any>};
 
 interface IError {
@@ -44,12 +49,14 @@ interface IResponse {
 
   meta?: IDictionary<any>;
   links?: IDictionary<ILink>;
+  jsonapi?: IJsonApiObject;
 }
 
 type IRequest = IResponse; // Not sure if this is correct, but it's ok for now
 
 export {
   IIdentifier,
+  IJsonApiObject,
   ILink,
   IError,
   IRelationship,

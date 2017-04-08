@@ -7,5 +7,6 @@ interface IRawResponse {
     headers?: IResponseHeaders;
     requestHeaders?: IHeaders;
     status?: number;
+    jsonapi?: JsonApi.IJsonApiObject;
 }
 export default IRawResponse;

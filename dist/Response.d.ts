@@ -28,6 +28,13 @@ export declare class Response {
      */
     links?: Object;
     /**
+     * The JSON API object returned by the server
+     *
+     * @type {JsonApi.IJsonApiObject}
+     * @memberOf Response
+     */
+    jsonapi?: JsonApi.IJsonApiObject;
+    /**
      * Headers received from the API call
      *
      * @type {IResponseHeaders}
