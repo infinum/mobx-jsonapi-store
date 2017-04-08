@@ -109,7 +109,7 @@ describe('Networking', () => {
         data: JSON.stringify({
           data: record.toJsonApi(),
         }),
-        method: 'PUT',
+        method: 'PATCH',
         name: 'event-1',
         url: 'event/1',
       });

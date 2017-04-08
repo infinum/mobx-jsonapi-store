@@ -144,7 +144,7 @@ export function update(
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse> {
-  return config.baseFetch('PUT', url, data, headers)
+  return config.baseFetch('PATCH', url, data, headers)
     .then((response: IRawResponse) => new LibResponse(response, store, options));
 }
 

@@ -95,7 +95,7 @@ exports.create = create;
  * @returns {Promise<Response>} Resolves with a Response object
  */
 function update(store, url, data, headers, options) {
-    return exports.config.baseFetch('PUT', url, data, headers)
+    return exports.config.baseFetch('PATCH', url, data, headers)
         .then(function (response) { return new Response_1.Response(response, store, options); });
 }
 exports.update = update;
