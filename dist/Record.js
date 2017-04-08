@@ -16,7 +16,16 @@ var utils_1 = require("./utils");
 var Record = (function (_super) {
     __extends(Record, _super);
     function Record() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /**
+         * Cache link fetch requests
+         *
+         * @private
+         * @type {IDictionary<Promise<Response>>}
+         * @memberOf Record
+         */
+        _this.__linkCache = {};
+        return _this;
     }
     /**
      * Get record relationship links
@@ -47,6 +56,23 @@ var Record = (function (_super) {
      */
     Record.prototype.getLinks = function () {
         return this.__internal && this.__internal.links;
+    };
+    /**
+     * Fetch a record link
+     *
+     * @param {string} name Name of the link
+     * @param {IRequestOptions} [options] Server options
+     * @returns {Promise<Response>} Response promise
+     *
+     * @memberOf Record
+     */
+    Record.prototype.fetchLink = function (name, options) {
+        if (!(name in this.__linkCache)) {
+            var link = ('links' in this.__internal && name in this.__internal.links) ?
+                this.__internal.links[name] : null;
+            this.__linkCache[name] = NetworkUtils_1.fetchLink(link, this.__collection, options && options.headers, options);
+        }
+        return this.__linkCache[name];
     };
     Object.defineProperty(Record.prototype, "__persisted", {
         /**

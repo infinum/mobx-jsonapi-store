@@ -117,3 +117,20 @@ function remove(store, url, headers, options) {
         .then(function (response) { return new Response_1.Response(response, store, options); });
 }
 exports.remove = remove;
+/**
+ * Fetch a link from the server
+ *
+ * @export
+ * @param {JsonApi.ILink} link Link URL or a link object
+ * @param {Store} store Store that will be used to save the response
+ * @param {IDictionary<string>} [requestHeaders] Request headers
+ * @param {IRequestOptions} [options] Server options
+ * @returns {Promise<LibResponse>} Response promise
+ */
+function fetchLink(link, store, requestHeaders, options) {
+    var href = typeof link === 'object' ? link.href : link;
+    return link
+        ? read(store, href, requestHeaders, options)
+        : Promise.resolve(new Response_1.Response({ data: null }, store));
+}
+exports.fetchLink = fetchLink;

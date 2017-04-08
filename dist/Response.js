@@ -18,7 +18,7 @@ var Response = (function () {
         this.data = store.sync(response.data);
         this.meta = (response.data && response.data.meta) || {};
         this.links = (response.data && response.data.links) || {};
-        this.jsonapi = response.data.jsonapi;
+        this.jsonapi = (response.data && response.data.jsonapi) || {};
         this.headers = response.headers;
         this.requestHeaders = response.requestHeaders;
         this.error = (response.data && response.data.errors) || response.error;
@@ -41,11 +41,7 @@ var Response = (function () {
     Response.prototype.__fetchLink = function (name) {
         if (!this.__cache[name]) {
             var link = name in this.links ? this.links[name] : null;
-            var href = typeof link === 'object' ? link.href : link;
-            var res = link
-                ? NetworkUtils_1.read(this.__store, href, this.requestHeaders, this.__options)
-                : Promise.resolve(new Response({ data: null }, this.__store));
-            this.__cache[name] = res;
+            this.__cache[name] = NetworkUtils_1.fetchLink(link, this.__store, this.requestHeaders, this.__options);
         }
         return this.__cache[name];
     };

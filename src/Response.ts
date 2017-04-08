@@ -11,7 +11,7 @@ import * as JsonApi from './interfaces/JsonApi';
 import {NetworkStore} from './NetworkStore';
 import {Store} from './Store';
 
-import {read} from './NetworkUtils';
+import {fetchLink, read} from './NetworkUtils';
 
 export class Response {
 
@@ -136,7 +136,7 @@ export class Response {
     this.data = store.sync(response.data);
     this.meta = (response.data && response.data.meta) || {};
     this.links = (response.data && response.data.links) || {};
-    this.jsonapi = response.data.jsonapi;
+    this.jsonapi = (response.data && response.data.jsonapi) || {};
     this.headers = response.headers;
     this.requestHeaders = response.requestHeaders;
     this.error = (response.data && response.data.errors) || response.error;
@@ -163,11 +163,7 @@ export class Response {
   private __fetchLink(name) {
     if (!this.__cache[name]) {
       const link: JsonApi.ILink = name in this.links ? this.links[name] : null;
-      const href = typeof link === 'object' ? link.href : link;
-      const res = link
-        ? read(this.__store, href, this.requestHeaders, this.__options)
-        : Promise.resolve(new Response({data: null}, this.__store));
-      this.__cache[name] = res;
+      this.__cache[name] = fetchLink(link, this.__store, this.requestHeaders, this.__options);
     }
     return this.__cache[name];
   }

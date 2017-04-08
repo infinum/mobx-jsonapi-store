@@ -2,6 +2,7 @@ import { Model } from 'mobx-collection-store';
 import IDictionary from './interfaces/IDictionary';
 import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
+import { Response } from './Response';
 export declare class Record extends Model {
     /**
      * Type property of the record class
@@ -34,6 +35,14 @@ export declare class Record extends Model {
      */
     private __internal;
     /**
+     * Cache link fetch requests
+     *
+     * @private
+     * @type {IDictionary<Promise<Response>>}
+     * @memberOf Record
+     */
+    private __linkCache;
+    /**
      * Get record relationship links
      *
      * @returns {IDictionary<JsonApi.IRelationship>} Record relationship links
@@ -57,6 +66,16 @@ export declare class Record extends Model {
      * @memberOf Record
      */
     getLinks(): IDictionary<JsonApi.ILink>;
+    /**
+     * Fetch a record link
+     *
+     * @param {string} name Name of the link
+     * @param {IRequestOptions} [options] Server options
+     * @returns {Promise<Response>} Response promise
+     *
+     * @memberOf Record
+     */
+    fetchLink(name: string, options?: IRequestOptions): Promise<Response>;
     /**
      * Get the persisted state
      *

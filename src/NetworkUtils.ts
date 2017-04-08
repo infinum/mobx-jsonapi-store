@@ -1,6 +1,8 @@
+import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
 import IRequestOptions from './interfaces/IRequestOptions';
+import * as JsonApi from './interfaces/JsonApi';
 
 import {Response as LibResponse} from './Response';
 import {Store} from './Store';
@@ -169,4 +171,26 @@ export function remove(
 ): Promise<LibResponse> {
   return config.baseFetch('DELETE', url, null, headers)
     .then((response: IRawResponse) => new LibResponse(response, store, options));
+}
+
+/**
+ * Fetch a link from the server
+ *
+ * @export
+ * @param {JsonApi.ILink} link Link URL or a link object
+ * @param {Store} store Store that will be used to save the response
+ * @param {IDictionary<string>} [requestHeaders] Request headers
+ * @param {IRequestOptions} [options] Server options
+ * @returns {Promise<LibResponse>} Response promise
+ */
+export function fetchLink(
+  link: JsonApi.ILink,
+  store: Store,
+  requestHeaders?: IDictionary<string>,
+  options?: IRequestOptions,
+): Promise<LibResponse> {
+  const href = typeof link === 'object' ? link.href : link;
+  return link
+    ? read(store, href, requestHeaders, options)
+    : Promise.resolve(new LibResponse({data: null}, store));
 }

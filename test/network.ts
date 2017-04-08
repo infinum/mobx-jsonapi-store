@@ -32,7 +32,6 @@ describe('Networking', () => {
       expect(events.data[0]['imageMeta']['foo']).to.equal('bar');
 
       const data = events.data[0].toJsonApi();
-      console.log(data)
       expect(data.id).to.equal(1);
       expect(data.type).to.equal('event');
       expect(data.attributes.title).to.equal('Test 1');
@@ -116,6 +115,27 @@ describe('Networking', () => {
       const events1b = await events2.prev;
       expect(events1).to.not.equal(events);
       expect(events1).to.equal(events1b);
+    });
+
+    it('should support record links', async () => {
+      mockApi({
+        name: 'event-1',
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event');
+      const event = events.data as Record;
+
+      mockApi({
+        name: 'image-1',
+        url: 'images/1',
+      });
+
+      const image = await event.fetchLink('image');
+      expect(image.data['id']).to.equal(1);
+      expect(image.data['type']).to.equal('image');
+      expect(image.data['url']).to.equal('http://example.com/1.jpg');
     });
   });
 

@@ -4,7 +4,7 @@ import IDictionary from './interfaces/IDictionary';
 import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
 
-import {config, create, remove, update} from './NetworkUtils';
+import {config, create, fetchLink, remove, update} from './NetworkUtils';
 import {Response} from './Response';
 import {Store} from './Store';
 import {mapItems, objectForEach} from './utils';
@@ -53,6 +53,15 @@ export class Record extends Model {
   private __internal: IInternal;
 
   /**
+   * Cache link fetch requests
+   *
+   * @private
+   * @type {IDictionary<Promise<Response>>}
+   * @memberOf Record
+   */
+  private __linkCache: IDictionary<Promise<Response>> = {};
+
+  /**
    * Get record relationship links
    *
    * @returns {IDictionary<JsonApi.IRelationship>} Record relationship links
@@ -83,6 +92,25 @@ export class Record extends Model {
    */
   public getLinks(): IDictionary<JsonApi.ILink> {
     return this.__internal && this.__internal.links;
+  }
+
+  /**
+   * Fetch a record link
+   *
+   * @param {string} name Name of the link
+   * @param {IRequestOptions} [options] Server options
+   * @returns {Promise<Response>} Response promise
+   *
+   * @memberOf Record
+   */
+  public fetchLink(name: string, options?: IRequestOptions): Promise<Response> {
+    if (!(name in this.__linkCache)) {
+      const link = ('links' in this.__internal && name in this.__internal.links) ?
+        this.__internal.links[name] : null;
+      this.__linkCache[name] = fetchLink(link, this.__collection as Store, options && options.headers, options);
+    }
+
+    return this.__linkCache[name];
   }
 
   /**
