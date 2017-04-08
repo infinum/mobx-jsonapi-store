@@ -89,18 +89,15 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 ### [Creating Resources](http://jsonapi.org/format/#crud-creating)
 * Creating resources is supported using the `save()` method on the record if the record was created on the client ✅
 * Client-Generated IDs are supported - just make sure you're using a valid UUID generator ✅
-* Response status is not fully implemented (needs more work) [#23](https://github.com/infinum/mobx-jsonapi-store/issues/23) ❌
 
 ### [Updating Resources](http://jsonapi.org/format/#crud-updating)
 * Updating resources is supported using the `save()` method on the record if the record was not created on the client ✅
-* Response status is not fully implemented (needs more work) [#23](https://github.com/infinum/mobx-jsonapi-store/issues/23) ❌
 
 ### [Updating Relationships](http://jsonapi.org/format/#crud-updating-relationships)
 * Direct update of relationships is not yet supported [#24](https://github.com/infinum/mobx-jsonapi-store/issues/24) ❌
 
 ### [Deleting Resources](http://jsonapi.org/format/#crud-deleting)
 * The resource can be deleted with the `remove()` method on the record ✅
-* Response status is not fully implemented (needs more work) [#23](https://github.com/infinum/mobx-jsonapi-store/issues/23) ❌
 
 ## [Query Parameters](http://jsonapi.org/format/#query-parameters)
 * All current communication with the server is using the required naming method ✅
