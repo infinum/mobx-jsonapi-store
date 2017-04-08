@@ -1,4 +1,5 @@
 import { IModel } from 'mobx-collection-store';
+import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
 import IRequestOptions from './interfaces/IRequestOptions';
@@ -26,7 +27,7 @@ export declare class Response {
      * @type {Object}
      * @memberOf Response
      */
-    links?: Object;
+    links?: IDictionary<JsonApi.ILink>;
     /**
      * The JSON API object returned by the server
      *

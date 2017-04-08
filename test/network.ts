@@ -76,7 +76,8 @@ describe('Networking', () => {
       expect(events.data['length']).to.equal(4);
       expect(events.data instanceof Array && events.data[0]['title']).to.equal('Test 1');
       expect(events.links).to.be.an('object');
-      expect(events.links['next']).to.equal('http://example.com/event?page=2');
+      expect(events.links['next']['href']).to.equal('http://example.com/event?page=2');
+      expect(events.links['next']['meta'].foo).to.equal('bar');
 
       mockApi({
         name: 'events-2',

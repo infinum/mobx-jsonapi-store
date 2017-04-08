@@ -37,7 +37,7 @@ export class Response {
    * @type {Object}
    * @memberOf Response
    */
-  public links?: Object;
+  public links?: IDictionary<JsonApi.ILink>;
 
   /**
    * The JSON API object returned by the server
@@ -162,8 +162,10 @@ export class Response {
    */
   private __fetchLink(name) {
     if (!this.__cache[name]) {
-      const res = name in this.links
-        ? read(this.__store, this.links[name], this.requestHeaders, this.__options)
+      const link: JsonApi.ILink = name in this.links ? this.links[name] : null;
+      const href = typeof link === 'object' ? link.href : link;
+      const res = link
+        ? read(this.__store, href, this.requestHeaders, this.__options)
         : Promise.resolve(new Response({data: null}, this.__store));
       this.__cache[name] = res;
     }

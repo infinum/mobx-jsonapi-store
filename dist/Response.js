@@ -40,8 +40,10 @@ var Response = (function () {
      */
     Response.prototype.__fetchLink = function (name) {
         if (!this.__cache[name]) {
-            var res = name in this.links
-                ? NetworkUtils_1.read(this.__store, this.links[name], this.requestHeaders, this.__options)
+            var link = name in this.links ? this.links[name] : null;
+            var href = typeof link === 'object' ? link.href : link;
+            var res = link
+                ? NetworkUtils_1.read(this.__store, href, this.requestHeaders, this.__options)
                 : Promise.resolve(new Response({ data: null }, this.__store));
             this.__cache[name] = res;
         }

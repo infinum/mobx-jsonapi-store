@@ -33,6 +33,11 @@
   }],
   "links": {
     "self": "http://example.com/event",
-    "next": "http://example.com/event?page=2"
+    "next": {
+      "href": "http://example.com/event?page=2",
+      "meta": {
+        "foo": "bar"
+      }
+    }
   }
 }
