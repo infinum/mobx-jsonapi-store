@@ -43,9 +43,13 @@ function flattenRecord(record) {
         data[key] = record.attributes[key];
     });
     objectForEach(record.relationships, function (key) {
-        if (record.relationships[key].links) {
+        var rel = record.relationships[key];
+        if (rel.meta) {
+            data[key + "Meta"] = rel.meta;
+        }
+        if (rel.links) {
             data.__internal.relationships = data.__internal.relationships || {};
-            data.__internal.relationships[key] = record.relationships[key].links;
+            data.__internal.relationships[key] = rel.links;
         }
     });
     objectForEach(record.links, function (key) {

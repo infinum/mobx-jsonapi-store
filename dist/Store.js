@@ -148,7 +148,7 @@ var Store = (function (_super) {
             if (items) {
                 var models = utils_1.mapItems(items, function (_a) {
                     var id = _a.id, type = _a.type;
-                    return _this.find(type, id);
+                    return _this.find(type, id) || id;
                 });
                 record.assignRef(ref, models, obj.type);
             }

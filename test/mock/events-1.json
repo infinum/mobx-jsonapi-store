@@ -8,6 +8,17 @@
     },
     "meta": {
       "createdAt": "2017-03-19T16:00:00.000Z"
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "image",
+          "id": "1"
+        },
+        "meta": {
+          "foo": "bar"
+        }
+      }
     }
   }, {
     "id": 2,

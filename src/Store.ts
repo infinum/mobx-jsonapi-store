@@ -146,7 +146,7 @@ export class Store extends NetworkStore {
     refs.forEach((ref) => {
       const items = obj.relationships[ref].data;
       if (items) {
-        const models = mapItems<IModel>(items, ({id, type}) => this.find(type, id));
+        const models = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
         record.assignRef(ref, models, obj.type);
       }
     });

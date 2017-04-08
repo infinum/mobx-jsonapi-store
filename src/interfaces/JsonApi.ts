@@ -31,6 +31,7 @@ interface IError {
 interface IRelationship {
   data?: IIdentifier|Array<IIdentifier>;
   links?: IDictionary<ILink>;
+  meta?: IDictionary<any>;
 }
 
 interface IRecord extends IIdentifier {
@@ -38,7 +39,7 @@ interface IRecord extends IIdentifier {
 
   relationships?: IDictionary<IRelationship>;
   links?: IDictionary<ILink>;
-  meta?: IDictionary<ILink>;
+  meta?: IDictionary<any>;
 }
 
 interface IResponse {

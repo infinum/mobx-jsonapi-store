@@ -28,6 +28,8 @@ describe('Networking', () => {
       expect(events.data['length']).to.equal(4);
       expect(events.data instanceof Array && events.data[0]['title']).to.equal('Test 1');
       expect(events.data[0].getMeta().createdAt).to.equal('2017-03-19T16:00:00.000Z');
+      expect(events.data[0]['imageId']).to.equal('1');
+      expect(events.data[0]['imageMeta']['foo']).to.equal('bar');
     });
 
     it('should save the jsonapi data', async () => {

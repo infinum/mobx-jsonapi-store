@@ -29,12 +29,13 @@ interface IError {
 interface IRelationship {
     data?: IIdentifier | Array<IIdentifier>;
     links?: IDictionary<ILink>;
+    meta?: IDictionary<any>;
 }
 interface IRecord extends IIdentifier {
     attributes: IDictionary<any>;
     relationships?: IDictionary<IRelationship>;
     links?: IDictionary<ILink>;
-    meta?: IDictionary<ILink>;
+    meta?: IDictionary<any>;
 }
 interface IResponse {
     data?: IRecord | Array<IRecord>;

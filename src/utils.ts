@@ -47,9 +47,15 @@ export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   });
 
   objectForEach(record.relationships, (key) => {
-    if (record.relationships[key].links) {
+    const rel = record.relationships[key];
+
+    if (rel.meta) {
+      data[`${key}Meta`] = rel.meta;
+    }
+
+    if (rel.links) {
       data.__internal.relationships = data.__internal.relationships || {};
-      data.__internal.relationships[key] = record.relationships[key].links;
+      data.__internal.relationships[key] = rel.links;
     }
   });
 
