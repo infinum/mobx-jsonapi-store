@@ -12,6 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_collection_store_1 = require("mobx-collection-store");
 var NetworkUtils_1 = require("./NetworkUtils");
+var utils_1 = require("./utils");
 var Record = (function (_super) {
     __extends(Record, _super);
     function Record() {
@@ -81,14 +82,28 @@ var Record = (function (_super) {
      * @memberOf Record
      */
     Record.prototype.toJsonApi = function () {
+        var _this = this;
         var attributes = this.toJS();
         delete attributes.id;
         delete attributes.type;
-        return {
+        var data = {
             attributes: attributes,
             id: this.__persisted ? this.id : undefined,
             type: this.type,
         };
+        // tslint:disable-next-line:no-string-literal
+        var refs = this['__refs'];
+        utils_1.objectForEach(refs, function (key) {
+            data.relationships = data.relationships || {};
+            var rel = utils_1.mapItems(_this[key + "Id"], function (id) { return ({ id: id, type: refs[key] }); });
+            data.relationships[key] = { data: rel };
+            delete data.attributes[key];
+            delete data.attributes[key + "Id"];
+            delete data.attributes[key + "Meta"];
+        });
+        delete data.attributes.__internal;
+        delete data.attributes.__type__;
+        return data;
     };
     /**
      * Saves (creates or updates) the record to the server

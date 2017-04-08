@@ -1,6 +1,13 @@
 import IDictionary from './interfaces/IDictionary';
 import * as JsonApi from './interfaces/JsonApi';
 /**
+ * Iterate trough object keys
+ *
+ * @param {Object} obj - Object that needs to be iterated
+ * @param {Function} fn - Function that should be called for every iteration
+ */
+export declare function objectForEach(obj: Object, fn: Function): void;
+/**
  * Iterate trough one item or array of items and call the defined function
  *
  * @export

@@ -13,6 +13,7 @@ function objectForEach(obj, fn) {
         }
     }
 }
+exports.objectForEach = objectForEach;
 /**
  * Iterate trough one item or array of items and call the defined function
  *

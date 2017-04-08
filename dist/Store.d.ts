@@ -87,7 +87,7 @@ export declare class Store extends NetworkStore {
      */
     private __updateRelationships(obj);
     /**
-     * Iterate trough JSNO API response models
+     * Iterate trough JSON API response models
      *
      * @private
      * @param {IJsonApiResponse} body - JSON API response

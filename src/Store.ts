@@ -147,13 +147,14 @@ export class Store extends NetworkStore {
       const items = obj.relationships[ref].data;
       if (items) {
         const models = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
-        record.assignRef(ref, models, obj.type);
+        const type = items instanceof Array ? items[0].type : items.type;
+        record.assignRef(ref, models, type);
       }
     });
   }
 
   /**
-   * Iterate trough JSNO API response models
+   * Iterate trough JSON API response models
    *
    * @private
    * @param {IJsonApiResponse} body - JSON API response

@@ -7,7 +7,7 @@ import * as JsonApi from './interfaces/JsonApi';
  * @param {Object} obj - Object that needs to be iterated
  * @param {Function} fn - Function that should be called for every iteration
  */
-function objectForEach(obj: Object, fn: Function): void {
+export function objectForEach(obj: Object, fn: Function): void {
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       fn(key);
