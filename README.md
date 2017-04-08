@@ -11,6 +11,8 @@ JSON API Store for MobX
 
 Don't need any [JSON API](http://jsonapi.org/) specific features? Check out [mobx-collection-store](https://github.com/infinum/mobx-collection-store).
 
+The complete list of supported JSON API features: [jsonapi.md](jsonapi.md)
+
 ## Basic example
 
 ```javascript
@@ -233,13 +235,8 @@ async function getAllUsers() {
 ```
 
 ## JSON API support
-* `data`
-* `included`
-* `relationships.data`
-* `relationships.links`
-* `meta`
-* `links`
-* `errors`
+* [The complete list of supported JSON API features](jsonapi.md)
+* [Milestone for the spec compliance](https://github.com/infinum/mobx-jsonapi-store/milestone/1)
 
 ## License
 
