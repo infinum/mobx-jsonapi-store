@@ -137,6 +137,28 @@ describe('Networking', () => {
       expect(image.data['type']).to.equal('image');
       expect(image.data['url']).to.equal('http://example.com/1.jpg');
     });
+
+    it('should support relationship link fetch', async () => {
+      mockApi({
+        name: 'events-1',
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event');
+      const event = events.data[0] as Record;
+
+      mockApi({
+        name: 'image-1',
+        url: 'images/1',
+      });
+
+      const image = await event.fetchRelationshipLink('image', 'self');
+      expect(image.data['id']).to.equal(1);
+      expect(image.data['type']).to.equal('image');
+      expect(image.data['url']).to.equal('http://example.com/1.jpg');
+
+    });
   });
 
   describe('updates', () => {

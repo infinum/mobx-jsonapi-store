@@ -41,6 +41,14 @@ export declare class Record extends Model {
      * @type {IDictionary<Promise<Response>>}
      * @memberOf Record
      */
+    private __relationshipLinkCache;
+    /**
+     * Cache link fetch requests
+     *
+     * @private
+     * @type {IDictionary<Promise<Response>>}
+     * @memberOf Record
+     */
     private __linkCache;
     /**
      * Get record relationship links
@@ -50,6 +58,17 @@ export declare class Record extends Model {
      * @memberOf Record
      */
     getRelationshipLinks(): IDictionary<JsonApi.IRelationship>;
+    /**
+     * Fetch a relationship link
+     *
+     * @param {string} relationship Name of the relationship
+     * @param {string} name Name of the link
+     * @param {IRequestOptions} [options] Server options
+     * @returns {Promise<Response>} Response promise
+     *
+     * @memberOf Record
+     */
+    fetchRelationshipLink(relationship: string, name: string, options?: IRequestOptions): Promise<Response>;
     /**
      * Get record metadata
      *

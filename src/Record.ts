@@ -59,6 +59,15 @@ export class Record extends Model {
    * @type {IDictionary<Promise<Response>>}
    * @memberOf Record
    */
+  private __relationshipLinkCache: IDictionary<IDictionary<Promise<Response>>> = {};
+
+  /**
+   * Cache link fetch requests
+   *
+   * @private
+   * @type {IDictionary<Promise<Response>>}
+   * @memberOf Record
+   */
   private __linkCache: IDictionary<Promise<Response>> = {};
 
   /**
@@ -70,6 +79,33 @@ export class Record extends Model {
    */
   public getRelationshipLinks(): IDictionary<JsonApi.IRelationship> {
     return this.__internal && this.__internal.relationships;
+  }
+
+  /**
+   * Fetch a relationship link
+   *
+   * @param {string} relationship Name of the relationship
+   * @param {string} name Name of the link
+   * @param {IRequestOptions} [options] Server options
+   * @returns {Promise<Response>} Response promise
+   *
+   * @memberOf Record
+   */
+  public fetchRelationshipLink(relationship: string, name: string, options?: IRequestOptions): Promise<Response> {
+    this.__relationshipLinkCache[relationship] = this.__relationshipLinkCache[relationship] || {};
+
+    if (!(name in this.__relationshipLinkCache)) {
+      const link = (
+        'relationships' in this.__internal &&
+        relationship in this.__internal.relationships &&
+        name in this.__internal.relationships[relationship]
+      ) ? this.__internal.relationships[relationship][name] : null;
+      const headers = options && options.headers;
+
+      this.__relationshipLinkCache[relationship][name] = fetchLink(link, this.__collection as Store, headers, options);
+    }
+
+    return this.__relationshipLinkCache[relationship][name];
   }
 
   /**

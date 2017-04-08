@@ -24,6 +24,14 @@ var Record = (function (_super) {
          * @type {IDictionary<Promise<Response>>}
          * @memberOf Record
          */
+        _this.__relationshipLinkCache = {};
+        /**
+         * Cache link fetch requests
+         *
+         * @private
+         * @type {IDictionary<Promise<Response>>}
+         * @memberOf Record
+         */
         _this.__linkCache = {};
         return _this;
     }
@@ -36,6 +44,27 @@ var Record = (function (_super) {
      */
     Record.prototype.getRelationshipLinks = function () {
         return this.__internal && this.__internal.relationships;
+    };
+    /**
+     * Fetch a relationship link
+     *
+     * @param {string} relationship Name of the relationship
+     * @param {string} name Name of the link
+     * @param {IRequestOptions} [options] Server options
+     * @returns {Promise<Response>} Response promise
+     *
+     * @memberOf Record
+     */
+    Record.prototype.fetchRelationshipLink = function (relationship, name, options) {
+        this.__relationshipLinkCache[relationship] = this.__relationshipLinkCache[relationship] || {};
+        if (!(name in this.__relationshipLinkCache)) {
+            var link = ('relationships' in this.__internal &&
+                relationship in this.__internal.relationships &&
+                name in this.__internal.relationships[relationship]) ? this.__internal.relationships[relationship][name] : null;
+            var headers = options && options.headers;
+            this.__relationshipLinkCache[relationship][name] = NetworkUtils_1.fetchLink(link, this.__collection, headers, options);
+        }
+        return this.__relationshipLinkCache[relationship][name];
     };
     /**
      * Get record metadata

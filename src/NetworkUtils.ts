@@ -189,8 +189,11 @@ export function fetchLink(
   requestHeaders?: IDictionary<string>,
   options?: IRequestOptions,
 ): Promise<LibResponse> {
-  const href = typeof link === 'object' ? link.href : link;
-  return link
-    ? read(store, href, requestHeaders, options)
-    : Promise.resolve(new LibResponse({data: null}, store));
+  if (link) {
+    const href: string = typeof link === 'object' ? link.href : link;
+    if (href) {
+      return read(store, href, requestHeaders, options);
+    }
+  }
+  return Promise.resolve(new LibResponse({data: null}, store));
 }

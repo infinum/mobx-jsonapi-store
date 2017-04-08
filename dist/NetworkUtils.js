@@ -128,9 +128,12 @@ exports.remove = remove;
  * @returns {Promise<LibResponse>} Response promise
  */
 function fetchLink(link, store, requestHeaders, options) {
-    var href = typeof link === 'object' ? link.href : link;
-    return link
-        ? read(store, href, requestHeaders, options)
-        : Promise.resolve(new Response_1.Response({ data: null }, store));
+    if (link) {
+        var href = typeof link === 'object' ? link.href : link;
+        if (href) {
+            return read(store, href, requestHeaders, options);
+        }
+    }
+    return Promise.resolve(new Response_1.Response({ data: null }, store));
 }
 exports.fetchLink = fetchLink;

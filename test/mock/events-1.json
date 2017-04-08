@@ -15,6 +15,9 @@
           "type": "image",
           "id": "1"
         },
+        "links": {
+          "self": "http://example.com/images/1"
+        },
         "meta": {
           "foo": "bar"
         }
