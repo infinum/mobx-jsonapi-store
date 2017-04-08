@@ -1,5 +1,6 @@
 import {Collection} from 'mobx-collection-store';
 
+import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
 import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
@@ -33,8 +34,8 @@ export class NetworkStore extends Collection {
     data?: Object,
     headers: IHeaders,
   } {
-    const url = id ? `${config.baseUrl}${type}/${id}` : `${config.baseUrl}${type}`;
-    const headers = options ? options.headers : {};
+    const url: string = id ? `${config.baseUrl}${type}/${id}` : `${config.baseUrl}${type}`;
+    const headers: IDictionary<string> = options ? options.headers : {};
 
     // TODO: Handle other options (include, filter, sort)
     return {data, headers, url};

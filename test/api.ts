@@ -71,7 +71,7 @@ export default function mockApi({
     mock = mock.query(query);
   }
 
-  return mock.reply(200, () => {
+  return mock.reply(status, () => {
     if (isFunction(responseFn)) {
       return responseFn();
     }

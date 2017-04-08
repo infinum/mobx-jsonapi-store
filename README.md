@@ -66,10 +66,10 @@ npm install mobx-jsonapi-store
 * `static type` - Type of the record
 * `static defaults` - An object with default record properties
 * `getRelationshipLinks()` - Get relationship links
-* `fetchRelationshipLink(relationshipName, linkName, [options])` - Fetch relationship link
+* `fetchRelationshipLink(relationshipName, linkName, [options], [force])` - Fetch relationship link
 * `getMeta()` - Get record meta object
 * `getLinks()` - Get record links
-* `fetchLink(linkName, [options])` - Fetch record link
+* `fetchLink(linkName, [options], [force])` - Fetch record link
 * `update(data)` - Update the record with new data (object)
 * `assign(key, value)` - Method used to add a new property or update an existing one
 * `assignRef(key, value, [type])` - Assign a new reference to the record

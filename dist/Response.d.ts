@@ -85,6 +85,13 @@ export declare class Response {
      */
     last: Promise<Response>;
     /**
+     * Received HTTP status
+     *
+     * @type {number}
+     * @memberOf Response
+     */
+    status: number;
+    /**
      * Related Store
      *
      * @private
@@ -101,6 +108,14 @@ export declare class Response {
      */
     private __options;
     /**
+     * Original server response
+     *
+     * @private
+     * @type {IRawResponse}
+     * @memberOf Response
+     */
+    private __response;
+    /**
      * Cache used for the link requests
      *
      * @private
@@ -108,7 +123,16 @@ export declare class Response {
      * @memberOf Response
      */
     private __cache;
-    constructor(response: IRawResponse, store: Store, options?: IRequestOptions);
+    constructor(response: IRawResponse, store: Store, options?: IRequestOptions, overrideData?: IModel | Array<IModel>);
+    /**
+     * Replace the response record with a different record. Used to replace a record while keeping the same reference
+     *
+     * @param {IModel} data New data
+     * @returns {Response}
+     *
+     * @memberOf Response
+     */
+    replaceData(data: IModel): Response;
     /**
      * Function called when a link is beeing fetched. The returned value is cached
      *

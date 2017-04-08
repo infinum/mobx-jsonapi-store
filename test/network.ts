@@ -165,11 +165,11 @@ describe('Networking', () => {
     it('should update a record', async () => {
       mockApi({
         name: 'event-1',
-        url: 'event/1',
+        url: 'event/12345',
       });
 
       const store = new Store();
-      const events = await store.fetch('event', 1);
+      const events = await store.fetch('event', 12345);
 
       const record = events.data as Record;
 
@@ -179,7 +179,7 @@ describe('Networking', () => {
         }),
         method: 'PATCH',
         name: 'event-1',
-        url: 'event/1',
+        url: 'event/12345',
       });
 
       const updated = await record.save();
@@ -190,11 +190,11 @@ describe('Networking', () => {
     it('should update a record with self link', async () => {
       mockApi({
         name: 'event-1b',
-        url: 'event/1',
+        url: 'event/12345',
       });
 
       const store = new Store();
-      const events = await store.fetch('event', 1);
+      const events = await store.fetch('event', 12345);
 
       const record = events.data as Record;
 
@@ -241,6 +241,86 @@ describe('Networking', () => {
       expect(updated).to.equal(record);
     });
 
+    it('should add a record with queue (201)', async () => {
+      const store = new Store();
+      const record = new Record({
+        title: 'Example title',
+        type: 'event',
+      });
+      store.add(record);
+
+      mockApi({
+        data: JSON.stringify({
+          data: record.toJsonApi(),
+        }),
+        method: 'POST',
+        name: 'queue-1',
+        status: 201,
+        url: 'event',
+      });
+
+      const data = record.toJsonApi();
+      expect(record['title']).to.equal('Example title');
+      expect(data.id).to.be.an('undefined');
+      expect(data.type).to.equal('event');
+      expect(data.attributes.id).to.be.an('undefined');
+      expect(data.attributes.type).to.be.an('undefined');
+
+      const queue = await record.save();
+      expect(queue.type).to.equal('queue');
+
+      mockApi({
+        name: 'queue-1',
+        url: 'events/queue-jobs/123',
+      });
+
+      const queue2 = await queue.fetchLink('self', null, true);
+      expect(queue2.data['type']).to.equal('queue');
+
+      mockApi({
+        name: 'event-1',
+        url: 'events/queue-jobs/123',
+      });
+
+      const updatedRes = await queue.fetchLink('self', null, true);
+      const updated = updatedRes.data as Record;
+      expect(updated.type).to.equal('event');
+
+      expect(updated['title']).to.equal('Test 1');
+      expect(updated.id).to.equal(12345);
+      expect(updated).to.equal(record);
+    });
+
+    it('should add a record with response 204', async () => {
+      const store = new Store();
+      const record = new Record({
+        id: 123,
+        title: 'Example title',
+        type: 'event',
+      });
+      store.add(record);
+
+      mockApi({
+        data: JSON.stringify({
+          data: record.toJsonApi(),
+        }),
+        method: 'POST',
+        responseFn: () => null,
+        status: 204,
+        url: 'event',
+      });
+
+      const data = record.toJsonApi();
+      expect(record['title']).to.equal('Example title');
+      expect(data.type).to.equal('event');
+      expect(data.attributes.id).to.be.an('undefined');
+      expect(data.attributes.type).to.be.an('undefined');
+
+      const updated = await record.save();
+      expect(updated['title']).to.equal('Example title');
+      expect(updated).to.equal(record);
+    });
+
     it('should add a record with client-generated id', async () => {
       const store = new Store();
 
@@ -280,18 +360,18 @@ describe('Networking', () => {
     it('should remove a record', async () => {
       mockApi({
         name: 'event-1',
-        url: 'event/1',
+        url: 'event/12345',
       });
 
       const store = new Store();
-      const events = await store.fetch('event', 1);
+      const events = await store.fetch('event', 12345);
 
       const record = events.data as Record;
 
       mockApi({
         method: 'DELETE',
         name: 'event-1',
-        url: 'event/1',
+        url: 'event/12345',
       });
 
       expect(store.findAll('event').length).to.equal(1);
@@ -319,18 +399,18 @@ describe('Networking', () => {
     it('should remove a record from the store', async () => {
       mockApi({
         name: 'event-1',
-        url: 'event/1',
+        url: 'event/12345',
       });
 
       const store = new Store();
-      const events = await store.fetch('event', 1);
+      const events = await store.fetch('event', 12345);
 
       const record = events.data as Record;
 
       mockApi({
         method: 'DELETE',
         name: 'event-1',
-        url: 'event/1',
+        url: 'event/12345',
       });
 
       expect(store.findAll('event').length).to.equal(1);

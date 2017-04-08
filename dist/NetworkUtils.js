@@ -40,6 +40,12 @@ exports.config = {
             headers = response.headers;
             return response.json();
         })
+            .catch(function (e) {
+            if (status === 204) {
+                return null;
+            }
+            throw e;
+        })
             .then(function (responseData) {
             data = responseData;
             if (status >= 400) {

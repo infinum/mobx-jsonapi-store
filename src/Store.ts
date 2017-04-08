@@ -2,6 +2,8 @@ import {action} from 'mobx';
 
 import {Collection, IModel} from 'mobx-collection-store';
 
+import IDictionary from './interfaces/IDictionary';
+import IHeaders from './interfaces/IHeaders';
 import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
 
@@ -10,6 +12,12 @@ import {read, remove} from './NetworkUtils';
 import {Record} from './Record';
 import {Response} from './Response';
 import {flattenRecord, mapItems} from './utils';
+
+interface IQueryParams {
+  url: string;
+  data?: Object;
+  headers: IHeaders;
+}
 
 export class Store extends NetworkStore {
 
@@ -31,7 +39,7 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   @action public sync(body: JsonApi.IResponse): IModel|Array<IModel> {
-    const data = this.__iterateEntries(body, this.__addRecord.bind(this));
+    const data: IModel|Array<IModel> = this.__iterateEntries(body, this.__addRecord.bind(this));
     this.__iterateEntries(body, this.__updateRelationships.bind(this));
     return data;
   }
@@ -48,7 +56,7 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   public fetch(type: string, id: number|string, force?: boolean, options?: IRequestOptions): Promise<Response> {
-    const query = this.__prepareQuery(type, id, null, options);
+    const query: IQueryParams = this.__prepareQuery(type, id, null, options);
     return read(this, query.url, query.headers, options).then(this.__handleErrors);
   }
 
@@ -63,7 +71,7 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   public fetchAll(type: string, force?: boolean, options?: IRequestOptions): Promise<Response> {
-    const query = this.__prepareQuery(type, null, null, options);
+    const query: IQueryParams = this.__prepareQuery(type, null, null, options);
     return read(this, query.url, query.headers, options).then(this.__handleErrors);
   }
 
@@ -78,7 +86,7 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   public destroy(type: string, id: number|string, options?: IRequestOptions): Promise<boolean> {
-    const model = this.find(type, id) as Record;
+    const model: Record = this.find(type, id) as Record;
     if (model) {
       return model.remove(options);
     }
@@ -113,8 +121,8 @@ export class Store extends NetworkStore {
   private __addRecord(obj: JsonApi.IRecord): Record {
     const {type, id} = obj;
     let record: Record = this.find(type, id) as Record;
-    const flattened = flattenRecord(obj);
-    const availableModels = this.static.types.map((item) => item.type);
+    const flattened: IDictionary<any> = flattenRecord(obj);
+    const availableModels: Array<string> = this.static.types.map((item) => item.type);
 
     if (record) {
       record.update(flattened);
@@ -138,16 +146,16 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   private __updateRelationships(obj: JsonApi.IRecord): void {
-    const record = this.find(obj.type, obj.id);
+    const record: IModel = this.find(obj.type, obj.id);
     if (!record) {
       return;
     }
-    const refs = obj.relationships ? Object.keys(obj.relationships) : [];
-    refs.forEach((ref) => {
+    const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
+    refs.forEach((ref: string) => {
       const items = obj.relationships[ref].data;
       if (items) {
-        const models = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
-        const type = items instanceof Array ? items[0].type : items.type;
+        const models: IModel|Array<IModel> = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
+        const type: string = items instanceof Array ? items[0].type : items.type;
         record.assignRef(ref, models, type);
       }
     });

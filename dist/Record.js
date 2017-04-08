@@ -51,13 +51,15 @@ var Record = (function (_super) {
      * @param {string} relationship Name of the relationship
      * @param {string} name Name of the link
      * @param {IRequestOptions} [options] Server options
+     * @param {boolean} [force=false] Ignore the existing cache
      * @returns {Promise<Response>} Response promise
      *
      * @memberOf Record
      */
-    Record.prototype.fetchRelationshipLink = function (relationship, name, options) {
+    Record.prototype.fetchRelationshipLink = function (relationship, name, options, force) {
+        if (force === void 0) { force = false; }
         this.__relationshipLinkCache[relationship] = this.__relationshipLinkCache[relationship] || {};
-        if (!(name in this.__relationshipLinkCache)) {
+        if (!(name in this.__relationshipLinkCache) || force) {
             var link = ('relationships' in this.__internal &&
                 relationship in this.__internal.relationships &&
                 name in this.__internal.relationships[relationship]) ? this.__internal.relationships[relationship][name] : null;
@@ -91,17 +93,34 @@ var Record = (function (_super) {
      *
      * @param {string} name Name of the link
      * @param {IRequestOptions} [options] Server options
+     * @param {boolean} [force=false] Ignore the existing cache
      * @returns {Promise<Response>} Response promise
      *
      * @memberOf Record
      */
-    Record.prototype.fetchLink = function (name, options) {
-        if (!(name in this.__linkCache)) {
+    Record.prototype.fetchLink = function (name, options, force) {
+        var _this = this;
+        if (force === void 0) { force = false; }
+        if (!(name in this.__linkCache) || force) {
             var link = ('links' in this.__internal && name in this.__internal.links) ?
                 this.__internal.links[name] : null;
             this.__linkCache[name] = NetworkUtils_1.fetchLink(link, this.__collection, options && options.headers, options);
         }
-        return this.__linkCache[name];
+        var request = this.__linkCache[name];
+        // tslint:disable-next-line:no-string-literal
+        if (this['__queue__']) {
+            request = this.__linkCache[name].then(function (response) {
+                // tslint:disable-next-line:no-string-literal
+                var related = _this['__related__'];
+                var record = response.data;
+                if (record && record.type !== _this.type && record.type === related.type) {
+                    related.__persisted = true;
+                    return response.replaceData(related);
+                }
+                return response;
+            });
+        }
+        return request;
     };
     Object.defineProperty(Record.prototype, "__persisted", {
         /**
@@ -180,8 +199,21 @@ var Record = (function (_super) {
             if (response.error) {
                 throw response.error;
             }
-            _this.__persisted = true;
-            return response.data;
+            if (response.status === 204) {
+                _this.__persisted = true;
+                return _this;
+            }
+            else if (response.status === 201) {
+                response.data.update({
+                    __queue__: true,
+                    __related__: _this,
+                });
+                return response.data;
+            }
+            else {
+                _this.__persisted = true;
+                return response.replaceData(_this).data;
+            }
         });
     };
     /**

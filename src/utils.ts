@@ -47,7 +47,7 @@ export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   });
 
   objectForEach(record.relationships, (key) => {
-    const rel = record.relationships[key];
+    const rel: JsonApi.IRelationship = record.relationships[key];
 
     if (rel.meta) {
       data[`${key}Meta`] = rel.meta;
@@ -76,7 +76,7 @@ export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   return data;
 }
 
-export const isBrowser = (typeof window !== 'undefined');
+export const isBrowser: boolean = (typeof window !== 'undefined');
 
 /**
  * Assign objects to the target object
@@ -89,7 +89,7 @@ export const isBrowser = (typeof window !== 'undefined');
  * @returns
  */
 export function assign(target: Object, ...args: Array<Object>) {
-  args.forEach((nextSource) => {
+  args.forEach((nextSource: Object) => {
     if (nextSource != null) {
       for (const nextKey in nextSource) {
         if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {

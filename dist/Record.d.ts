@@ -72,11 +72,12 @@ export declare class Record extends Model {
      * @param {string} relationship Name of the relationship
      * @param {string} name Name of the link
      * @param {IRequestOptions} [options] Server options
+     * @param {boolean} [force=false] Ignore the existing cache
      * @returns {Promise<Response>} Response promise
      *
      * @memberOf Record
      */
-    fetchRelationshipLink(relationship: string, name: string, options?: IRequestOptions): Promise<Response>;
+    fetchRelationshipLink(relationship: string, name: string, options?: IRequestOptions, force?: boolean): Promise<Response>;
     /**
      * Get record metadata
      *
@@ -98,11 +99,12 @@ export declare class Record extends Model {
      *
      * @param {string} name Name of the link
      * @param {IRequestOptions} [options] Server options
+     * @param {boolean} [force=false] Ignore the existing cache
      * @returns {Promise<Response>} Response promise
      *
      * @memberOf Record
      */
-    fetchLink(name: string, options?: IRequestOptions): Promise<Response>;
+    fetchLink(name: string, options?: IRequestOptions, force?: boolean): Promise<Response>;
     /**
      * Get the persisted state
      *

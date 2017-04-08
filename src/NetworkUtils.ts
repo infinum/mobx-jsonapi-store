@@ -2,6 +2,7 @@ import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
 import IRequestOptions from './interfaces/IRequestOptions';
+import IResponseHeaders from './interfaces/IResponseHeaders';
 import * as JsonApi from './interfaces/JsonApi';
 
 import {Response as LibResponse} from './Response';
@@ -52,15 +53,15 @@ export const config: IConfigType = {
     body?: Object,
     requestHeaders?: IHeaders,
   ): Promise<IRawResponse> {
-    let data;
-    let status;
-    let headers;
+    let data: JsonApi.IResponse;
+    let status: number;
+    let headers: IResponseHeaders;
 
-    const request = Promise.resolve();
+    const request: Promise<void> = Promise.resolve();
 
     return request
       .then(() => {
-        const reqHeaders = assign({}, config.defaultHeaders, requestHeaders);
+        const reqHeaders: IHeaders = assign({}, config.defaultHeaders, requestHeaders) as IHeaders;
         return this.fetchReference(url, {
           body: JSON.stringify(body),
           headers: reqHeaders,
@@ -72,7 +73,13 @@ export const config: IConfigType = {
         headers = response.headers;
         return response.json();
       })
-      .then((responseData) => {
+      .catch((e: Error) => {
+        if (status === 204) {
+          return null;
+        }
+        throw e;
+      })
+      .then((responseData: JsonApi.IResponse) => {
         data = responseData;
         if (status >= 400) {
           throw {
