@@ -11,7 +11,6 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 
 ### [Server Responsibilities](http://jsonapi.org/format/#content-negotiation-servers)
 * If the server returns any HTTP status 400 or greater (including 406 and 415 mentioned in the spec), the request promise will reject. ✅
-* Right now it will just throw a generic "Invalid HTTP status" error. We might need to tweak this a little bit to pass the original error back. [#9](https://github.com/infinum/mobx-jsonapi-store/issues/9) ❌
 
 ## [Document Structure](http://jsonapi.org/format/#document-structure)
 
@@ -23,17 +22,17 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 * If the resource has `attributes`, they will be added to the record ✅
 * If the resource has `relationships`
   * `links` will be available using the `getRelationshipLinks()` method on the record ✅
-    * Right now, there is no direct way to fetch the links from the lib [#10](https://github.com/infinum/mobx-jsonapi-store/issues/10) ❌
+    * Use `fetchRelationshipLink(relationship, link)` to fetch the link ✅
   * `data` will be used to build the references between models
     * If the store already contains the referenced model or `includes` contains the model it will be available right away on the record: `record[relName]`. Also, the id is available on `record[relName + 'Id']`. ✅
     * If the model is "unknown", the id will be available on  `record[relName + 'Id']`. ✅
-  * `meta` is not supported right now, might be added as `record[relName + 'Meta']` [#11](https://github.com/infinum/mobx-jsonapi-store/issues/11) ❌
+  * `meta` is available on `record[relName + 'Meta']` ✅
 * If the resource has `links` or `meta`, they will be available with the `getLinks()` and `getMeta()` methods on the record ✅
-  * Right now, there is no direct way to fetch the links from the lib [#12](https://github.com/infinum/mobx-jsonapi-store/issues/12) ❌
+  * Use `fetchLink(link)` to fetch the link ✅
 
 ### [Resource Identifier Objects](http://jsonapi.org/format/#document-resource-identifier-objects)
 * The lib expects `id` and `type` ✅
-* The lib ignores the `meta` property [#11](https://github.com/infinum/mobx-jsonapi-store/issues/11) ❌
+* `meta` is available on `record[relName + 'Meta']` ✅
 
 ### [Compound Objects](http://jsonapi.org/format/#document-compound-documents)
 * The lib supports `included` property ✅
@@ -49,10 +48,9 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 * `response[linkName]` is a Promise that will resolve to the link content or reject with an error. In both cases, it will be a `Response` object ✅
   * The link is lazily evaluated, so the request won't be made until you access the property
   * The link can be a string with an URL ✅
-  * The link can't be an "link object" with `href` and `meta` [#13](https://github.com/infinum/mobx-jsonapi-store/issues/13) ❌
 
 ### [JSON API Object](http://jsonapi.org/format/#document-jsonapi-object)
-* The `jsonapi` property is currently ignorred [#14](https://github.com/infinum/mobx-jsonapi-store/issues/14) ❌
+* The `jsonapi` property is available on `response.jsonapi` ✅
 
 ### [Member Names](http://jsonapi.org/format/#document-member-names)
 * All member names are treated as strings, therefore adhere to the specification ✅
@@ -62,11 +60,11 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 
 ### [Fetching Resources](http://jsonapi.org/format/#fetching-resources)
 * Fetch top-level `links` ✅
-* Fetch resource-level `links` [#12](https://github.com/infinum/mobx-jsonapi-store/issues/12) ❌
-* Fetch `related` link from relationship-level `links` [#10](https://github.com/infinum/mobx-jsonapi-store/issues/10) ❌
+* Fetch resource-level `links` with `record.fetchLink(link)` ✅
+* Fetch `related` link from relationship-level `links` with `record.fetchRelationshipLink(relationship, link)` ✅
 
 ### [Fetching Relationships](http://jsonapi.org/format/#fetching-relationships)
-* Fetch relationship-level `links` [#10](https://github.com/infinum/mobx-jsonapi-store/issues/10) ❌
+* Fetch relationship-level `links` with `record.fetchRelationshipLink(relationship, link)` ✅
 
 ### [Inclusion of Related Resources](http://jsonapi.org/format/#fetching-includes)
 * Not yet supported, unless part of the link received from the server [#15](https://github.com/infinum/mobx-jsonapi-store/issues/15) ❌
@@ -90,15 +88,11 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 
 ### [Creating Resources](http://jsonapi.org/format/#crud-creating)
 * Creating resources is supported using the `save()` method on the record if the record was created on the client ✅
-* Creation doesn't support `relationships` yet [#19](https://github.com/infinum/mobx-jsonapi-store/issues/19) ❌
-* Client-Generated IDs are not yet supported [#20](https://github.com/infinum/mobx-jsonapi-store/issues/20) ❌
+* Client-Generated IDs are supported - just make sure you're using a valid UUID generator ✅
 * Response status is not fully implemented (needs more work) [#23](https://github.com/infinum/mobx-jsonapi-store/issues/23) ❌
 
 ### [Updating Resources](http://jsonapi.org/format/#crud-updating)
 * Updating resources is supported using the `save()` method on the record if the record was not created on the client ✅
-* Currently the `PUT` method is used instead of `PATCH` [#21](https://github.com/infinum/mobx-jsonapi-store/issues/21) ❌
-* `self` link is not used if available [#22](https://github.com/infinum/mobx-jsonapi-store/issues/22) ❌
-* Updating of `relationships` is not yet supported [#19](https://github.com/infinum/mobx-jsonapi-store/issues/19) ❌
 * Response status is not fully implemented (needs more work) [#23](https://github.com/infinum/mobx-jsonapi-store/issues/23) ❌
 
 ### [Updating Relationships](http://jsonapi.org/format/#crud-updating-relationships)
@@ -106,7 +100,6 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 
 ### [Deleting Resources](http://jsonapi.org/format/#crud-deleting)
 * The resource can be deleted with the `remove()` method on the record ✅
-* `self` link is not used if available [#22](https://github.com/infinum/mobx-jsonapi-store/issues/22) ❌
 * Response status is not fully implemented (needs more work) [#23](https://github.com/infinum/mobx-jsonapi-store/issues/23) ❌
 
 ## [Query Parameters](http://jsonapi.org/format/#query-parameters)
