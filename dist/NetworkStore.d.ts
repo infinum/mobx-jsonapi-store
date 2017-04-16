@@ -24,4 +24,5 @@ export declare class NetworkStore extends Collection {
         data?: Object;
         headers: IHeaders;
     };
+    protected __prefixUrl(url: any): string;
 }

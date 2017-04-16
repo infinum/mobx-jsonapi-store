@@ -94,7 +94,7 @@ export class Store extends NetworkStore {
   }
 
   public request(url: string, method: string = 'GET', data?: Object, options?: IRequestOptions): Promise<Response> {
-    return fetch({url, options, data, method, store: this});
+    return fetch({url: this.__prefixUrl(url), options, data, method, store: this});
   }
 
   /**

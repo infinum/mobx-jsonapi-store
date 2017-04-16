@@ -34,10 +34,17 @@ export class NetworkStore extends Collection {
     data?: Object,
     headers: IHeaders,
   } {
-    const url: string = id ? `${config.baseUrl}${type}/${id}` : `${config.baseUrl}${type}`;
+    const model = this.static.types.filter((item) => item.type === type)[0];
+    const path = model ? (model['baseUrl'] || model.type) : type;
+
+    const url: string = id ? `${path}/${id}` : `${path}`;
     const headers: IDictionary<string> = options ? options.headers : {};
 
     // TODO: Handle other options (include, filter, sort)
-    return {data, headers, url};
+    return {data, headers, url: this.__prefixUrl(url)};
+  }
+
+  protected __prefixUrl(url) {
+    return `${config.baseUrl}${url}`;
   }
 }

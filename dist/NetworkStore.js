@@ -34,10 +34,15 @@ var NetworkStore = (function (_super) {
      * @memberOf NetworkStore
      */
     NetworkStore.prototype.__prepareQuery = function (type, id, data, options) {
-        var url = id ? "" + NetworkUtils_1.config.baseUrl + type + "/" + id : "" + NetworkUtils_1.config.baseUrl + type;
+        var model = this.static.types.filter(function (item) { return item.type === type; })[0];
+        var path = model ? (model['baseUrl'] || model.type) : type;
+        var url = id ? path + "/" + id : "" + path;
         var headers = options ? options.headers : {};
         // TODO: Handle other options (include, filter, sort)
-        return { data: data, headers: headers, url: url };
+        return { data: data, headers: headers, url: this.__prefixUrl(url) };
+    };
+    NetworkStore.prototype.__prefixUrl = function (url) {
+        return "" + NetworkUtils_1.config.baseUrl + url;
     };
     return NetworkStore;
 }(mobx_collection_store_1.Collection));
