@@ -128,7 +128,11 @@ var Store = (function (_super) {
             record = new Record_1.Record(flattened);
             this.add(record);
         }
-        record.setPersisted(true);
+        // In case a record is not a real record
+        // TODO: Figure out when this happens and try to handle it better
+        if (record && typeof record.setPersisted === 'function') {
+            record.setPersisted(true);
+        }
         return record;
     };
     /**
