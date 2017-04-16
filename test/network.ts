@@ -182,6 +182,20 @@ describe('Networking', () => {
       const event = response.data as Event;
       expect(event.type).to.equal('event');
     });
+
+    it('should prepend config.baseUrl to the request url', async () => {
+      mockApi({
+        name: 'event-1b',
+        url: 'event/1',
+      });
+
+      const store = new Store();
+      const events = await store.request('event/1');
+
+      const record = events.data as Record;
+
+      expect(record['title']).to.equal('Test 1');
+    });
   });
 
   describe('updates', () => {
