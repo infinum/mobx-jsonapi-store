@@ -94,7 +94,7 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 * Updating resources is supported using the `save()` method on the record if the record was not created on the client ✅
 
 ### [Updating Relationships](http://jsonapi.org/format/#crud-updating-relationships)
-* Direct update of relationships is not yet supported [#24](https://github.com/infinum/mobx-jsonapi-store/issues/24) ❌
+* Direct update of relationships ✅
 
 ### [Deleting Resources](http://jsonapi.org/format/#crud-deleting)
 * The resource can be deleted with the `remove()` method on the record ✅
