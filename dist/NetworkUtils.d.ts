@@ -3,6 +3,7 @@ import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
 import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
+import { Record } from './Record';
 import { Response as LibResponse } from './Response';
 import { Store } from './Store';
 export declare type FetchType = (method: string, url: string, body?: Object, requestHeaders?: IHeaders) => Promise<IRawResponse>;
@@ -14,6 +15,13 @@ interface IConfigType {
 }
 export { IConfigType };
 export declare const config: IConfigType;
+export declare function fetch({url, options, data, method, store}: {
+    url: string;
+    options?: IRequestOptions;
+    data?: Object;
+    method: string;
+    store: Store;
+}): Promise<LibResponse>;
 /**
  * API call used to get data from the server
  *
@@ -71,3 +79,4 @@ export declare function remove(store: Store, url: string, headers?: IHeaders, op
  * @returns {Promise<LibResponse>} Response promise
  */
 export declare function fetchLink(link: JsonApi.ILink, store: Store, requestHeaders?: IDictionary<string>, options?: IRequestOptions): Promise<LibResponse>;
+export declare function handleResponse(record: Record, prop?: string): (LibResponse) => Record | Array<Record>;

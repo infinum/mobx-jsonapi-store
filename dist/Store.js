@@ -85,6 +85,10 @@ var Store = (function (_super) {
         }
         return Promise.resolve(true);
     };
+    Store.prototype.request = function (url, method, data, options) {
+        if (method === void 0) { method = 'GET'; }
+        return NetworkUtils_1.fetch({ url: url, options: options, data: data, method: method, store: this });
+    };
     /**
      * Function used to handle response errors
      *

@@ -8,7 +8,7 @@ import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
 
 import {NetworkStore} from './NetworkStore';
-import {read, remove} from './NetworkUtils';
+import {fetch, read, remove} from './NetworkUtils';
 import {Record} from './Record';
 import {Response} from './Response';
 import {flattenRecord, mapItems} from './utils';
@@ -91,6 +91,10 @@ export class Store extends NetworkStore {
       return model.remove(options);
     }
     return Promise.resolve(true);
+  }
+
+  public request(url: string, method: string = 'GET', data?: Object, options?: IRequestOptions): Promise<Response> {
+    return fetch({url, options, data, method, store: this});
   }
 
   /**

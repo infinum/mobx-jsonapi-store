@@ -5,6 +5,7 @@ import IRequestOptions from './interfaces/IRequestOptions';
 import IResponseHeaders from './interfaces/IResponseHeaders';
 import * as JsonApi from './interfaces/JsonApi';
 
+import {Record} from './Record';
 import {Response as LibResponse} from './Response';
 import {Store} from './Store';
 import {assign, isBrowser} from './utils';
@@ -95,6 +96,23 @@ export const config: IConfigType = {
       });
   },
 };
+
+export function fetch({
+  url,
+  options,
+  data,
+  method = 'GET',
+  store,
+}: {
+  url: string,
+  options?: IRequestOptions,
+  data?: Object,
+  method: string,
+  store: Store,
+}) {
+  return config.baseFetch(method, url, data, options && options.headers)
+    .then((response: IRawResponse) => new LibResponse(response, store, options));
+}
 
 /**
  * API call used to get data from the server
@@ -203,4 +221,27 @@ export function fetchLink(
     }
   }
   return Promise.resolve(new LibResponse({data: null}, store));
+}
+
+export function handleResponse(record: Record, prop?: string): (LibResponse) => Record|Array<Record> {
+  return (response: LibResponse): Record|Array<Record> => {
+    if (response.error) {
+      throw response.error;
+    }
+
+    if (response.status === 204) {
+      record['__persisted'] = true;
+      return record as Record;
+    } else if (response.status === 201) {
+      (response.data as Record).update({
+        __prop__: prop,
+        __queue__: true,
+        __related__: record,
+      });
+      return response.data as Record|Array<Record>;
+    } else {
+      record['__persisted'] = true;
+      return response.replaceData(record).data as Record|Array<Record>;
+    }
+  };
 }

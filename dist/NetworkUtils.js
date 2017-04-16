@@ -61,6 +61,12 @@ exports.config = {
         });
     },
 };
+function fetch(_a) {
+    var url = _a.url, options = _a.options, data = _a.data, _b = _a.method, method = _b === void 0 ? 'GET' : _b, store = _a.store;
+    return exports.config.baseFetch(method, url, data, options && options.headers)
+        .then(function (response) { return new Response_1.Response(response, store, options); });
+}
+exports.fetch = fetch;
 /**
  * API call used to get data from the server
  *
@@ -143,3 +149,27 @@ function fetchLink(link, store, requestHeaders, options) {
     return Promise.resolve(new Response_1.Response({ data: null }, store));
 }
 exports.fetchLink = fetchLink;
+function handleResponse(record, prop) {
+    return function (response) {
+        if (response.error) {
+            throw response.error;
+        }
+        if (response.status === 204) {
+            record['__persisted'] = true;
+            return record;
+        }
+        else if (response.status === 201) {
+            response.data.update({
+                __prop__: prop,
+                __queue__: true,
+                __related__: record,
+            });
+            return response.data;
+        }
+        else {
+            record['__persisted'] = true;
+            return response.replaceData(record).data;
+        }
+    };
+}
+exports.handleResponse = handleResponse;

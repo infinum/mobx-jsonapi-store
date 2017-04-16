@@ -443,6 +443,42 @@ describe('Networking', () => {
       expect(updated).to.equal(true);
       expect(store.findAll('event').length).to.equal(0);
     });
+
+    it('should support updating relationships', async () => {
+      mockApi({
+        name: 'events-1',
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event');
+      const event = events.data[0] as Record;
+
+      event['imageId'] = [event['imageId'], '2'];
+
+      mockApi({
+        data:  {
+          data: [{
+            id: '1',
+            type: 'image',
+          }, {
+            id: '2',
+            type: 'image',
+          }],
+        },
+        method: 'PATCH',
+        name: 'event-1d',
+        url: 'images/1',
+      });
+
+      const event2 = await event.saveRelationship('image') as Record;
+      expect(event2.id).to.equal(12345);
+      expect(event2.type).to.equal('event');
+      expect(event2['imageId'][0]).to.equal('1');
+      expect(event['imageId'][0]).to.equal('1');
+      expect(event).to.equal(event2);
+
+    });
   });
 
   describe('error handling', () => {
