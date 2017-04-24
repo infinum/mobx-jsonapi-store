@@ -19,18 +19,18 @@ function getMockStream(name: string): fs.ReadStream {
   return fs.createReadStream(testPath);
 }
 
-type mockArgs = {
-  name?: string,
-  method?: string,
-  hostname?: string,
-  url?: string,
-  data?: any,
-  query?: boolean|Function|Object,
-  responseFn?: Function,
-  headers?: nock.HttpHeaders,
-  reqheaders?: IDictionary<any>,
-  status?: number,
-};
+interface IMockArgs {
+  name?: string;
+  method?: string;
+  hostname?: string;
+  url?: string;
+  data?: any;
+  query?: boolean|Function|Object;
+  responseFn?: Function;
+  headers?: nock.HttpHeaders;
+  reqheaders?: IDictionary<any>;
+  status?: number;
+}
 
 /**
  * Prepare a mock API call
@@ -60,7 +60,7 @@ export default function mockApi({
   headers = {'content-type': 'application/vnd.api+json'},
   reqheaders = {'content-type': 'application/vnd.api+json'},
   status = 200,
-}: mockArgs): nock.Scope {
+}: IMockArgs): nock.Scope {
   const apiUrl = nodeUrl.parse(config.baseUrl);
   const hostname = `${apiUrl.protocol}//${apiUrl.hostname}`;
   const nockScope = nock(hostname, {reqheaders}).replyContentLength();

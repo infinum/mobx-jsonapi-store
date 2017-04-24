@@ -54,27 +54,25 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/mocha": "^2.2.40",
-    "@types/node": "^7.0.12",
+    "@types/mocha": "^2.2.41",
+    "@types/nock": "^8.2.1",
+    "@types/node": "^7.0.13",
     "chai": "^3.5.0",
     "husky": "^0.13.3",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
-    "mobx": "^3.1.8",
-    "mobx-collection-store": "^1.0.0",
-    "mocha": "^3.2.0",
-    "nock": "^9.0.11",
+    "mobx": "^3.1.9",
+    "mobx-collection-store": "^1.1.0",
+    "mocha": "^3.3.0",
+    "nock": "^9.0.13",
     "ntypescript": "^1.201609302242.1",
-    "nyc": "^10.2.0",
+    "nyc": "^10.2.2",
     "ts-node": "^3.0.2",
-    "tslint": "^5.0.0",
-    "typescript": "^2.2.2"
+    "tslint": "^5.1.0",
+    "typescript": "^2.3.0"
   },
   "peerDependencies": {
     "mobx": "^2.6.0 || ^3",
-    "mobx-collection-store": "^1.1.0"
-  },
-  "dependencies": {
-    "mobx-collection-store": "^1.1.0"
+    "mobx-collection-store": "^1.0.0"
   }
 }
