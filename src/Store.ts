@@ -126,11 +126,10 @@ export class Store extends NetworkStore {
     const {type, id} = obj;
     let record: Record = this.find(type, id) as Record;
     const flattened: IDictionary<any> = flattenRecord(obj);
-    const availableModels: Array<string> = this.static.types.map((item) => item.type);
 
     if (record) {
       record.update(flattened);
-    } else if (availableModels.indexOf(obj.type) !== -1) {
+    } else if (this.static.types.filter((item) => item.type === obj.type).length) {
       record = this.add(flattened, obj.type) as Record;
     } else {
       record = new Record(flattened);
