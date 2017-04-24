@@ -117,11 +117,10 @@ var Store = (function (_super) {
         var type = obj.type, id = obj.id;
         var record = this.find(type, id);
         var flattened = utils_1.flattenRecord(obj);
-        var availableModels = this.static.types.map(function (item) { return item.type; });
         if (record) {
             record.update(flattened);
         }
-        else if (availableModels.indexOf(obj.type) !== -1) {
+        else if (this.static.types.filter(function (item) { return item.type === obj.type; }).length) {
             record = this.add(flattened, obj.type);
         }
         else {

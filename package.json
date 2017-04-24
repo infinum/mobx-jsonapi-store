@@ -72,6 +72,9 @@
   },
   "peerDependencies": {
     "mobx": "^2.6.0 || ^3",
-    "mobx-collection-store": "^1.0.0"
+    "mobx-collection-store": "^1.1.0"
+  },
+  "dependencies": {
+    "mobx-collection-store": "^1.1.0"
   }
 }
