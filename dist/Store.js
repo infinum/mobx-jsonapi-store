@@ -24,7 +24,18 @@ var utils_1 = require("./utils");
 var Store = (function (_super) {
     __extends(Store, _super);
     function Store() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /**
+         * Cache async actions (can be overriden with force=true)
+         *
+         * @private
+         *
+         * @memberOf Store
+         */
+        _this.__cache = {
+            fetchAll: {},
+        };
+        return _this;
     }
     /**
      * Import the JSON API data into the store
@@ -65,8 +76,19 @@ var Store = (function (_super) {
      * @memberOf Store
      */
     Store.prototype.fetchAll = function (type, force, options) {
+        var _this = this;
         var query = this.__prepareQuery(type, null, null, options);
-        return NetworkUtils_1.read(this, query.url, query.headers, options).then(this.__handleErrors);
+        if (!force && query.url in this.__cache.fetchAll) {
+            return this.__cache.fetchAll[query.url];
+        }
+        this.__cache.fetchAll[query.url] = NetworkUtils_1.read(this, query.url, query.headers, options)
+            .then(this.__handleErrors)
+            .catch(function (e) {
+            // Don't cache if there was an error
+            delete _this.__cache.fetchAll[query.url];
+            throw e;
+        });
+        return this.__cache.fetchAll[query.url];
     };
     /**
      * Destroy a record (API & store)

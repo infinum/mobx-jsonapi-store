@@ -14,6 +14,14 @@ export declare class Store extends NetworkStore {
      */
     static types: typeof Record[];
     /**
+     * Cache async actions (can be overriden with force=true)
+     *
+     * @private
+     *
+     * @memberOf Store
+     */
+    private __cache;
+    /**
      * Import the JSON API data into the store
      *
      * @param {IJsonApiResponse} body - JSON API response

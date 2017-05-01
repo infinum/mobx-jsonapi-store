@@ -2,6 +2,7 @@ import {action} from 'mobx';
 
 import {Collection, IModel} from 'mobx-collection-store';
 
+import ICache from './interfaces/ICache';
 import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
 import IRequestOptions from './interfaces/IRequestOptions';
@@ -29,6 +30,17 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   public static types = [Record];
+
+  /**
+   * Cache async actions (can be overriden with force=true)
+   *
+   * @private
+   *
+   * @memberOf Store
+   */
+  private __cache: ICache = {
+    fetchAll: {},
+  };
 
   /**
    * Import the JSON API data into the store
@@ -72,7 +84,20 @@ export class Store extends NetworkStore {
    */
   public fetchAll(type: string, force?: boolean, options?: IRequestOptions): Promise<Response> {
     const query: IQueryParams = this.__prepareQuery(type, null, null, options);
-    return read(this, query.url, query.headers, options).then(this.__handleErrors);
+
+    if (!force && query.url in this.__cache.fetchAll) {
+      return this.__cache.fetchAll[query.url];
+    }
+
+    this.__cache.fetchAll[query.url] = read(this, query.url, query.headers, options)
+      .then(this.__handleErrors)
+      .catch((e) => {
+        // Don't cache if there was an error
+        delete this.__cache.fetchAll[query.url];
+        throw e;
+      });
+
+    return this.__cache.fetchAll[query.url];
   }
 
   /**
