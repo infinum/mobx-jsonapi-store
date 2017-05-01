@@ -679,6 +679,36 @@ describe('Networking', () => {
       expect(events.headers.get('X-Auth')).to.equal('98765');
     });
   });
+
+  describe('params', () => {
+    it('should support basic filtering', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({filter: {name: 'foo'}}),
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {filter: {name: 'foo'}});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
+
+    it('should support advanced filtering', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({filter: {'bar.id': '2', 'name': 'foo'}}),
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {filter: {name: 'foo', bar: {id: 2}}});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
+  });
 });
 
 // TODO

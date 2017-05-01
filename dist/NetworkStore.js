@@ -12,6 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_collection_store_1 = require("mobx-collection-store");
 var NetworkUtils_1 = require("./NetworkUtils");
+var utils_1 = require("./utils");
 var NetworkStore = (function (_super) {
     __extends(NetworkStore, _super);
     function NetworkStore() {
@@ -38,11 +39,37 @@ var NetworkStore = (function (_super) {
         var path = model ? (model['baseUrl'] || model.type) : type;
         var url = id ? path + "/" + id : "" + path;
         var headers = options ? options.headers : {};
+        var filters = this.__prepareFilters((options && options.filter) || {});
+        var params = filters.slice();
         // TODO: Handle other options (include, filter, sort)
-        return { data: data, headers: headers, url: this.__prefixUrl(url) };
+        var baseUrl = this.__appendParams(this.__prefixUrl(url), params);
+        return { data: data, headers: headers, url: baseUrl };
+    };
+    NetworkStore.prototype.__prepareFilters = function (filters) {
+        return this.__parametrize(filters).map(function (item) { return "filter[" + item.key + "]=" + item.value; });
     };
     NetworkStore.prototype.__prefixUrl = function (url) {
         return "" + NetworkUtils_1.config.baseUrl + url;
+    };
+    NetworkStore.prototype.__appendParams = function (url, params) {
+        if (params.length) {
+            url += '?' + params.join('&');
+        }
+        return url;
+    };
+    NetworkStore.prototype.__parametrize = function (params, scope) {
+        var _this = this;
+        if (scope === void 0) { scope = ''; }
+        var list = [];
+        utils_1.objectForEach(params, function (key) {
+            if (typeof params[key] === 'object') {
+                list.push.apply(list, _this.__parametrize(params[key], key + "."));
+            }
+            else {
+                list.push({ key: "" + scope + key, value: params[key] });
+            }
+        });
+        return list;
     };
     return NetworkStore;
 }(mobx_collection_store_1.Collection));

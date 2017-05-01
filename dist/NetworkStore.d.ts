@@ -1,4 +1,5 @@
 import { Collection } from 'mobx-collection-store';
+import IFilters from './interfaces/IFilters';
 import IHeaders from './interfaces/IHeaders';
 import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
@@ -24,5 +25,8 @@ export declare class NetworkStore extends Collection {
         data?: Object;
         headers: IHeaders;
     };
+    protected __prepareFilters(filters: IFilters): Array<string>;
     protected __prefixUrl(url: any): string;
+    protected __appendParams(url: string, params: Array<string>): string;
+    private __parametrize(params, scope?);
 }
