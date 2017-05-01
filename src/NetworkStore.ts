@@ -43,10 +43,11 @@ export class NetworkStore extends Collection {
     const headers: IDictionary<string> = options ? options.headers : {};
 
     const filters: Array<string> = this.__prepareFilters((options && options.filter) || {});
-    const sort: Array<string> = this.__prepareSort((options && options.sort));
-    const includes: Array<string> = this.__prepareIncludes((options && options.include));
+    const sort: Array<string> = this.__prepareSort(options && options.sort);
+    const includes: Array<string> = this.__prepareIncludes(options && options.include);
+    const fields: Array<string> = this.__prepareFields((options && options.fields) || {});
 
-    const params: Array<string> = [...filters, ...sort, ...includes];
+    const params: Array<string> = [...filters, ...sort, ...includes, ...fields];
 
     // TODO: Handle other options (include, filter, sort)
     const baseUrl: string = this.__appendParams(this.__prefixUrl(url), params);
@@ -63,6 +64,16 @@ export class NetworkStore extends Collection {
 
   protected __prepareIncludes(include?: string|Array<string>): Array<string> {
     return include ? [`include=${include}`] : [];
+  }
+
+  protected __prepareFields(fields: IDictionary<string|Array<string>>): Array<string> {
+    const list = [];
+
+    objectForEach(fields, (key: string) => {
+      list.push(`fields[${key}]=${fields[key]}`);
+    });
+
+    return list;
   }
 
   protected __prefixUrl(url) {

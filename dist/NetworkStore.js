@@ -40,9 +40,10 @@ var NetworkStore = (function (_super) {
         var url = id ? path + "/" + id : "" + path;
         var headers = options ? options.headers : {};
         var filters = this.__prepareFilters((options && options.filter) || {});
-        var sort = this.__prepareSort((options && options.sort));
-        var includes = this.__prepareIncludes((options && options.include));
-        var params = filters.concat(sort, includes);
+        var sort = this.__prepareSort(options && options.sort);
+        var includes = this.__prepareIncludes(options && options.include);
+        var fields = this.__prepareFields((options && options.fields) || {});
+        var params = filters.concat(sort, includes, fields);
         // TODO: Handle other options (include, filter, sort)
         var baseUrl = this.__appendParams(this.__prefixUrl(url), params);
         return { data: data, headers: headers, url: baseUrl };
@@ -55,6 +56,13 @@ var NetworkStore = (function (_super) {
     };
     NetworkStore.prototype.__prepareIncludes = function (include) {
         return include ? ["include=" + include] : [];
+    };
+    NetworkStore.prototype.__prepareFields = function (fields) {
+        var list = [];
+        utils_1.objectForEach(fields, function (key) {
+            list.push("fields[" + key + "]=" + fields[key]);
+        });
+        return list;
     };
     NetworkStore.prototype.__prefixUrl = function (url) {
         return "" + NetworkUtils_1.config.baseUrl + url;

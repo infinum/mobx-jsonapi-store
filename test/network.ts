@@ -764,6 +764,38 @@ describe('Networking', () => {
       expect(events.data).to.be.an('array');
       expect(events.data['length']).to.equal(4);
     });
+
+    it('should support sparse fields', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({fields: {foo: 'name', bar: 'name'}}),
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {fields: {foo: 'name', bar: 'name'}});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
+
+    it('should support advanced sparse fields', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({fields: {'foo': 'name', 'bar': 'name', 'bar.baz': 'foo,bar'}}),
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {fields: {
+        'bar': 'name',
+        'bar.baz': ['foo', 'bar'],
+        'foo': 'name',
+      }});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
   });
 });
 

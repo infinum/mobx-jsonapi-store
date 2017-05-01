@@ -70,7 +70,7 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 * Supported since version 3.4.0 [#15](https://github.com/infinum/mobx-jsonapi-store/issues/15) ✅
 
 ### [Sparse Fieldsets](http://jsonapi.org/format/#fetching-sparse-fieldsets)
-* Not yet supported, unless part of the link received from the server [#16](https://github.com/infinum/mobx-jsonapi-store/issues/16) ❌
+* Supported since version 3.4.0 [#16](https://github.com/infinum/mobx-jsonapi-store/issues/16) ✅
 
 ### [Sorting](http://jsonapi.org/format/#fetching-sorting)
 * Supported since version 3.4.0 [#17](https://github.com/infinum/mobx-jsonapi-store/issues/17) ✅

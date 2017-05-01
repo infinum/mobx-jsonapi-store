@@ -1,4 +1,5 @@
 import { Collection } from 'mobx-collection-store';
+import IDictionary from './interfaces/IDictionary';
 import IFilters from './interfaces/IFilters';
 import IHeaders from './interfaces/IHeaders';
 import IRequestOptions from './interfaces/IRequestOptions';
@@ -28,6 +29,7 @@ export declare class NetworkStore extends Collection {
     protected __prepareFilters(filters: IFilters): Array<string>;
     protected __prepareSort(sort?: string | Array<string>): Array<string>;
     protected __prepareIncludes(include?: string | Array<string>): Array<string>;
+    protected __prepareFields(fields: IDictionary<string | Array<string>>): Array<string>;
     protected __prefixUrl(url: any): string;
     protected __appendParams(url: string, params: Array<string>): string;
     private __parametrize(params, scope?);
