@@ -2,7 +2,7 @@ import IFilters from './IFilters';
 import IHeaders from './IHeaders';
 interface IRequestOptions {
     headers?: IHeaders;
-    include?: any;
+    include?: string | Array<string>;
     filter?: IFilters;
     sort?: string | Array<string>;
 }

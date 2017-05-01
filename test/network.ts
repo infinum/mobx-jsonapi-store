@@ -736,6 +736,34 @@ describe('Networking', () => {
       expect(events.data).to.be.an('array');
       expect(events.data['length']).to.equal(4);
     });
+
+    it('should support inclusion of related resources', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({include: 'bar'}),
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {include: 'bar'});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
+
+    it('should support advanced inclusion of related resources', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({include: 'bar,bar.baz'}),
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {include: ['bar', 'bar.baz']});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
   });
 });
 

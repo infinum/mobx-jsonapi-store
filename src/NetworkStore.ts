@@ -44,8 +44,9 @@ export class NetworkStore extends Collection {
 
     const filters: Array<string> = this.__prepareFilters((options && options.filter) || {});
     const sort: Array<string> = this.__prepareSort((options && options.sort));
+    const includes: Array<string> = this.__prepareIncludes((options && options.include));
 
-    const params: Array<string> = [...filters, ...sort];
+    const params: Array<string> = [...filters, ...sort, ...includes];
 
     // TODO: Handle other options (include, filter, sort)
     const baseUrl: string = this.__appendParams(this.__prefixUrl(url), params);
@@ -58,6 +59,10 @@ export class NetworkStore extends Collection {
 
   protected __prepareSort(sort?: string|Array<string>): Array<string> {
     return sort ? [`sort=${sort}`] : [];
+  }
+
+  protected __prepareIncludes(include?: string|Array<string>): Array<string> {
+    return include ? [`include=${include}`] : [];
   }
 
   protected __prefixUrl(url) {

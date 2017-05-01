@@ -67,13 +67,13 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
 * Fetch relationship-level `links` with `record.fetchRelationshipLink(relationship, link)` ✅
 
 ### [Inclusion of Related Resources](http://jsonapi.org/format/#fetching-includes)
-* Not yet supported, unless part of the link received from the server [#15](https://github.com/infinum/mobx-jsonapi-store/issues/15) ❌
+* Supported since version 3.4.0 [#15](https://github.com/infinum/mobx-jsonapi-store/issues/15) ✅
 
 ### [Sparse Fieldsets](http://jsonapi.org/format/#fetching-sparse-fieldsets)
 * Not yet supported, unless part of the link received from the server [#16](https://github.com/infinum/mobx-jsonapi-store/issues/16) ❌
 
 ### [Sorting](http://jsonapi.org/format/#fetching-sorting)
-* Not yet supported, unless part of the link received from the server [#17](https://github.com/infinum/mobx-jsonapi-store/issues/17) ❌
+* Supported since version 3.4.0 [#17](https://github.com/infinum/mobx-jsonapi-store/issues/17) ✅
 
 ### [Pagination](http://jsonapi.org/format/#fetching-pagination)
 * The lib supports top-level links ✅
@@ -82,7 +82,7 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), here is 
   * The link is lazily evaluated, so the request won't be made until you access the property
 
 ### [Filtering](http://jsonapi.org/format/#fetching-filtering)
-* Not yet supported, unless part of the link received from the server [#18](https://github.com/infinum/mobx-jsonapi-store/issues/18) ❌
+* Supported since version 3.4.0 [#18](https://github.com/infinum/mobx-jsonapi-store/issues/18) ✅
 
 ## [Creating, Updating and Deleting Resources](http://jsonapi.org/format/#crud)
 
