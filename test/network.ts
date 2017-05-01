@@ -708,6 +708,34 @@ describe('Networking', () => {
       expect(events.data).to.be.an('array');
       expect(events.data['length']).to.equal(4);
     });
+
+    it('should support sorting', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({sort: 'name'}),
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {sort: 'name'});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
+
+    it('should support advanced sorting', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({sort: '-name,bar.id'}),
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {sort: ['-name', 'bar.id']});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
   });
 });
 

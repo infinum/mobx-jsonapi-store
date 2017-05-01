@@ -6,7 +6,7 @@ interface IRequestOptions {
   headers?: IHeaders;
   include?: any;
   filter?: IFilters;
-  sort?: any;
+  sort?: string|Array<string>;
 }
 
 export default IRequestOptions;

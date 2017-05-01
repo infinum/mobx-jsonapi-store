@@ -43,8 +43,9 @@ export class NetworkStore extends Collection {
     const headers: IDictionary<string> = options ? options.headers : {};
 
     const filters: Array<string> = this.__prepareFilters((options && options.filter) || {});
+    const sort: Array<string> = this.__prepareSort((options && options.sort));
 
-    const params: Array<string> = [...filters];
+    const params: Array<string> = [...filters, ...sort];
 
     // TODO: Handle other options (include, filter, sort)
     const baseUrl: string = this.__appendParams(this.__prefixUrl(url), params);
@@ -53,6 +54,10 @@ export class NetworkStore extends Collection {
 
   protected __prepareFilters(filters: IFilters): Array<string> {
     return this.__parametrize(filters).map((item) => `filter[${item.key}]=${item.value}`);
+  }
+
+  protected __prepareSort(sort?: string|Array<string>): Array<string> {
+    return sort ? [`sort=${sort}`] : [];
   }
 
   protected __prefixUrl(url) {

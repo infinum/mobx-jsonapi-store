@@ -26,6 +26,7 @@ export declare class NetworkStore extends Collection {
         headers: IHeaders;
     };
     protected __prepareFilters(filters: IFilters): Array<string>;
+    protected __prepareSort(sort?: string | Array<string>): Array<string>;
     protected __prefixUrl(url: any): string;
     protected __appendParams(url: string, params: Array<string>): string;
     private __parametrize(params, scope?);

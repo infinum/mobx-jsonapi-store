@@ -40,13 +40,17 @@ var NetworkStore = (function (_super) {
         var url = id ? path + "/" + id : "" + path;
         var headers = options ? options.headers : {};
         var filters = this.__prepareFilters((options && options.filter) || {});
-        var params = filters.slice();
+        var sort = this.__prepareSort((options && options.sort));
+        var params = filters.concat(sort);
         // TODO: Handle other options (include, filter, sort)
         var baseUrl = this.__appendParams(this.__prefixUrl(url), params);
         return { data: data, headers: headers, url: baseUrl };
     };
     NetworkStore.prototype.__prepareFilters = function (filters) {
         return this.__parametrize(filters).map(function (item) { return "filter[" + item.key + "]=" + item.value; });
+    };
+    NetworkStore.prototype.__prepareSort = function (sort) {
+        return sort ? ["sort=" + sort] : [];
     };
     NetworkStore.prototype.__prefixUrl = function (url) {
         return "" + NetworkUtils_1.config.baseUrl + url;
