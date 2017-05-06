@@ -1,4 +1,6 @@
 # mobx-jsonapi-store
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/infinum/mobx-jsonapi-store.svg)](https://greenkeeper.io/)
 JSON API Store for MobX
 
 [![npm version](https://badge.fury.io/js/mobx-jsonapi-store.svg)](https://badge.fury.io/js/mobx-jsonapi-store)
