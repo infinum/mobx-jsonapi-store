@@ -39,12 +39,7 @@ var NetworkStore = (function (_super) {
         var path = model ? (model['baseUrl'] || model.type) : type;
         var url = id ? path + "/" + id : "" + path;
         var headers = options ? options.headers : {};
-        var filters = this.__prepareFilters((options && options.filter) || {});
-        var sort = this.__prepareSort(options && options.sort);
-        var includes = this.__prepareIncludes(options && options.include);
-        var fields = this.__prepareFields((options && options.fields) || {});
-        var params = filters.concat(sort, includes, fields);
-        // TODO: Handle other options (include, filter, sort)
+        var params = this.__prepareFilters((options && options.filter) || {}).concat(this.__prepareSort(options && options.sort), this.__prepareIncludes(options && options.include), this.__prepareFields((options && options.fields) || {}));
         var baseUrl = this.__appendParams(this.__prefixUrl(url), params);
         return { data: data, headers: headers, url: baseUrl };
     };

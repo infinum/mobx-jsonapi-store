@@ -62,7 +62,6 @@ describe('General', () => {
     const event = store.find<Event>('events', 1);
     expect(event.name).to.equal('Demo');
 
-    // TODO: It seems autorun is not running on value change - check mobx-collection-store
     autorun(() => {
       expect(event.name).to.equal(name);
 

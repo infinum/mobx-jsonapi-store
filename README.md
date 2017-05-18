@@ -44,6 +44,7 @@ npm install mobx-jsonapi-store
 
 * `constructor([serializedData])` - The constructor can be provided with the serialized data from `toJS` in order to deserialize
 * `static types` - Array of classes extended from the `Record`
+* `static cache` - Should the cache be used for API calls when possible (defaults to `true`)
 * `length` - Number of unique records in the store
 * `sync(body)` - Sync the JSON API response with the store. Return value will be either a record or an array of records that were parsed from the response.
 * `add(record, [type])` - Add a record (or an array of records). Type param is required if the first argument is an plain object (or an array of plain objects) and you want to map them to the correct record classes

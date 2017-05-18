@@ -33,6 +33,7 @@ var Store = (function (_super) {
          * @memberOf Store
          */
         _this.__cache = {
+            fetch: {},
             fetchAll: {},
         };
         return _this;
@@ -62,8 +63,22 @@ var Store = (function (_super) {
      * @memberOf Store
      */
     Store.prototype.fetch = function (type, id, force, options) {
+        var _this = this;
         var query = this.__prepareQuery(type, id, null, options);
-        return NetworkUtils_1.read(this, query.url, query.headers, options).then(this.__handleErrors);
+        if (!this.static.cache) {
+            return this.__doFetch(query, options);
+        }
+        this.__cache.fetch[type] = this.__cache.fetch[type] || {};
+        // TODO: Should we fake the cache if the record already exists?
+        if (force || !(query.url in this.__cache.fetch[type])) {
+            this.__cache.fetch[type][query.url] = this.__doFetch(query, options)
+                .catch(function (e) {
+                // Don't cache if there was an error
+                delete _this.__cache.fetch[type][query.url];
+                throw e;
+            });
+        }
+        return this.__cache.fetch[type][query.url];
     };
     /**
      * Fetch the first page of records of the given type
@@ -78,16 +93,17 @@ var Store = (function (_super) {
     Store.prototype.fetchAll = function (type, force, options) {
         var _this = this;
         var query = this.__prepareQuery(type, null, null, options);
-        if (!force && query.url in this.__cache.fetchAll) {
-            return this.__cache.fetchAll[query.url];
+        if (!this.static.cache) {
+            return this.__doFetch(query, options);
         }
-        this.__cache.fetchAll[query.url] = NetworkUtils_1.read(this, query.url, query.headers, options)
-            .then(this.__handleErrors)
-            .catch(function (e) {
-            // Don't cache if there was an error
-            delete _this.__cache.fetchAll[query.url];
-            throw e;
-        });
+        if (force || !(query.url in this.__cache.fetchAll)) {
+            this.__cache.fetchAll[query.url] = this.__doFetch(query, options)
+                .catch(function (e) {
+                // Don't cache if there was an error
+                delete _this.__cache.fetchAll[query.url];
+                throw e;
+            });
+        }
         return this.__cache.fetchAll[query.url];
     };
     /**
@@ -110,6 +126,18 @@ var Store = (function (_super) {
     Store.prototype.request = function (url, method, data, options) {
         if (method === void 0) { method = 'GET'; }
         return NetworkUtils_1.fetch({ url: this.__prefixUrl(url), options: options, data: data, method: method, store: this });
+    };
+    /**
+     * Make the request and handle the errors
+     *
+     * @param {IQueryParams} query Request query info
+     * @param {IRequestOptions} [options] Server options
+     * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
+     *
+     * @memberof Store
+     */
+    Store.prototype.__doFetch = function (query, options) {
+        return NetworkUtils_1.read(this, query.url, query.headers, options).then(this.__handleErrors);
     };
     /**
      * Function used to handle response errors
@@ -208,6 +236,14 @@ var Store = (function (_super) {
  * @memberOf Store
  */
 Store.types = [Record_1.Record];
+/**
+ * Should the cache be used for API calls when possible
+ *
+ * @static
+ *
+ * @memberof Store
+ */
+Store.cache = true;
 __decorate([
     mobx_1.action
 ], Store.prototype, "sync", null);

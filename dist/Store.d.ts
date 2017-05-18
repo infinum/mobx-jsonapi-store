@@ -14,6 +14,15 @@ export declare class Store extends NetworkStore {
      */
     static types: typeof Record[];
     /**
+     * Should the cache be used for API calls when possible
+     *
+     * @static
+     *
+     * @memberof Store
+     */
+    static cache: boolean;
+    static: typeof Store;
+    /**
      * Cache async actions (can be overriden with force=true)
      *
      * @private
@@ -65,6 +74,16 @@ export declare class Store extends NetworkStore {
      */
     destroy(type: string, id: number | string, options?: IRequestOptions): Promise<boolean>;
     request(url: string, method?: string, data?: Object, options?: IRequestOptions): Promise<Response>;
+    /**
+     * Make the request and handle the errors
+     *
+     * @param {IQueryParams} query Request query info
+     * @param {IRequestOptions} [options] Server options
+     * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
+     *
+     * @memberof Store
+     */
+    private __doFetch(query, options?);
     /**
      * Function used to handle response errors
      *

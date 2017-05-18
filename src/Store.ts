@@ -32,6 +32,17 @@ export class Store extends NetworkStore {
   public static types = [Record];
 
   /**
+   * Should the cache be used for API calls when possible
+   *
+   * @static
+   *
+   * @memberof Store
+   */
+  public static cache = true;
+
+  public static: typeof Store;
+
+  /**
    * Cache async actions (can be overriden with force=true)
    *
    * @private
@@ -39,6 +50,7 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   private __cache: ICache = {
+    fetch: {},
     fetchAll: {},
   };
 
@@ -69,7 +81,24 @@ export class Store extends NetworkStore {
    */
   public fetch(type: string, id: number|string, force?: boolean, options?: IRequestOptions): Promise<Response> {
     const query: IQueryParams = this.__prepareQuery(type, id, null, options);
-    return read(this, query.url, query.headers, options).then(this.__handleErrors);
+
+    if (!this.static.cache) {
+      return this.__doFetch(query, options);
+    }
+
+    this.__cache.fetch[type] = this.__cache.fetch[type] || {};
+
+    // TODO: Should we fake the cache if the record already exists?
+    if (force || !(query.url in this.__cache.fetch[type])) {
+      this.__cache.fetch[type][query.url] = this.__doFetch(query, options)
+        .catch((e) => {
+          // Don't cache if there was an error
+          delete this.__cache.fetch[type][query.url];
+          throw e;
+        });
+    }
+
+    return this.__cache.fetch[type][query.url];
   }
 
   /**
@@ -85,17 +114,18 @@ export class Store extends NetworkStore {
   public fetchAll(type: string, force?: boolean, options?: IRequestOptions): Promise<Response> {
     const query: IQueryParams = this.__prepareQuery(type, null, null, options);
 
-    if (!force && query.url in this.__cache.fetchAll) {
-      return this.__cache.fetchAll[query.url];
+    if (!this.static.cache) {
+      return this.__doFetch(query, options);
     }
 
-    this.__cache.fetchAll[query.url] = read(this, query.url, query.headers, options)
-      .then(this.__handleErrors)
-      .catch((e) => {
-        // Don't cache if there was an error
-        delete this.__cache.fetchAll[query.url];
-        throw e;
-      });
+    if (force || !(query.url in this.__cache.fetchAll)) {
+      this.__cache.fetchAll[query.url] = this.__doFetch(query, options)
+        .catch((e) => {
+          // Don't cache if there was an error
+          delete this.__cache.fetchAll[query.url];
+          throw e;
+        });
+    }
 
     return this.__cache.fetchAll[query.url];
   }
@@ -120,6 +150,19 @@ export class Store extends NetworkStore {
 
   public request(url: string, method: string = 'GET', data?: Object, options?: IRequestOptions): Promise<Response> {
     return fetch({url: this.__prefixUrl(url), options, data, method, store: this});
+  }
+
+  /**
+   * Make the request and handle the errors
+   *
+   * @param {IQueryParams} query Request query info
+   * @param {IRequestOptions} [options] Server options
+   * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
+   *
+   * @memberof Store
+   */
+  private __doFetch(query: IQueryParams, options?: IRequestOptions): Promise<Response> {
+    return read(this, query.url, query.headers, options).then(this.__handleErrors);
   }
 
   /**
