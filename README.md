@@ -1,7 +1,9 @@
 # mobx-jsonapi-store
+
 JSON API Store for MobX
 
 [![npm version](https://badge.fury.io/js/mobx-jsonapi-store.svg)](https://badge.fury.io/js/mobx-jsonapi-store)
+[![Greenkeeper badge](https://badges.greenkeeper.io/infinum/mobx-jsonapi-store.svg)](https://greenkeeper.io/)
 
 [![Build Status](https://travis-ci.org/infinum/mobx-jsonapi-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-jsonapi-store)
 [![Test Coverage](https://codeclimate.com/github/infinum/mobx-jsonapi-store/badges/coverage.svg)](https://codeclimate.com/github/infinum/mobx-jsonapi-store/coverage)
