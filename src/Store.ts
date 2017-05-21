@@ -230,6 +230,10 @@ export class Store extends NetworkStore {
     const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
     refs.forEach((ref: string) => {
       const items = obj.relationships[ref].data;
+      if (items instanceof Array && items.length < 1) {
+        // it's only possible to update items with one ore more refs. Early exit
+        return;
+      }
       if (items) {
         const models: IModel|Array<IModel> = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
         const type: string = items instanceof Array ? items[0].type : items.type;
