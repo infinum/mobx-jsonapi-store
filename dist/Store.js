@@ -202,6 +202,10 @@ var Store = (function (_super) {
         var refs = obj.relationships ? Object.keys(obj.relationships) : [];
         refs.forEach(function (ref) {
             var items = obj.relationships[ref].data;
+            if (items instanceof Array && items.length < 1) {
+                // it's only possible to update items with one ore more refs. Early exit
+                return;
+            }
             if (items) {
                 var models = utils_1.mapItems(items, function (_a) {
                     var id = _a.id, type = _a.type;
