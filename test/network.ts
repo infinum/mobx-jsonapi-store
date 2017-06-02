@@ -805,7 +805,7 @@ describe('Networking', () => {
 
       return fetch.then(
         () => expect(true).to.equal(false),
-        (err) => expect(err).to.be.an('error'),
+        (err) => expect(err).to.have.all.keys(['name', 'message', 'type']),
       );
     });
 

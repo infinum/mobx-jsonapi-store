@@ -50,8 +50,8 @@ exports.config = {
             data = responseData;
             if (status >= 400) {
                 throw {
-                    status: status,
                     message: "Invalid HTTP status: " + status,
+                    status: status,
                 };
             }
             return { data: data, headers: headers, requestHeaders: requestHeaders, status: status };

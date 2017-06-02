@@ -84,8 +84,8 @@ export const config: IConfigType = {
         data = responseData;
         if (status >= 400) {
           throw {
-            status,
             message: `Invalid HTTP status: ${status}`,
+            status,
           };
         }
 
