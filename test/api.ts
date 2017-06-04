@@ -35,7 +35,7 @@ interface IMockArgs {
 /**
  * Prepare a mock API call
  *
- * @param {Object} param - Param object
+ * @param {object} param - Param object
  * @param {String} param.name - Name of the mock API call
  * @param {String} [param.method=requestType.READ] - HTTP method to be used
  * @param {String} [param.hostname=config.root] - Hostname to be mocked
@@ -43,9 +43,9 @@ interface IMockArgs {
  * @param {any} [param.data] - Expected body
  * @param {Function} [param.query=true] - Function to be called during the query step
  * @param {Function} param.responseFn - Function to be called when response should be sent
- * @param {Object} [param.headers={'content-type': 'application/vnd.api+json'}]
+ * @param {object} [param.headers={'content-type': 'application/vnd.api+json'}]
  *   HTTP headers to be used in the mock response
- * @param {Object} [reqheaders={'content-type': 'application/vnd.api+json'}]
+ * @param {object} [reqheaders={'content-type': 'application/vnd.api+json'}]
  *   Expected request headers
  * @param {Number} status - HTTP status code that should be returned
  * @return {undefined}

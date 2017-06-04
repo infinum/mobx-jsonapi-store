@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Iterate trough object keys
  *
- * @param {Object} obj - Object that needs to be iterated
+ * @param {object} obj - Object that needs to be iterated
  * @param {Function} fn - Function that should be called for every iteration
  */
 function objectForEach(obj, fn) {
@@ -19,7 +19,7 @@ exports.objectForEach = objectForEach;
  *
  * @export
  * @template T
- * @param {(Object|Array<Object>)} data - Data which needs to be iterated
+ * @param {(object|Array<object>)} data - Data which needs to be iterated
  * @param {Function} fn - Function that needs to be callse
  * @returns {(T|Array<T>)} - The result of iteration
  */
@@ -75,8 +75,8 @@ exports.isBrowser = (typeof window !== 'undefined');
  * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
  *
  * @private
- * @param {Object} target - Target object
- * @param {Array<Object>} args - Objects to be assigned
+ * @param {object} target - Target object
+ * @param {Array<object>} args - Objects to be assigned
  * @returns
  */
 function assign(target) {

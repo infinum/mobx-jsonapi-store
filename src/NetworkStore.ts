@@ -20,7 +20,7 @@ export class NetworkStore extends Collection {
    * @param {IRequestOptions} [options] Server options
    * @returns {{
    *     url: string,
-   *     data?: Object,
+   *     data?: object,
    *     headers: IHeaders,
    *   }} Options needed for an API call
    *
@@ -33,7 +33,7 @@ export class NetworkStore extends Collection {
     options?: IRequestOptions,
   ): {
     url: string,
-    data?: Object,
+    data?: object,
     headers: IHeaders,
   } {
     const model: IModelConstructor = this.static.types.filter((item) => item.type === type)[0];

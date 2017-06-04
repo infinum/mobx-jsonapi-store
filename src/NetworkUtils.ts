@@ -13,7 +13,7 @@ import {assign, isBrowser} from './utils';
 export type FetchType = (
   method: string,
   url: string,
-  body?: Object,
+  body?: object,
   requestHeaders?: IHeaders,
 ) => Promise<IRawResponse>;
 
@@ -44,14 +44,14 @@ export const config: IConfigType = {
    *
    * @param {string} method API call method
    * @param {string} url API call URL
-   * @param {Object} [body] API call body
+   * @param {object} [body] API call body
    * @param {IHeaders} [requestHeaders] Headers that will be sent
    * @returns {Promise<IRawResponse>} Resolves with a raw response object
    */
   baseFetch(
     method: string,
     url: string,
-    body?: Object,
+    body?: object,
     requestHeaders?: IHeaders,
   ): Promise<IRawResponse> {
     let data: JsonApi.IResponse;
@@ -106,7 +106,7 @@ export function fetch({
 }: {
   url: string,
   options?: IRequestOptions,
-  data?: Object,
+  data?: object,
   method: string,
   store: Store,
 }) {
@@ -140,7 +140,7 @@ export function read(
  * @export
  * @param {Store} store Related Store
  * @param {string} url API call URL
- * @param {Object} [data] Request body
+ * @param {object} [data] Request body
  * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
@@ -148,7 +148,7 @@ export function read(
 export function create(
   store: Store,
   url: string,
-  data?: Object,
+  data?: object,
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse> {
@@ -162,7 +162,7 @@ export function create(
  * @export
  * @param {Store} store Related Store
  * @param {string} url API call URL
- * @param {Object} [data] Request body
+ * @param {object} [data] Request body
  * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
@@ -170,7 +170,7 @@ export function create(
 export function update(
   store: Store,
   url: string,
-  data?: Object,
+  data?: object,
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse> {
@@ -237,7 +237,7 @@ export function handleResponse(record: Record, prop?: string): (LibResponse) => 
         __prop__: prop,
         __queue__: true,
         __related__: record,
-      });
+      } as Object);
       return response.data as Record|Array<Record>;
     } else {
       record['__persisted'] = true;

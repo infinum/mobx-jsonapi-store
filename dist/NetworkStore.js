@@ -28,7 +28,7 @@ var NetworkStore = (function (_super) {
      * @param {IRequestOptions} [options] Server options
      * @returns {{
      *     url: string,
-     *     data?: Object,
+     *     data?: object,
      *     headers: IHeaders,
      *   }} Options needed for an API call
      *

@@ -11,7 +11,7 @@ import {mapItems, objectForEach} from './utils';
 
 interface IInternal {
   relationships?: IDictionary<JsonApi.IRelationship>;
-  meta?: Object;
+  meta?: object;
   links?: IDictionary<JsonApi.ILink>;
   persisted?: boolean;
 }
@@ -137,11 +137,11 @@ export class Record extends Model {
   /**
    * Get record metadata
    *
-   * @returns {Object} Record metadata
+   * @returns {object} Record metadata
    *
    * @memberOf Record
    */
-  public getMeta(): Object {
+  public getMeta(): object {
     return this.__internal && this.__internal.meta;
   }
 

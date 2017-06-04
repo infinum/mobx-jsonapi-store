@@ -90,11 +90,11 @@ export declare class Record extends Model {
     /**
      * Get record metadata
      *
-     * @returns {Object} Record metadata
+     * @returns {object} Record metadata
      *
      * @memberOf Record
      */
-    getMeta(): Object;
+    getMeta(): object;
     /**
      * Get record links
      *

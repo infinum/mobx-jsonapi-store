@@ -17,14 +17,14 @@ export declare class Response {
     /**
      * API response metadata
      *
-     * @type {Object}
+     * @type {object}
      * @memberOf Response
      */
-    meta?: Object;
+    meta?: object;
     /**
      * API reslonse links
      *
-     * @type {Object}
+     * @type {object}
      * @memberOf Response
      */
     links?: IDictionary<JsonApi.ILink>;

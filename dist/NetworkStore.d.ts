@@ -15,7 +15,7 @@ export declare class NetworkStore extends Collection {
      * @param {IRequestOptions} [options] Server options
      * @returns {{
      *     url: string,
-     *     data?: Object,
+     *     data?: object,
      *     headers: IHeaders,
      *   }} Options needed for an API call
      *
@@ -23,7 +23,7 @@ export declare class NetworkStore extends Collection {
      */
     protected __prepareQuery(type: string, id?: number | string, data?: JsonApi.IRequest, options?: IRequestOptions): {
         url: string;
-        data?: Object;
+        data?: object;
         headers: IHeaders;
     };
     protected __prepareFilters(filters: IFilters): Array<string>;

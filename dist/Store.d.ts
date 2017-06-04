@@ -73,7 +73,7 @@ export declare class Store extends NetworkStore {
      * @memberOf Store
      */
     destroy(type: string, id: number | string, options?: IRequestOptions): Promise<boolean>;
-    request(url: string, method?: string, data?: Object, options?: IRequestOptions): Promise<Response>;
+    request(url: string, method?: string, data?: object, options?: IRequestOptions): Promise<Response>;
     /**
      * Make the request and handle the errors
      *

@@ -16,7 +16,7 @@ import {flattenRecord, mapItems} from './utils';
 
 interface IQueryParams {
   url: string;
-  data?: Object;
+  data?: object;
   headers: IHeaders;
 }
 
@@ -148,7 +148,7 @@ export class Store extends NetworkStore {
     return Promise.resolve(true);
   }
 
-  public request(url: string, method: string = 'GET', data?: Object, options?: IRequestOptions): Promise<Response> {
+  public request(url: string, method: string = 'GET', data?: object, options?: IRequestOptions): Promise<Response> {
     return fetch({url: this.__prefixUrl(url), options, data, method, store: this});
   }
 

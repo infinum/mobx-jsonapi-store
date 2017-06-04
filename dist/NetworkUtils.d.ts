@@ -6,7 +6,7 @@ import * as JsonApi from './interfaces/JsonApi';
 import { Record } from './Record';
 import { Response as LibResponse } from './Response';
 import { Store } from './Store';
-export declare type FetchType = (method: string, url: string, body?: Object, requestHeaders?: IHeaders) => Promise<IRawResponse>;
+export declare type FetchType = (method: string, url: string, body?: object, requestHeaders?: IHeaders) => Promise<IRawResponse>;
 interface IConfigType {
     baseFetch: FetchType;
     baseUrl: string;
@@ -18,7 +18,7 @@ export declare const config: IConfigType;
 export declare function fetch({url, options, data, method, store}: {
     url: string;
     options?: IRequestOptions;
-    data?: Object;
+    data?: object;
     method: string;
     store: Store;
 }): Promise<LibResponse>;
@@ -39,24 +39,24 @@ export declare function read(store: Store, url: string, headers?: IHeaders, opti
  * @export
  * @param {Store} store Related Store
  * @param {string} url API call URL
- * @param {Object} [data] Request body
+ * @param {object} [data] Request body
  * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export declare function create(store: Store, url: string, data?: Object, headers?: IHeaders, options?: IRequestOptions): Promise<LibResponse>;
+export declare function create(store: Store, url: string, data?: object, headers?: IHeaders, options?: IRequestOptions): Promise<LibResponse>;
 /**
  * API call used to update data on the server
  *
  * @export
  * @param {Store} store Related Store
  * @param {string} url API call URL
- * @param {Object} [data] Request body
+ * @param {object} [data] Request body
  * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export declare function update(store: Store, url: string, data?: Object, headers?: IHeaders, options?: IRequestOptions): Promise<LibResponse>;
+export declare function update(store: Store, url: string, data?: object, headers?: IHeaders, options?: IRequestOptions): Promise<LibResponse>;
 /**
  * API call used to remove data from the server
  *

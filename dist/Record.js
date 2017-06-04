@@ -71,7 +71,7 @@ var Record = (function (_super) {
     /**
      * Get record metadata
      *
-     * @returns {Object} Record metadata
+     * @returns {object} Record metadata
      *
      * @memberOf Record
      */

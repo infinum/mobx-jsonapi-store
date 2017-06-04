@@ -27,15 +27,15 @@ export class Response {
   /**
    * API response metadata
    *
-   * @type {Object}
+   * @type {object}
    * @memberOf Response
    */
-  public meta?: Object;
+  public meta?: object;
 
   /**
    * API reslonse links
    *
-   * @type {Object}
+   * @type {object}
    * @memberOf Response
    */
   public links?: IDictionary<JsonApi.ILink>;

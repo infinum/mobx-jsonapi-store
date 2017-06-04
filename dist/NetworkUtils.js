@@ -16,7 +16,7 @@ exports.config = {
      *
      * @param {string} method API call method
      * @param {string} url API call URL
-     * @param {Object} [body] API call body
+     * @param {object} [body] API call body
      * @param {IHeaders} [requestHeaders] Headers that will be sent
      * @returns {Promise<IRawResponse>} Resolves with a raw response object
      */
@@ -88,7 +88,7 @@ exports.read = read;
  * @export
  * @param {Store} store Related Store
  * @param {string} url API call URL
- * @param {Object} [data] Request body
+ * @param {object} [data] Request body
  * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
@@ -104,7 +104,7 @@ exports.create = create;
  * @export
  * @param {Store} store Related Store
  * @param {string} url API call URL
- * @param {Object} [data] Request body
+ * @param {object} [data] Request body
  * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
