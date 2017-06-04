@@ -27,13 +27,15 @@ describe('Networking', () => {
 
       class OrganizationRecord extends Record {
         public static type = 'organizations';
+        public static refs = {
+          units: {
+            model: 'units',
+            property: 'organization',
+          },
+        };
 
         public name: string;
-
-        @computed get units(): UnitRecord|Array<UnitRecord> {
-          return (this.__collection.findAll('units') as Array<UnitRecord>)
-            .filter((unit: UnitRecord) => unit.organization === this);
-        }
+        public units: Array<UnitRecord>;
       }
 
       class ApiStore extends Store {
