@@ -17,14 +17,23 @@ export type FetchType = (
   requestHeaders?: IHeaders,
 ) => Promise<IRawResponse>;
 
-interface IConfigType {
+export interface IStoreFetchOpts {
+  url: string;
+  options?: IRequestOptions;
+  data?: object;
+  method: string;
+  store: Store;
+}
+
+export type StoreFetchType = (options: IStoreFetchOpts) => Promise<LibResponse>;
+
+export interface IConfigType {
   baseFetch: FetchType;
   baseUrl: string;
   defaultHeaders: IHeaders;
   fetchReference: Function;
+  storeFetch: StoreFetchType;
 }
-
-export {IConfigType};
 
 export const config: IConfigType = {
 
@@ -95,23 +104,26 @@ export const config: IConfigType = {
         return {data, error, headers, requestHeaders, status};
       });
   },
+  /**
+   * Base implementation of the stateful fetch function (can be overriden)
+   *
+   * @param {IStoreFetchOpts} options API request options
+   * @returns {Promise<Response>} Resolves with a response object
+   */
+  storeFetch({
+    url,
+    options,
+    data,
+    method = 'GET',
+    store,
+  }: IStoreFetchOpts): Promise<LibResponse> {
+    return config.baseFetch(method, url, data, options && options.headers)
+      .then((response: IRawResponse) => new LibResponse(response, store, options));
+  },
 };
 
-export function fetch({
-  url,
-  options,
-  data,
-  method = 'GET',
-  store,
-}: {
-  url: string,
-  options?: IRequestOptions,
-  data?: object,
-  method: string,
-  store: Store,
-}) {
-  return config.baseFetch(method, url, data, options && options.headers)
-    .then((response: IRawResponse) => new LibResponse(response, store, options));
+export function fetch(options: IStoreFetchOpts) {
+  return config.storeFetch(options);
 }
 
 /**
@@ -130,8 +142,13 @@ export function read(
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse> {
-  return config.baseFetch('GET', url, null, headers)
-    .then((response) => new LibResponse(response, store, options));
+  return config.storeFetch({
+    data: null,
+    method: 'GET',
+    options: {...options, headers},
+    store,
+    url,
+  });
 }
 
 /**
@@ -152,8 +169,13 @@ export function create(
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse> {
-  return config.baseFetch('POST', url, data, headers)
-    .then((response: IRawResponse) => new LibResponse(response, store, options));
+  return config.storeFetch({
+    data,
+    method: 'POST',
+    options: {...options, headers},
+    store,
+    url,
+  });
 }
 
 /**
@@ -174,8 +196,13 @@ export function update(
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse> {
-  return config.baseFetch('PATCH', url, data, headers)
-    .then((response: IRawResponse) => new LibResponse(response, store, options));
+  return config.storeFetch({
+    data,
+    method: 'PATCH',
+    options: {...options, headers},
+    store,
+    url,
+  });
 }
 
 /**
@@ -194,8 +221,13 @@ export function remove(
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse> {
-  return config.baseFetch('DELETE', url, null, headers)
-    .then((response: IRawResponse) => new LibResponse(response, store, options));
+  return config.storeFetch({
+    data: null,
+    method: 'DELETE',
+    options: {...options, headers},
+    store,
+    url,
+  });
 }
 
 /**

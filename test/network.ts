@@ -8,6 +8,8 @@ import {config, Record, Store} from '../src';
 import mockApi from './api';
 import {Event, Image, Organiser, Photo, TestStore, User} from './setup';
 
+const baseStoreFetch = config.storeFetch;
+
 describe('Networking', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
@@ -15,6 +17,10 @@ describe('Networking', () => {
   });
 
   describe('basics', () => {
+    beforeEach(() => {
+      config.storeFetch = baseStoreFetch;
+    });
+
     it('should fetch the basic data', async () => {
       mockApi({
         name: 'events-1',
@@ -36,6 +42,27 @@ describe('Networking', () => {
       expect(data.type).to.equal('event');
       expect(data.attributes.title).to.equal('Test 1');
       expect(data.relationships.image.data).to.eql({type: 'image', id: '1'});
+    });
+
+    it('should support storeFetch override', async () => {
+      mockApi({
+        name: 'events-1',
+        url: 'event',
+      });
+
+      let hasCustomStoreFetchBeenCalled = false;
+
+      config.storeFetch = (opts) => {
+        expect(opts.store).to.equal(store);
+        hasCustomStoreFetchBeenCalled = true;
+        return baseStoreFetch(opts);
+      };
+
+      const store = new Store();
+      const events = await store.fetchAll('event');
+
+      expect(events.data).to.be.an('array');
+      expect(hasCustomStoreFetchBeenCalled).to.equal(true);
     });
 
     it('should save the jsonapi data', async () => {

@@ -1,4 +1,12 @@
 "use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Response_1 = require("./Response");
 var utils_1 = require("./utils");
@@ -60,11 +68,20 @@ exports.config = {
             return { data: data, error: error, headers: headers, requestHeaders: requestHeaders, status: status };
         });
     },
+    /**
+     * Base implementation of the stateful fetch function (can be overriden)
+     *
+     * @param {IStoreFetchOpts} options API request options
+     * @returns {Promise<Response>} Resolves with a response object
+     */
+    storeFetch: function (_a) {
+        var url = _a.url, options = _a.options, data = _a.data, _b = _a.method, method = _b === void 0 ? 'GET' : _b, store = _a.store;
+        return exports.config.baseFetch(method, url, data, options && options.headers)
+            .then(function (response) { return new Response_1.Response(response, store, options); });
+    },
 };
-function fetch(_a) {
-    var url = _a.url, options = _a.options, data = _a.data, _b = _a.method, method = _b === void 0 ? 'GET' : _b, store = _a.store;
-    return exports.config.baseFetch(method, url, data, options && options.headers)
-        .then(function (response) { return new Response_1.Response(response, store, options); });
+function fetch(options) {
+    return exports.config.storeFetch(options);
 }
 exports.fetch = fetch;
 /**
@@ -78,8 +95,13 @@ exports.fetch = fetch;
  * @returns {Promise<Response>} Resolves with a Response object
  */
 function read(store, url, headers, options) {
-    return exports.config.baseFetch('GET', url, null, headers)
-        .then(function (response) { return new Response_1.Response(response, store, options); });
+    return exports.config.storeFetch({
+        data: null,
+        method: 'GET',
+        options: __assign({}, options, { headers: headers }),
+        store: store,
+        url: url,
+    });
 }
 exports.read = read;
 /**
@@ -94,8 +116,13 @@ exports.read = read;
  * @returns {Promise<Response>} Resolves with a Response object
  */
 function create(store, url, data, headers, options) {
-    return exports.config.baseFetch('POST', url, data, headers)
-        .then(function (response) { return new Response_1.Response(response, store, options); });
+    return exports.config.storeFetch({
+        data: data,
+        method: 'POST',
+        options: __assign({}, options, { headers: headers }),
+        store: store,
+        url: url,
+    });
 }
 exports.create = create;
 /**
@@ -110,8 +137,13 @@ exports.create = create;
  * @returns {Promise<Response>} Resolves with a Response object
  */
 function update(store, url, data, headers, options) {
-    return exports.config.baseFetch('PATCH', url, data, headers)
-        .then(function (response) { return new Response_1.Response(response, store, options); });
+    return exports.config.storeFetch({
+        data: data,
+        method: 'PATCH',
+        options: __assign({}, options, { headers: headers }),
+        store: store,
+        url: url,
+    });
 }
 exports.update = update;
 /**
@@ -125,8 +157,13 @@ exports.update = update;
  * @returns {Promise<Response>} Resolves with a Response object
  */
 function remove(store, url, headers, options) {
-    return exports.config.baseFetch('DELETE', url, null, headers)
-        .then(function (response) { return new Response_1.Response(response, store, options); });
+    return exports.config.storeFetch({
+        data: null,
+        method: 'DELETE',
+        options: __assign({}, options, { headers: headers }),
+        store: store,
+        url: url,
+    });
 }
 exports.remove = remove;
 /**

@@ -7,21 +7,23 @@ import { Record } from './Record';
 import { Response as LibResponse } from './Response';
 import { Store } from './Store';
 export declare type FetchType = (method: string, url: string, body?: object, requestHeaders?: IHeaders) => Promise<IRawResponse>;
-interface IConfigType {
-    baseFetch: FetchType;
-    baseUrl: string;
-    defaultHeaders: IHeaders;
-    fetchReference: Function;
-}
-export { IConfigType };
-export declare const config: IConfigType;
-export declare function fetch({url, options, data, method, store}: {
+export interface IStoreFetchOpts {
     url: string;
     options?: IRequestOptions;
     data?: object;
     method: string;
     store: Store;
-}): Promise<LibResponse>;
+}
+export declare type StoreFetchType = (options: IStoreFetchOpts) => Promise<LibResponse>;
+export interface IConfigType {
+    baseFetch: FetchType;
+    baseUrl: string;
+    defaultHeaders: IHeaders;
+    fetchReference: Function;
+    storeFetch: StoreFetchType;
+}
+export declare const config: IConfigType;
+export declare function fetch(options: IStoreFetchOpts): Promise<LibResponse>;
 /**
  * API call used to get data from the server
  *
