@@ -18,7 +18,7 @@ exports.config = {
         'content-type': 'application/vnd.api+json',
     },
     /** Reference of the fetch method that should be used */
-    fetchReference: utils_1.isBrowser && window.fetch,
+    fetchReference: utils_1.isBrowser && window.fetch.bind(window),
     /**
      * Base implementation of the fetch function (can be overriden)
      *

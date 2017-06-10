@@ -46,7 +46,7 @@ export const config: IConfigType = {
   },
 
   /** Reference of the fetch method that should be used */
-  fetchReference: isBrowser && window.fetch,
+  fetchReference: isBrowser && window.fetch.bind(window),
 
   /**
    * Base implementation of the fetch function (can be overriden)
