@@ -34,11 +34,13 @@ exports.config = {
         var status;
         var headers;
         var request = Promise.resolve();
+        var uppercaseMethod = method.toUpperCase();
+        var isBodySupported = uppercaseMethod !== 'GET' && uppercaseMethod !== 'HEAD';
         return request
             .then(function () {
             var reqHeaders = utils_1.assign({}, exports.config.defaultHeaders, requestHeaders);
             return _this.fetchReference(url, {
-                body: JSON.stringify(body),
+                body: isBodySupported && JSON.stringify(body),
                 headers: reqHeaders,
                 method: method,
             });

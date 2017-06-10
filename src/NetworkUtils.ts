@@ -69,11 +69,14 @@ export const config: IConfigType = {
 
     const request: Promise<void> = Promise.resolve();
 
+    const uppercaseMethod = method.toUpperCase();
+    const isBodySupported = uppercaseMethod !== 'GET' && uppercaseMethod !== 'HEAD';
+
     return request
       .then(() => {
         const reqHeaders: IHeaders = assign({}, config.defaultHeaders, requestHeaders) as IHeaders;
         return this.fetchReference(url, {
-          body: JSON.stringify(body),
+          body: isBodySupported && JSON.stringify(body),
           headers: reqHeaders,
           method,
         });
