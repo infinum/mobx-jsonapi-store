@@ -165,6 +165,21 @@ describe('Networking', () => {
       expect(image.data['url']).to.equal('http://example.com/1.jpg');
     });
 
+    it('should recover if no link defined', async () => {
+      mockApi({
+        name: 'event-1',
+        url: 'event',
+      });
+
+      const store = new Store();
+      const events = await store.fetchAll('event');
+      const event = events.data as Record;
+
+      const foobar = await event.fetchLink('foobar');
+      expect(foobar.data).to.be.an('array');
+      expect(foobar.data).to.have.length(0);
+    });
+
     it('should support relationship link fetch', async () => {
       mockApi({
         name: 'events-1',
@@ -224,6 +239,24 @@ describe('Networking', () => {
       expect(record['title']).to.equal('Test 1');
     });
 
+    it('should handle the request methods', async () => {
+      mockApi({
+        method: 'PUT',
+        name: 'event-1b',
+        url: 'event/1',
+      });
+
+      const store = new Store();
+      const events = await store.request('event/1', 'PUT');
+
+      const record = events.data as Record;
+
+      expect(record['title']).to.equal('Test 1');
+    });
+
+  });
+
+  describe('caching', () => {
     describe('fetch caching', () => {
       it('should cache fetch requests', async () => {
         mockApi({
@@ -240,6 +273,29 @@ describe('Networking', () => {
         const events2 = await store.fetch('event', 12345);
 
         expect(events2).to.equal(events);
+      });
+
+      it('should clear fetch cache on removeAll', async () => {
+        mockApi({
+          name: 'event-1',
+          url: 'event/12345',
+        });
+
+        const store = new Store();
+        const events = await store.fetch('event', 12345);
+
+        expect(events.data['id']).to.equal(12345);
+
+        store.removeAll('event');
+
+        const req2 = mockApi({
+          name: 'event-1',
+          url: 'event/12345',
+        });
+
+        const events2 = await store.fetch('event', 12345);
+        expect(events2.data['id']).to.equal(12345);
+        expect(req2.isDone()).to.equal(true);
       });
 
       it('should ignore fetch cache if force is true', async () => {
@@ -363,6 +419,30 @@ describe('Networking', () => {
         const events2 = await store.fetchAll('event');
 
         expect(events2).to.equal(events);
+      });
+
+      it('should clear fetchAll cache on removeAll', async () => {
+        mockApi({
+          name: 'events-1',
+          url: 'event',
+        });
+
+        const store = new Store();
+        const events = await store.fetchAll('event');
+
+        expect(events.data).to.be.an('array');
+        expect(events.data['length']).to.equal(4);
+
+        store.removeAll('event');
+
+        const req2 = mockApi({
+          name: 'events-1',
+          url: 'event',
+        });
+
+        const events2 = await store.fetchAll('event');
+        expect(events2.data['length']).to.equal(4);
+        expect(req2.isDone()).to.equal(true);
       });
 
       it('should ignore fetchAll cache if force is true', async () => {

@@ -27,6 +27,30 @@ describe('General', () => {
     expect(event.name).to.equal('Demo');
   });
 
+  it('should handle missing reference', () => {
+    const store = new TestStore();
+    const event = store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        relationships: {
+          image: {
+            data: {
+              id: 1,
+              type: 'image',
+            },
+          },
+        },
+        type: 'events',
+      },
+    }) as Event;
+
+    expect(event.name).to.equal('Demo');
+    expect(event.image).to.be.a('null');
+  });
+
   it('should find an event', () => {
     const store = new TestStore();
     store.sync({

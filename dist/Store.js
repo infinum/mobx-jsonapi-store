@@ -96,15 +96,16 @@ var Store = (function (_super) {
         if (!this.static.cache) {
             return this.__doFetch(query, options);
         }
-        if (force || !(query.url in this.__cache.fetchAll)) {
-            this.__cache.fetchAll[query.url] = this.__doFetch(query, options)
+        this.__cache.fetchAll[type] = this.__cache.fetchAll[type] || {};
+        if (force || !(query.url in this.__cache.fetchAll[type])) {
+            this.__cache.fetchAll[type][query.url] = this.__doFetch(query, options)
                 .catch(function (e) {
                 // Don't cache if there was an error
-                delete _this.__cache.fetchAll[query.url];
+                delete _this.__cache.fetchAll[type][query.url];
                 throw e;
             });
         }
-        return this.__cache.fetchAll[query.url];
+        return this.__cache.fetchAll[type][query.url];
     };
     /**
      * Destroy a record (API & store)
@@ -126,6 +127,12 @@ var Store = (function (_super) {
     Store.prototype.request = function (url, method, data, options) {
         if (method === void 0) { method = 'GET'; }
         return NetworkUtils_1.fetch({ url: this.__prefixUrl(url), options: options, data: data, method: method, store: this });
+    };
+    Store.prototype.removeAll = function (type) {
+        var models = _super.prototype.removeAll.call(this, type);
+        this.__cache.fetch[type] = {};
+        this.__cache.fetchAll[type] = {};
+        return models;
     };
     /**
      * Make the request and handle the errors
@@ -196,9 +203,6 @@ var Store = (function (_super) {
     Store.prototype.__updateRelationships = function (obj) {
         var _this = this;
         var record = this.find(obj.type, obj.id);
-        if (!record) {
-            return;
-        }
         var refs = obj.relationships ? Object.keys(obj.relationships) : [];
         refs.forEach(function (ref) {
             var items = obj.relationships[ref].data;

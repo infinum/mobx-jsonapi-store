@@ -118,16 +118,17 @@ export class Store extends NetworkStore {
       return this.__doFetch(query, options);
     }
 
-    if (force || !(query.url in this.__cache.fetchAll)) {
-      this.__cache.fetchAll[query.url] = this.__doFetch(query, options)
+    this.__cache.fetchAll[type] = this.__cache.fetchAll[type] || {};
+    if (force || !(query.url in this.__cache.fetchAll[type])) {
+      this.__cache.fetchAll[type][query.url] = this.__doFetch(query, options)
         .catch((e) => {
           // Don't cache if there was an error
-          delete this.__cache.fetchAll[query.url];
+          delete this.__cache.fetchAll[type][query.url];
           throw e;
         });
     }
 
-    return this.__cache.fetchAll[query.url];
+    return this.__cache.fetchAll[type][query.url];
   }
 
   /**
@@ -150,6 +151,13 @@ export class Store extends NetworkStore {
 
   public request(url: string, method: string = 'GET', data?: object, options?: IRequestOptions): Promise<Response> {
     return fetch({url: this.__prefixUrl(url), options, data, method, store: this});
+  }
+
+  public removeAll(type: string) {
+    const models = super.removeAll(type);
+    this.__cache.fetch[type] = {};
+    this.__cache.fetchAll[type] = {};
+    return models;
   }
 
   /**
@@ -224,9 +232,6 @@ export class Store extends NetworkStore {
    */
   private __updateRelationships(obj: JsonApi.IRecord): void {
     const record: IModel = this.find(obj.type, obj.id);
-    if (!record) {
-      return;
-    }
     const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
     refs.forEach((ref: string) => {
       const items = obj.relationships[ref].data;

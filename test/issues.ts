@@ -10,7 +10,7 @@ import {config, Record, Store} from '../src';
 import mockApi from './api';
 import {Event, Image, Organiser, Photo, TestStore, User} from './setup';
 
-describe('Networking', () => {
+describe('Reported issues', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
     config.baseUrl = 'http://example.com/';
