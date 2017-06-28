@@ -258,8 +258,8 @@ export function fetchLink(
   return Promise.resolve(new LibResponse({data: null}, store));
 }
 
-export function handleResponse(record: Record, prop?: string): (LibResponse) => Record|Array<Record> {
-  return (response: LibResponse): Record|Array<Record> => {
+export function handleResponse(record: Record, prop?: string): (LibResponse) => Record {
+  return (response: LibResponse): Record => {
     if (response.error) {
       throw response.error;
     }
@@ -273,10 +273,10 @@ export function handleResponse(record: Record, prop?: string): (LibResponse) => 
         __queue__: true,
         __related__: record,
       } as Object);
-      return response.data as Record|Array<Record>;
+      return response.data as Record;
     } else {
       record['__persisted'] = true;
-      return response.replaceData(record).data as Record|Array<Record>;
+      return response.replaceData(record).data as Record;
     }
   };
 }

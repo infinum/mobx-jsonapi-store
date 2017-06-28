@@ -1,4 +1,4 @@
-import {Model} from 'mobx-collection-store';
+import {IModel, Model} from 'mobx-collection-store';
 
 import IDictionary from './interfaces/IDictionary';
 import IRequestOptions from './interfaces/IRequestOptions';
@@ -16,7 +16,7 @@ interface IInternal {
   persisted?: boolean;
 }
 
-export class Record extends Model {
+export class Record extends Model implements IModel {
 
   /**
    * Type property of the record class
