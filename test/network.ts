@@ -44,6 +44,18 @@ describe('Networking', () => {
       expect(data.relationships.image.data).to.eql({type: 'image', id: '1'});
     });
 
+    it('should use the correct types', async () => {
+      const store = new TestStore();
+
+      const user = new User({firstName: 'John'});
+      const userData = user.toJsonApi();
+      expect(userData.type).to.equal('user');
+
+      const wrongEvent = new Event({type: 'evil-event', name: 'Test'});
+      const wrongEventData = wrongEvent.toJsonApi();
+      expect(wrongEventData.type).to.equal('evil-event');
+    });
+
     it('should support storeFetch override', async () => {
       mockApi({
         name: 'events-1',
