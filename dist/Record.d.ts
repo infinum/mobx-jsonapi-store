@@ -23,11 +23,20 @@ export declare class Record extends Model {
     /**
      * Base url for API requests if there is no self link
      *
+     * @deprecated
      * @static
      * @type {string}
      * @memberOf Record
      */
     static baseUrl: string;
+    /**
+     * Endpoint for API requests if there is no self link
+     *
+     * @static
+     * @type {string}
+     * @memberOf Record
+     */
+    static endpoint: string;
     'static': typeof Record;
     /**
      * Record id

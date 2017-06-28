@@ -39,11 +39,21 @@ export class Record extends Model {
   /**
    * Base url for API requests if there is no self link
    *
+   * @deprecated
    * @static
    * @type {string}
    * @memberOf Record
    */
   public static baseUrl: string;
+
+  /**
+   * Endpoint for API requests if there is no self link
+   *
+   * @static
+   * @type {string}
+   * @memberOf Record
+   */
+  public static endpoint: string;
 
   public 'static': typeof Record;
 
@@ -350,7 +360,7 @@ export class Record extends Model {
       return typeof self === 'string' ? self : self.href;
     }
 
-    const url = this.static.baseUrl || this.type;
+    const url = this.static.endpoint || this.static.baseUrl || this.type;
 
     return this.__persisted
       ? `${config.baseUrl}${url}/${this.id}`
