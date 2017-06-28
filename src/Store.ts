@@ -153,8 +153,8 @@ export class Store extends NetworkStore {
     return fetch({url: this.__prefixUrl(url), options, data, method, store: this});
   }
 
-  public removeAll(type: string) {
-    const models = super.removeAll(type);
+  public removeAll<T extends IModel>(type: string): Array<T> {
+    const models = super.removeAll<T>(type);
     this.__cache.fetch[type] = {};
     this.__cache.fetchAll[type] = {};
     return models;

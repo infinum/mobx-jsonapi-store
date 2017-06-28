@@ -74,7 +74,7 @@ export declare class Store extends NetworkStore {
      */
     destroy(type: string, id: number | string, options?: IRequestOptions): Promise<boolean>;
     request(url: string, method?: string, data?: object, options?: IRequestOptions): Promise<Response>;
-    removeAll(type: string): IModel[];
+    removeAll<T extends IModel>(type: string): Array<T>;
     /**
      * Make the request and handle the errors
      *
