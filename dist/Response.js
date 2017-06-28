@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = require("mobx");
+var Record_1 = require("./Record");
+var utils_1 = require("./utils");
 var NetworkUtils_1 = require("./NetworkUtils");
 var Response = (function () {
     function Response(response, store, options, overrideData) {
@@ -17,7 +19,17 @@ var Response = (function () {
         this.__options = options;
         this.__response = response;
         this.status = response.status;
-        this.data = overrideData ? store.add(overrideData) : store.sync(response.data);
+        if (store) {
+            this.data = overrideData ? store.add(overrideData) : store.sync(response.data);
+        }
+        else if (response.data) {
+            // The case when a record is not in a store and save/remove are used
+            var resp = response.data;
+            if (resp.data instanceof Array) {
+                throw new Error('A save/remove operation should not return an array of results');
+            }
+            this.data = overrideData || new Record_1.Record(utils_1.flattenRecord(resp.data));
+        }
         this.meta = (response.data && response.data.meta) || {};
         this.links = (response.data && response.data.links) || {};
         this.jsonapi = (response.data && response.data.jsonapi) || {};
@@ -44,7 +56,9 @@ var Response = (function () {
         if (record === data) {
             return this;
         }
-        this.__store.remove(record.type, record.id);
+        if (this.__store) {
+            this.__store.remove(record.type, record.id);
+        }
         data.update(record.toJS());
         // tslint:disable-next-line:no-string-literal
         data['__data'].id = record.id;

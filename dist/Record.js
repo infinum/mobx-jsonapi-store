@@ -232,7 +232,9 @@ var Record = (function (_super) {
                 throw response.error;
             }
             _this.__persisted = false;
-            _this.__collection.remove(_this.type, _this.id);
+            if (_this.__collection) {
+                _this.__collection.remove(_this.type, _this.id);
+            }
             return true;
         });
     };

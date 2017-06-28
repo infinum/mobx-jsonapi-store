@@ -11,6 +11,7 @@ import * as JsonApi from './interfaces/JsonApi';
 import {NetworkStore} from './NetworkStore';
 import {Record} from './Record';
 import {Store} from './Store';
+import {flattenRecord} from './utils';
 
 import {fetchLink, read} from './NetworkUtils';
 
@@ -148,12 +149,23 @@ export class Response {
    */
   private __cache: IDictionary<Promise<Response>> = {};
 
-  constructor(response: IRawResponse, store: Store, options?: IRequestOptions, overrideData?: IModel|Array<IModel>) {
+  constructor(response: IRawResponse, store?: Store, options?: IRequestOptions, overrideData?: IModel|Array<IModel>) {
     this.__store = store;
     this.__options = options;
     this.__response = response;
     this.status = response.status;
-    this.data = overrideData ? store.add(overrideData) : store.sync(response.data);
+
+    if (store) {
+      this.data = overrideData ? store.add(overrideData) : store.sync(response.data);
+    } else if (response.data) {
+      // The case when a record is not in a store and save/remove are used
+      const resp = response.data;
+      if (resp.data instanceof Array) {
+        throw new Error('A save/remove operation should not return an array of results');
+      }
+      this.data = overrideData || new Record(flattenRecord(resp.data));
+    }
+
     this.meta = (response.data && response.data.meta) || {};
     this.links = (response.data && response.data.links) || {};
     this.jsonapi = (response.data && response.data.jsonapi) || {};
@@ -184,7 +196,11 @@ export class Response {
     if (record === data) {
       return this;
     }
-    this.__store.remove(record.type, record.id);
+
+    if (this.__store) {
+      this.__store.remove(record.type, record.id);
+    }
+
     data.update(record.toJS());
 
     // tslint:disable-next-line:no-string-literal

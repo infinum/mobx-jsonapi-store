@@ -123,7 +123,7 @@ export declare class Response {
      * @memberOf Response
      */
     private __cache;
-    constructor(response: IRawResponse, store: Store, options?: IRequestOptions, overrideData?: IModel | Array<IModel>);
+    constructor(response: IRawResponse, store?: Store, options?: IRequestOptions, overrideData?: IModel | Array<IModel>);
     /**
      * Replace the response record with a different record. Used to replace a record while keeping the same reference
      *

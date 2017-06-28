@@ -314,7 +314,11 @@ export class Record extends Model {
         }
 
         this.__persisted = false;
-        this.__collection.remove(this.type, this.id);
+
+        if (this.__collection) {
+          this.__collection.remove(this.type, this.id);
+        }
+
         return true;
       });
   }
