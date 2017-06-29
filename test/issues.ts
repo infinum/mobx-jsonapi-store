@@ -61,4 +61,31 @@ describe('Reported issues', () => {
       expect(org.units).to.be.an('array');
     });
   });
+
+  describe('fetch issues', () => {
+    beforeEach(() => {
+      this.defaultFetch = config.fetchReference;
+    });
+
+    afterEach(() => {
+      config.fetchReference = this.defaultFetch;
+    });
+
+    it('should not send a body on GET and HEAD', async () => {
+      config.fetchReference = async (url, options) => {
+        expect(options.body).to.be.an('undefined');
+
+        // Mock response
+        return {
+          status: 204,
+          async json() {
+            return {};
+          },
+        };
+      };
+
+      const store = new Store();
+      const events = await store.fetchAll('event');
+    });
+  });
 });
