@@ -88,4 +88,50 @@ describe('Reported issues', () => {
       const events = await store.fetchAll('event');
     });
   });
+
+  describe('save creates a new model', () => {
+    it('should update the existing generic model', async () => {
+      const store = new Store();
+      const record = new Record({
+        password: 'hunter2',
+        type: 'sessions',
+        username: 'foobar',
+      });
+      store.add(record);
+
+      mockApi({
+        method: 'POST',
+        name: 'session-1',
+        url: 'sessions',
+      });
+
+      const updated = await record.save();
+      expect(updated).to.equal(record);
+      expect(store.length).to.equal(1);
+    });
+
+    it('should update the existing custom model', async () => {
+      class Session extends Record {}
+      Session.type = 'sessions';
+      Session.endpoint = 'sessions';
+
+      class AppStore extends Store {}
+      AppStore.types = [Session];
+      const store = new AppStore();
+
+      mockApi({
+        method: 'POST',
+        name: 'session-1',
+        url: 'sessions',
+      });
+
+      const login = new Session({email: 'test@example.com', password: 'hunter2'});
+      store.add(login);
+      const session = await login.save();
+
+      expect(session).to.equal(login);
+      expect(store.length).to.equal(1);
+      expect(store.find('sessions', 12345)).to.equal(session);
+    });
+  });
 });

@@ -234,25 +234,25 @@ var Store = (function (_super) {
         utils_1.mapItems((body && body.included) || [], fn);
         return utils_1.mapItems((body && body.data) || [], fn);
     };
+    /**
+     * List of Models that will be used in the collection
+     *
+     * @static
+     *
+     * @memberOf Store
+     */
+    Store.types = [Record_1.Record];
+    /**
+     * Should the cache be used for API calls when possible
+     *
+     * @static
+     *
+     * @memberof Store
+     */
+    Store.cache = true;
+    __decorate([
+        mobx_1.action
+    ], Store.prototype, "sync", null);
     return Store;
 }(NetworkStore_1.NetworkStore));
-/**
- * List of Models that will be used in the collection
- *
- * @static
- *
- * @memberOf Store
- */
-Store.types = [Record_1.Record];
-/**
- * Should the cache be used for API calls when possible
- *
- * @static
- *
- * @memberof Store
- */
-Store.cache = true;
-__decorate([
-    mobx_1.action
-], Store.prototype, "sync", null);
 exports.Store = Store;

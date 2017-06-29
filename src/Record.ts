@@ -360,7 +360,7 @@ export class Record extends Model implements IModel {
       return typeof self === 'string' ? self : self.href;
     }
 
-    const url = this.static.endpoint || this.static.baseUrl || this.type;
+    const url = this.static.endpoint || this.static.baseUrl || this.type || this.static.type;
 
     return this.__persisted
       ? `${config.baseUrl}${url}/${this.id}`

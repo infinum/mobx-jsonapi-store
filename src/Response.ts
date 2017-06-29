@@ -203,8 +203,14 @@ export class Response {
 
     data.update(record.toJS());
 
-    // tslint:disable-next-line:no-string-literal
+    // TODO: Refactor this to avoid using mobx-collection-store internals
+    const oldId = data['id'];
     data['__data'].id = record.id;
+    if (this.__store) {
+      this.__store['__modelHash'][record.type][record.id] = this.__store['__modelHash'][record.type][oldId];
+      delete this.__store['__modelHash'][record.type][oldId];
+    }
+
     return new Response(this.__response, this.__store, this.__options, data);
   }
 
