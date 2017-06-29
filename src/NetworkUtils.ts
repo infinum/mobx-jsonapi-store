@@ -76,7 +76,7 @@ export const config: IConfigType = {
       .then(() => {
         const reqHeaders: IHeaders = assign({}, config.defaultHeaders, requestHeaders) as IHeaders;
         return this.fetchReference(url, {
-          body: isBodySupported && JSON.stringify(body),
+          body: isBodySupported && JSON.stringify(body) || undefined,
           headers: reqHeaders,
           method,
         });

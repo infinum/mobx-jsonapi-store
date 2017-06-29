@@ -40,7 +40,7 @@ exports.config = {
             .then(function () {
             var reqHeaders = utils_1.assign({}, exports.config.defaultHeaders, requestHeaders);
             return _this.fetchReference(url, {
-                body: isBodySupported && JSON.stringify(body),
+                body: isBodySupported && JSON.stringify(body) || undefined,
                 headers: reqHeaders,
                 method: method,
             });
