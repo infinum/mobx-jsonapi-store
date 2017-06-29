@@ -197,7 +197,7 @@ function handleResponse(record, prop) {
             record['__persisted'] = true;
             return record;
         }
-        else if (response.status === 201) {
+        else if (response.status === 202) {
             response.data.update({
                 __prop__: prop,
                 __queue__: true,

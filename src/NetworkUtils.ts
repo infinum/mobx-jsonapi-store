@@ -267,7 +267,7 @@ export function handleResponse(record: Record, prop?: string): (LibResponse) => 
     if (response.status === 204) {
       record['__persisted'] = true;
       return record as Record;
-    } else if (response.status === 201) {
+    } else if (response.status === 202) {
       (response.data as Record).update({
         __prop__: prop,
         __queue__: true,

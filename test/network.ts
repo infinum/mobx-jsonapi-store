@@ -645,7 +645,7 @@ describe('Networking', () => {
         expect(updated).to.equal(record);
       });
 
-      it('should add a record with queue (201)', async () => {
+      it('should add a record with queue (202)', async () => {
         const store = new Store();
         const record = new Record({
           title: 'Example title',
@@ -659,7 +659,7 @@ describe('Networking', () => {
           }),
           method: 'POST',
           name: 'queue-1',
-          status: 201,
+          status: 202,
           url: 'event',
         });
 
@@ -695,7 +695,7 @@ describe('Networking', () => {
         expect(updated).to.equal(record);
       });
 
-      it('should add a record with queue (201) if not in store', async () => {
+      it('should add a record with queue (202) if not in store', async () => {
         const record = new Record({
           title: 'Example title',
           type: 'event',
@@ -707,7 +707,7 @@ describe('Networking', () => {
           }),
           method: 'POST',
           name: 'queue-1',
-          status: 201,
+          status: 202,
           url: 'event',
         });
 
