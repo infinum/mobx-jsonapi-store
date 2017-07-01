@@ -4,6 +4,8 @@ JSON API Store for MobX
 
 Don't need any [JSON API](http://jsonapi.org/) specific features? Check out [mobx-collection-store](https://github.com/infinum/mobx-collection-store).
 
+**Can be used with [Redux DevTools](https://github.com/infinum/mobx-jsonapi-store/wiki/Redux-DevTools).**
+
 [![Build Status](https://travis-ci.org/infinum/mobx-jsonapi-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-jsonapi-store)
 [![Test Coverage](https://codeclimate.com/github/infinum/mobx-jsonapi-store/badges/coverage.svg)](https://codeclimate.com/github/infinum/mobx-jsonapi-store/coverage)
 [![npm version](https://badge.fury.io/js/mobx-jsonapi-store.svg)](https://badge.fury.io/js/mobx-jsonapi-store)
@@ -49,6 +51,8 @@ The main idea behind the library is to have one instance of the store that conta
 * [Configuring the store](https://github.com/infinum/mobx-jsonapi-store/wiki/Configuring-the-store)
 * [Using the store](https://github.com/infinum/mobx-jsonapi-store/wiki/Using-the-store)
 * [Using the network methods](https://github.com/infinum/mobx-jsonapi-store/wiki/Using-the-network)
+* [Persisting data locally](https://github.com/infinum/mobx-jsonapi-store/wiki/Persisting-data-locally)
+* [Redux DevTools](https://github.com/infinum/mobx-jsonapi-store/wiki/Redux-DevTools)
 
 # JSON API Spec
 mobx-jsonapi-store is [100% compatible with the JSON API v1.0 spec](https://github.com/infinum/mobx-jsonapi-store/wiki/JSON-API-Spec)
