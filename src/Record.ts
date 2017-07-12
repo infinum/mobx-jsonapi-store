@@ -7,7 +7,7 @@ import * as JsonApi from './interfaces/JsonApi';
 import {config, create, fetchLink, handleResponse, remove, update} from './NetworkUtils';
 import {Response} from './Response';
 import {Store} from './Store';
-import {mapItems, objectForEach} from './utils';
+import {getValue, mapItems, objectForEach} from './utils';
 
 interface IInternal {
   relationships?: IDictionary<JsonApi.IRelationship>;
@@ -50,10 +50,10 @@ export class Record extends Model implements IModel {
    * Endpoint for API requests if there is no self link
    *
    * @static
-   * @type {string}
+   * @type {string|() => string}
    * @memberOf Record
    */
-  public static endpoint: string;
+  public static endpoint: string|(() => string);
 
   public 'static': typeof Record;
 
@@ -360,7 +360,7 @@ export class Record extends Model implements IModel {
       return typeof self === 'string' ? self : self.href;
     }
 
-    const url = this.static.endpoint || this.static.baseUrl || this.type || this.static.type;
+    const url = getValue<string>(this.static.endpoint) || this.static.baseUrl || this.type || this.static.type;
 
     return this.__persisted
       ? `${config.baseUrl}${url}/${this.id}`

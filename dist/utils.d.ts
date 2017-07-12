@@ -37,3 +37,13 @@ export declare const isBrowser: boolean;
  * @returns
  */
 export declare function assign(target: object, ...args: Array<object>): object;
+/**
+ * Returns the value if it's not a function. If it's a function
+ * it calls it.
+ *
+ * @export
+ * @template T
+ * @param {(T|(() => T))} target can be  anything or function
+ * @returns {T} value
+ */
+export declare function getValue<T>(target: T | (() => T)): T;

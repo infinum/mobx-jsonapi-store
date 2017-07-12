@@ -6,7 +6,7 @@ import IHeaders from './interfaces/IHeaders';
 import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
 import {config} from './NetworkUtils';
-import {objectForEach} from './utils';
+import {getValue, objectForEach} from './utils';
 
 export class NetworkStore extends Collection {
 
@@ -37,7 +37,9 @@ export class NetworkStore extends Collection {
     headers: IHeaders,
   } {
     const model: IModelConstructor = this.static.types.filter((item) => item.type === type)[0];
-    const path: string = model ? (model['endpoint'] || model['baseUrl'] || model.type) : type;
+    const path: string = model
+      ? (getValue<string>(model['endpoint']) || model['baseUrl'] || model.type)
+      : type;
 
     const url: string = id ? `${path}/${id}` : `${path}`;
     const headers: IDictionary<string> = options ? options.headers : {};
