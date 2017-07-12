@@ -50,10 +50,10 @@ export class Record extends Model implements IModel {
    * Endpoint for API requests if there is no self link
    *
    * @static
-   * @type {string}
+   * @type {string|() => string}
    * @memberOf Record
    */
-  public static endpoint: string;
+  public static endpoint: string|(() => string);
 
   public 'static': typeof Record;
 
