@@ -36,7 +36,9 @@ var NetworkStore = (function (_super) {
      */
     NetworkStore.prototype.__prepareQuery = function (type, id, data, options) {
         var model = this.static.types.filter(function (item) { return item.type === type; })[0];
-        var path = model ? (model['endpoint'] || model['baseUrl'] || model.type) : type;
+        var path = model
+            ? (utils_1.getValue(model['endpoint']) || model['baseUrl'] || model.type)
+            : type;
         var url = id ? path + "/" + id : "" + path;
         var headers = options ? options.headers : {};
         var params = this.__prepareFilters((options && options.filter) || {}).concat(this.__prepareSort(options && options.sort), this.__prepareIncludes(options && options.include), this.__prepareFields((options && options.fields) || {}));

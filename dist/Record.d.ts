@@ -33,10 +33,10 @@ export declare class Record extends Model implements IModel {
      * Endpoint for API requests if there is no self link
      *
      * @static
-     * @type {string}
+     * @type {string|() => string}
      * @memberOf Record
      */
-    static endpoint: string;
+    static endpoint: string | (() => string);
     'static': typeof Record;
     /**
      * Record id

@@ -96,3 +96,19 @@ function assign(target) {
     return target;
 }
 exports.assign = assign;
+/**
+ * Returns the value if it's not a function. If it's a function
+ * it calls it.
+ *
+ * @export
+ * @template T
+ * @param {(T|(() => T))} target can be  anything or function
+ * @returns {T} value
+ */
+function getValue(target) {
+    if (typeof target === 'function') {
+        return target();
+    }
+    return target;
+}
+exports.getValue = getValue;

@@ -262,7 +262,7 @@ var Record = (function (_super) {
             var self_1 = links.self;
             return typeof self_1 === 'string' ? self_1 : self_1.href;
         }
-        var url = this.static.endpoint || this.static.baseUrl || this.type || this.static.type;
+        var url = utils_1.getValue(this.static.endpoint) || this.static.baseUrl || this.type || this.static.type;
         return this.__persisted
             ? "" + NetworkUtils_1.config.baseUrl + url + "/" + this.id
             : "" + NetworkUtils_1.config.baseUrl + url;
