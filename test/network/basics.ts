@@ -210,29 +210,6 @@ describe('Network basics', () => {
 
   });
 
-  it('should support baseUrl', async () => {
-    class Event extends Record {
-      public static type = 'event';
-      public static baseUrl = 'foo/event';
-    }
-
-    // tslint:disable-next-line:max-classes-per-file
-    class Collection extends Store {
-      public static types = [Event];
-    }
-
-    const store = new Collection();
-
-    mockApi({
-      name: 'event-1',
-      url: 'foo/event',
-    });
-
-    const response = await store.fetchAll('event');
-    const event = response.data as Event;
-    expect(event.type).to.equal('event');
-  });
-
   it('should support endpoint', async () => {
     // tslint:disable-next-line:max-classes-per-file
     class Event extends Record {
