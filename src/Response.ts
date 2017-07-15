@@ -160,9 +160,12 @@ export class Response {
     } else if (response.data) {
       // The case when a record is not in a store and save/remove are used
       const resp = response.data;
+
+      /* istanbul ignore if */
       if (resp.data instanceof Array) {
         throw new Error('A save/remove operation should not return an array of results');
       }
+
       this.data = overrideData || new Record(flattenRecord(resp.data));
     }
 
@@ -229,7 +232,10 @@ export class Response {
    */
   private __fetchLink(name) {
     if (!this.__cache[name]) {
+
+      /* istanbul ignore next */
       const link: JsonApi.ILink = name in this.links ? this.links[name] : null;
+
       this.__cache[name] = fetchLink(link, this.__store, this.requestHeaders, this.__options);
     }
     return this.__cache[name];

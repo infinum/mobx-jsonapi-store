@@ -156,6 +156,7 @@ var Store = (function (_super) {
      * @memberOf Store
      */
     Store.prototype.__handleErrors = function (response) {
+        /* istanbul ignore if */
         if (response.error) {
             throw response.error;
         }
@@ -186,6 +187,7 @@ var Store = (function (_super) {
         }
         // In case a record is not a real record
         // TODO: Figure out when this happens and try to handle it better
+        /* istanbul ignore else */
         if (record && typeof record.setPersisted === 'function') {
             record.setPersisted(true);
         }

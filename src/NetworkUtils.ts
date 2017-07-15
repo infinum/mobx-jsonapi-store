@@ -46,6 +46,7 @@ export const config: IConfigType = {
   },
 
   /** Reference of the fetch method that should be used */
+  /* istanbul ignore next */
   fetchReference: isBrowser && window.fetch.bind(window),
 
   /**
@@ -251,6 +252,8 @@ export function fetchLink(
 ): Promise<LibResponse> {
   if (link) {
     const href: string = typeof link === 'object' ? link.href : link;
+
+    /* istanbul ignore else */
     if (href) {
       return read(store, href, requestHeaders, options);
     }
@@ -260,6 +263,8 @@ export function fetchLink(
 
 export function handleResponse(record: Record, prop?: string): (LibResponse) => Record {
   return (response: LibResponse): Record => {
+
+    /* istanbul ignore if */
     if (response.error) {
       throw response.error;
     }

@@ -25,6 +25,7 @@ var Response = (function () {
         else if (response.data) {
             // The case when a record is not in a store and save/remove are used
             var resp = response.data;
+            /* istanbul ignore if */
             if (resp.data instanceof Array) {
                 throw new Error('A save/remove operation should not return an array of results');
             }
@@ -83,6 +84,7 @@ var Response = (function () {
      */
     Response.prototype.__fetchLink = function (name) {
         if (!this.__cache[name]) {
+            /* istanbul ignore next */
             var link = name in this.links ? this.links[name] : null;
             this.__cache[name] = NetworkUtils_1.fetchLink(link, this.__store, this.requestHeaders, this.__options);
         }

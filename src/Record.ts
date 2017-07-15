@@ -130,6 +130,7 @@ export class Record extends Model implements IModel {
   ): Promise<Response> {
     this.__relationshipLinkCache[relationship] = this.__relationshipLinkCache[relationship] || {};
 
+    /* istanbul ignore else */
     if (!(name in this.__relationshipLinkCache) || force) {
       const link: JsonApi.ILink = (
         'relationships' in this.__internal &&
@@ -191,6 +192,8 @@ export class Record extends Model implements IModel {
         const prop: string = this['__prop__'];
         const record: Record = response.data as Record;
         if (record && record.type !== this.type && record.type === related.type) {
+
+          /* istanbul ignore if */
           if (prop) {
             related[prop] = record;
             return response;
@@ -288,11 +291,14 @@ export class Record extends Model implements IModel {
       'self' in this.__internal.relationships[relationship]
     ) ? this.__internal.relationships[relationship]['self'] : null;
 
+    /* istanbul ignore if */
     if (!link) {
       throw new Error('The relationship doesn\'t have a defined link');
     }
 
     const store: Store = this.__collection as Store;
+
+    /* istanbul ignore next */
     const href: string = typeof link === 'object' ? link.href : link;
 
     const type: string = this['__refs'][relationship];
@@ -319,6 +325,8 @@ export class Record extends Model implements IModel {
     }
     return remove(store, this.__getUrl(), options && options.headers)
       .then((response: Response) => {
+
+        /* istanbul ignore if */
         if (response.error) {
           throw response.error;
         }
@@ -357,9 +365,12 @@ export class Record extends Model implements IModel {
     const links: IDictionary<JsonApi.ILink> = this.getLinks();
     if (links && links.self) {
       const self: JsonApi.ILink = links.self;
+
+      /* istanbul ignore next */
       return typeof self === 'string' ? self : self.href;
     }
 
+    /* istanbul ignore next */
     const url = getValue<string>(this.static.endpoint) || this.static.baseUrl || this.type || this.static.type;
 
     return this.__persisted

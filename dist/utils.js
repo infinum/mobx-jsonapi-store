@@ -8,6 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 function objectForEach(obj, fn) {
     for (var key in obj) {
+        /* istanbul ignore else */
         if (obj.hasOwnProperty(key)) {
             fn(key);
         }
@@ -54,12 +55,14 @@ function flattenRecord(record) {
         }
     });
     objectForEach(record.links, function (key) {
+        /* istanbul ignore else */
         if (record.links[key]) {
             data.__internal.links = data.__internal.links || {};
             data.__internal.links[key] = record.links[key];
         }
     });
     objectForEach(record.meta, function (key) {
+        /* istanbul ignore else */
         if (record.meta[key]) {
             data.__internal.meta = data.__internal.meta || {};
             data.__internal.meta[key] = record.meta[key];
@@ -87,6 +90,7 @@ function assign(target) {
     args.forEach(function (nextSource) {
         if (nextSource != null) {
             for (var nextKey in nextSource) {
+                /* istanbul ignore else */
                 if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
                     target[nextKey] = nextSource[nextKey];
                 }

@@ -59,6 +59,7 @@ var Record = (function (_super) {
     Record.prototype.fetchRelationshipLink = function (relationship, name, options, force) {
         if (force === void 0) { force = false; }
         this.__relationshipLinkCache[relationship] = this.__relationshipLinkCache[relationship] || {};
+        /* istanbul ignore else */
         if (!(name in this.__relationshipLinkCache) || force) {
             var link = ('relationships' in this.__internal &&
                 relationship in this.__internal.relationships &&
@@ -113,6 +114,7 @@ var Record = (function (_super) {
                 var prop = _this['__prop__'];
                 var record = response.data;
                 if (record && record.type !== _this.type && record.type === related.type) {
+                    /* istanbul ignore if */
                     if (prop) {
                         related[prop] = record;
                         return response;
@@ -201,10 +203,12 @@ var Record = (function (_super) {
         var link = ('relationships' in this.__internal &&
             relationship in this.__internal.relationships &&
             'self' in this.__internal.relationships[relationship]) ? this.__internal.relationships[relationship]['self'] : null;
+        /* istanbul ignore if */
         if (!link) {
             throw new Error('The relationship doesn\'t have a defined link');
         }
         var store = this.__collection;
+        /* istanbul ignore next */
         var href = typeof link === 'object' ? link.href : link;
         var type = this['__refs'][relationship];
         var data = utils_1.mapItems(this[relationship + "Id"], function (id) { return ({ id: id, type: type }); });
@@ -228,6 +232,7 @@ var Record = (function (_super) {
         }
         return NetworkUtils_1.remove(store, this.__getUrl(), options && options.headers)
             .then(function (response) {
+            /* istanbul ignore if */
             if (response.error) {
                 throw response.error;
             }
@@ -260,8 +265,10 @@ var Record = (function (_super) {
         var links = this.getLinks();
         if (links && links.self) {
             var self_1 = links.self;
+            /* istanbul ignore next */
             return typeof self_1 === 'string' ? self_1 : self_1.href;
         }
+        /* istanbul ignore next */
         var url = utils_1.getValue(this.static.endpoint) || this.static.baseUrl || this.type || this.static.type;
         return this.__persisted
             ? "" + NetworkUtils_1.config.baseUrl + url + "/" + this.id

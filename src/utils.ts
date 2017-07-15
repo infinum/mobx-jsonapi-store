@@ -9,6 +9,8 @@ import * as JsonApi from './interfaces/JsonApi';
  */
 export function objectForEach(obj: object, fn: Function): void {
   for (const key in obj) {
+
+    /* istanbul ignore else */
     if (obj.hasOwnProperty(key)) {
       fn(key);
     }
@@ -60,6 +62,8 @@ export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   });
 
   objectForEach(record.links, (key) => {
+
+    /* istanbul ignore else */
     if (record.links[key]) {
       data.__internal.links = data.__internal.links || {};
       data.__internal.links[key] = record.links[key];
@@ -67,6 +71,8 @@ export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   });
 
   objectForEach(record.meta, (key) => {
+
+    /* istanbul ignore else */
     if (record.meta[key]) {
       data.__internal.meta = data.__internal.meta || {};
       data.__internal.meta[key] = record.meta[key];
@@ -92,6 +98,8 @@ export function assign(target: object, ...args: Array<object>) {
   args.forEach((nextSource: object) => {
     if (nextSource != null) {
       for (const nextKey in nextSource) {
+
+        /* istanbul ignore else */
         if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
           target[nextKey] = nextSource[nextKey];
         }

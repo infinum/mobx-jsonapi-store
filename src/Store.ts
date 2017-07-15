@@ -183,9 +183,12 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   private __handleErrors(response: Response) {
+
+    /* istanbul ignore if */
     if (response.error) {
       throw response.error;
     }
+
     return response;
   }
 
@@ -214,6 +217,7 @@ export class Store extends NetworkStore {
 
     // In case a record is not a real record
     // TODO: Figure out when this happens and try to handle it better
+    /* istanbul ignore else */
     if (record && typeof record.setPersisted === 'function') {
       record.setPersisted(true);
     }

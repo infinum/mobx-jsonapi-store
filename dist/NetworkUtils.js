@@ -18,6 +18,7 @@ exports.config = {
         'content-type': 'application/vnd.api+json',
     },
     /** Reference of the fetch method that should be used */
+    /* istanbul ignore next */
     fetchReference: utils_1.isBrowser && window.fetch.bind(window),
     /**
      * Base implementation of the fetch function (can be overriden)
@@ -181,6 +182,7 @@ exports.remove = remove;
 function fetchLink(link, store, requestHeaders, options) {
     if (link) {
         var href = typeof link === 'object' ? link.href : link;
+        /* istanbul ignore else */
         if (href) {
             return read(store, href, requestHeaders, options);
         }
@@ -190,6 +192,7 @@ function fetchLink(link, store, requestHeaders, options) {
 exports.fetchLink = fetchLink;
 function handleResponse(record, prop) {
     return function (response) {
+        /* istanbul ignore if */
         if (response.error) {
             throw response.error;
         }
