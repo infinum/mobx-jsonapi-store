@@ -181,6 +181,10 @@ export class Response {
     extendObservable(this, linkGetter);
 
     Object.freeze(this);
+
+    if (this.error) {
+      throw this;
+    }
   }
 
   /**

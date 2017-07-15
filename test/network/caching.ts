@@ -120,8 +120,8 @@ describe('caching', () => {
       try {
         const events = await store.fetch('event', 12345);
         expect(true).to.equal(false);
-      } catch (e) {
-        expect(e).to.be.an('array');
+      } catch (resp) {
+        expect(resp.error).to.be.an('array');
       }
 
       mockApi({
@@ -267,8 +267,8 @@ describe('caching', () => {
       try {
         const events = await store.fetchAll('event');
         expect(true).to.equal(false);
-      } catch (e) {
-        expect(e).to.be.an('array');
+      } catch (resp) {
+        expect(resp.error).to.be.an('array');
       }
 
       mockApi({

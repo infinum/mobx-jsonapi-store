@@ -42,6 +42,9 @@ var Response = (function () {
         });
         mobx_1.extendObservable(this, linkGetter);
         Object.freeze(this);
+        if (this.error) {
+            throw this;
+        }
     }
     /**
      * Replace the response record with a different record. Used to replace a record while keeping the same reference

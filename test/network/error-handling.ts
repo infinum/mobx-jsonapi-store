@@ -29,7 +29,8 @@ describe('error handling', () => {
 
     return fetch.then(
       () => expect(true).to.equal(false),
-      (err) => {
+      (response) => {
+        const err = response.error;
         expect(err).to.be.an('object');
         expect(err.status).to.equal(404);
         expect(err.message).to.equal('Invalid HTTP status: 404');
@@ -49,7 +50,7 @@ describe('error handling', () => {
 
     return fetch.then(
       () => expect(true).to.equal(false),
-      (err) => expect(err).to.have.all.keys(['name', 'message', 'type']),
+      (response) => expect(response.error).to.have.all.keys(['name', 'message', 'type']),
     );
   });
 
@@ -65,7 +66,7 @@ describe('error handling', () => {
 
     return fetch.then(
       () => expect(true).to.equal(false),
-      (err) => expect(err[0]).to.be.an('object'),
+      (response) => expect(response.error[0]).to.be.an('object'),
     );
   });
 
@@ -88,7 +89,7 @@ describe('error handling', () => {
 
     return fetch.then(
       () => expect(true).to.equal(false),
-      (err) => expect(err[0]).to.be.an('object'),
+      (response) => expect(response.error[0]).to.be.an('object'),
     );
   });
 
@@ -112,7 +113,7 @@ describe('error handling', () => {
 
     return fetch.then(
       () => expect(true).to.equal(false),
-      (err) => expect(err[0]).to.be.an('object'),
+      (resp) => expect(resp.error[0]).to.be.an('object'),
     );
   });
 });
