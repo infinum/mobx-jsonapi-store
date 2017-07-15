@@ -7,8 +7,8 @@ import {computed} from 'mobx';
 
 import {config, Record, Store} from '../src';
 
-import mockApi from './api';
-import {Event, Image, Organiser, Photo, TestStore, User} from './setup';
+import mockApi from './utils/api';
+import {Event, Image, Organiser, Photo, TestStore, User} from './utils/setup';
 
 describe('Reported issues', () => {
   beforeEach(() => {

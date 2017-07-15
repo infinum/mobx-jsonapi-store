@@ -1,6 +1,6 @@
 import {computed} from 'mobx';
 
-import {IDictionary, Record, Store} from '../src';
+import {IDictionary, Record, Store} from '../../src';
 
 // tslint:disable:max-classes-per-file
 

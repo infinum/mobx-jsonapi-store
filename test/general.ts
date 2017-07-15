@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {autorun, extendObservable, observable} from 'mobx';
 
 import {config, IDictionary, Record, Store} from '../src';
-import {Event, Image, Organiser, Photo, TestStore, User} from './setup';
+import {Event, Image, Organiser, Photo, TestStore, User} from './utils/setup';
 
 // tslint:disable:no-string-literal
 
