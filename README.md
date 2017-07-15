@@ -42,6 +42,10 @@ Since the lib is exposed as a set of CommonJS modules, you'll need something lik
 
 Don't forget to [prepare your code for production](https://webpack.js.org/guides/production/) for better performance!
 
+# Migration from v3 to v4
+
+Version 4 has a few breaking changes described in the [migration guide](https://github.com/infinum/mobx-jsonapi-store/wiki/Migrating-from-v3-to-v4).
+
 # Getting started
 The main idea behind the library is to have one instance of the store that contains multiple model types. This way, there can be references between models that can handle all use cases, including circular dependencies.
 
