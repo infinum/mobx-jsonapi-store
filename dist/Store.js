@@ -215,8 +215,8 @@ var Store = (function (_super) {
                     var id = _a.id, type = _a.type;
                     return _this.find(type, id) || id;
                 });
-                var type = items instanceof Array ? items[0].type : items.type;
-                record.assignRef(ref, models, type);
+                var itemType = items instanceof Array ? items[0].type : items.type;
+                record.assignRef(ref, models, itemType);
             }
         });
     };

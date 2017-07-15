@@ -241,8 +241,8 @@ export class Store extends NetworkStore {
       }
       if (items) {
         const models: IModel|Array<IModel> = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
-        const type: string = items instanceof Array ? items[0].type : items.type;
-        record.assignRef(ref, models, type);
+        const itemType: string = items instanceof Array ? items[0].type : items.type;
+        record.assignRef(ref, models, itemType);
       }
     });
   }
