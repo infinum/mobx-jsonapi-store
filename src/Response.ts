@@ -1,4 +1,4 @@
-import {computed, extendObservable, IComputedValue} from 'mobx';
+import {computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
 import {IModel} from 'mobx-collection-store';
 
 import IDictionary from './interfaces/IDictionary';
@@ -216,14 +216,56 @@ export class Response {
 
     // TODO: Refactor this to avoid using mobx-collection-store internals
     data['__internal'].id = newId;
+    this.__updateStoreReferences(type, oldId, newId);
+
+    return new Response(this.__response, this.__store, this.__options, data);
+  }
+
+  /**
+   * Update references in the store
+   *
+   * @private
+   * @param {any} type Record type
+   * @param {any} oldId Old redord ID
+   * @param {any} newId New record ID
+   * @memberof Response
+   */
+  private __updateStoreReferences(type, oldId, newId) {
     if (this.__store) {
       const modelHash = this.__store['__modelHash'][type];
       const oldModel = modelHash[oldId];
       modelHash[newId] = oldModel;
       delete modelHash[oldId];
-    }
 
-    return new Response(this.__response, this.__store, this.__options, data);
+      this.__updateReferences(oldId, newId);
+    }
+  }
+
+  /**
+   * Update models that reference the updated model
+   *
+   * @private
+   * @param {any} oldId Old record ID
+   * @param {any} newId new record ID
+   * @memberof Response
+   */
+  private __updateReferences(oldId, newId) {
+    this.__store['__data'].map((model) => {
+      const keys = Object.keys(model['__data']);
+      keys.map((key) => {
+        const keyId = `${key}Id`;
+        if (key in model && keyId in model) {
+          if (isObservableArray(model[keyId])) {
+            const index = model[keyId].indexOf(oldId);
+            if (index > -1) {
+              model[keyId][index] = newId;
+            }
+          } else if (model[keyId] === oldId) {
+            model[keyId] = newId;
+          }
+        }
+      });
+    });
   }
 
   /**

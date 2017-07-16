@@ -135,6 +135,25 @@ export declare class Response {
      */
     replaceData(data: Record): Response;
     /**
+     * Update references in the store
+     *
+     * @private
+     * @param {any} type Record type
+     * @param {any} oldId Old redord ID
+     * @param {any} newId New record ID
+     * @memberof Response
+     */
+    private __updateStoreReferences(type, oldId, newId);
+    /**
+     * Update models that reference the updated model
+     *
+     * @private
+     * @param {any} oldId Old record ID
+     * @param {any} newId new record ID
+     * @memberof Response
+     */
+    private __updateReferences(oldId, newId);
+    /**
      * Function called when a link is beeing fetched. The returned value is cached
      *
      * @private

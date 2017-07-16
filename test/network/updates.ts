@@ -71,6 +71,69 @@ describe('updates', () => {
       expect(updated).to.equal(record);
     });
 
+    it('should add a referenced record', async () => {
+      class Foo extends Record {
+        public static type = 'event';
+      }
+
+      // tslint:disable-next-line:max-classes-per-file
+      class Bar extends Record {
+        public static type = 'bar';
+        public static refs = {
+          foo: 'event',
+        };
+
+        public foo: Foo;
+        public fooId: number|string;
+      }
+
+      // tslint:disable-next-line:max-classes-per-file
+      class Test extends Store {
+        public static types = [Foo, Bar];
+      }
+
+      const store = new Test();
+      const foo = new Foo({
+        title: 'Example title',
+      });
+      store.add(foo);
+      const bar = store.add<Bar>({foo}, 'bar');
+      const baz = store.add<Record>({}, 'baz');
+      expect(bar.foo).to.equal(foo);
+      expect(bar.fooId).to.equal(foo.getRecordId());
+
+      baz.assignRef('foo', foo);
+      expect(baz['foo']).to.equal(foo);
+      expect(baz['fooId']).to.equal(foo.getRecordId());
+
+      mockApi({
+        data: JSON.stringify({
+          data: foo.toJsonApi(),
+        }),
+        method: 'POST',
+        name: 'event-1',
+        url: 'event',
+      });
+
+      const data = foo.toJsonApi();
+      expect(foo['title']).to.equal('Example title');
+      expect(data.id).to.be.an('undefined');
+      expect(data.type).to.equal('event');
+      expect(data.attributes.id).to.be.an('undefined');
+      expect(data.attributes.type).to.be.an('undefined');
+
+      const updated = await foo.save();
+      expect(updated['title']).to.equal('Test 1');
+      expect(updated).to.equal(foo);
+      expect(foo.getRecordId()).to.equal(12345);
+
+      expect(bar.foo).to.equal(foo);
+      expect(bar.fooId).to.equal(foo.getRecordId());
+
+      expect(baz['foo']).to.equal(foo);
+      expect(baz['fooId']).to.equal(foo.getRecordId());
+    });
+
     it('should add a record with queue (202)', async () => {
       const store = new Store();
       const record = new Record({

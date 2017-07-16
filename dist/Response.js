@@ -69,13 +69,53 @@ var Response = (function () {
         data.update(record.toJS());
         // TODO: Refactor this to avoid using mobx-collection-store internals
         data['__internal'].id = newId;
+        this.__updateStoreReferences(type, oldId, newId);
+        return new Response(this.__response, this.__store, this.__options, data);
+    };
+    /**
+     * Update references in the store
+     *
+     * @private
+     * @param {any} type Record type
+     * @param {any} oldId Old redord ID
+     * @param {any} newId New record ID
+     * @memberof Response
+     */
+    Response.prototype.__updateStoreReferences = function (type, oldId, newId) {
         if (this.__store) {
             var modelHash = this.__store['__modelHash'][type];
             var oldModel = modelHash[oldId];
             modelHash[newId] = oldModel;
             delete modelHash[oldId];
+            this.__updateReferences(oldId, newId);
         }
-        return new Response(this.__response, this.__store, this.__options, data);
+    };
+    /**
+     * Update models that reference the updated model
+     *
+     * @private
+     * @param {any} oldId Old record ID
+     * @param {any} newId new record ID
+     * @memberof Response
+     */
+    Response.prototype.__updateReferences = function (oldId, newId) {
+        this.__store['__data'].map(function (model) {
+            var keys = Object.keys(model['__data']);
+            keys.map(function (key) {
+                var keyId = key + "Id";
+                if (key in model && keyId in model) {
+                    if (mobx_1.isObservableArray(model[keyId])) {
+                        var index = model[keyId].indexOf(oldId);
+                        if (index > -1) {
+                            model[keyId][index] = newId;
+                        }
+                    }
+                    else if (model[keyId] === oldId) {
+                        model[keyId] = newId;
+                    }
+                }
+            });
+        });
     };
     /**
      * Function called when a link is beeing fetched. The returned value is cached
