@@ -25,9 +25,10 @@ describe('caching', () => {
 
       const store = new Store();
       const events = await store.fetch('event', 12345);
+      const event = events.data as Event;
 
-      expect(events.data).to.be.an('object');
-      expect(events.data['id']).to.equal(12345);
+      expect(event).to.be.an('object');
+      expect(event.getRecordId()).to.equal(12345);
 
       const events2 = await store.fetch('event', 12345);
 
@@ -42,8 +43,9 @@ describe('caching', () => {
 
       const store = new Store();
       const events = await store.fetch('event', 12345);
+      const event = events.data as Event;
 
-      expect(events.data['id']).to.equal(12345);
+      expect(event.getRecordId()).to.equal(12345);
 
       store.removeAll('event');
 
@@ -53,7 +55,8 @@ describe('caching', () => {
       });
 
       const events2 = await store.fetch('event', 12345);
-      expect(events2.data['id']).to.equal(12345);
+      const event2 = events2.data as Event;
+      expect(event2.getRecordId()).to.equal(12345);
       expect(req2.isDone()).to.equal(true);
     });
 
@@ -65,9 +68,10 @@ describe('caching', () => {
 
       const store = new Store();
       const events = await store.fetch('event', 12345);
+      const event = events.data as Event;
 
-      expect(events.data).to.be.an('object');
-      expect(events.data['id']).to.equal(12345);
+      expect(event).to.be.an('object');
+      expect(event.getRecordId()).to.equal(12345);
 
       mockApi({
         name: 'event-1',
@@ -75,10 +79,11 @@ describe('caching', () => {
       });
 
       const events2 = await store.fetch('event', 12345, true);
+      const event2 = events2.data as Event;
 
       expect(events2).to.not.equal(events);
-      expect(events2.data).to.be.an('object');
-      expect(events2.data['id']).to.equal(12345);
+      expect(event2).to.be.an('object');
+      expect(event2.getRecordId()).to.equal(12345);
     });
 
     it('should ignore fetch cache if static cache is false', async () => {
@@ -94,9 +99,10 @@ describe('caching', () => {
 
       const store = new TestStore();
       const events = await store.fetch('event', 12345);
+      const event = events.data as Event;
 
-      expect(events.data).to.be.an('object');
-      expect(events.data['id']).to.equal(12345);
+      expect(event).to.be.an('object');
+      expect(event.getRecordId()).to.equal(12345);
 
       mockApi({
         name: 'event-1',
@@ -104,10 +110,11 @@ describe('caching', () => {
       });
 
       const events2 = await store.fetch('event', 12345);
+      const event2 = events2.data as Event;
 
       expect(events2).to.not.equal(events);
-      expect(events2.data).to.be.an('object');
-      expect(events2.data['id']).to.equal(12345);
+      expect(event2).to.be.an('object');
+      expect(event2.getRecordId()).to.equal(12345);
     });
 
     it('should not cache fetch if the response was an jsonapi error', async () => {
@@ -130,9 +137,10 @@ describe('caching', () => {
       });
 
       const events2 = await store.fetch('event', 12345);
+      const event2 = events2.data as Event;
 
-      expect(events2.data).to.be.an('object');
-      expect(events2.data['id']).to.equal(12345);
+      expect(event2).to.be.an('object');
+      expect(event2.getRecordId()).to.equal(12345);
     });
 
     it('should not cache fetch if the response was an http error', async () => {
@@ -156,9 +164,10 @@ describe('caching', () => {
       });
 
       const events2 = await store.fetch('event', 12345);
+      const event2 = events2.data as Event;
 
-      expect(events2.data).to.be.an('object');
-      expect(events2.data['id']).to.equal(12345);
+      expect(event2).to.be.an('object');
+      expect(event2.getRecordId()).to.equal(12345);
     });
   });
 
@@ -171,9 +180,10 @@ describe('caching', () => {
 
       const store = new Store();
       const events = await store.fetchAll('event');
+      const event = events.data as Array<Event>;
 
-      expect(events.data).to.be.an('array');
-      expect(events.data['length']).to.equal(4);
+      expect(event).to.be.an('array');
+      expect(event.length).to.equal(4);
 
       const events2 = await store.fetchAll('event');
 
@@ -188,9 +198,10 @@ describe('caching', () => {
 
       const store = new Store();
       const events = await store.fetchAll('event');
+      const event = events.data as Array<Event>;
 
-      expect(events.data).to.be.an('array');
-      expect(events.data['length']).to.equal(4);
+      expect(event).to.be.an('array');
+      expect(event.length).to.equal(4);
 
       store.removeAll('event');
 

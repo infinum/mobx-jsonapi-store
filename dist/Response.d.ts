@@ -5,6 +5,7 @@ import IRawResponse from './interfaces/IRawResponse';
 import IRequestOptions from './interfaces/IRequestOptions';
 import IResponseHeaders from './interfaces/IResponseHeaders';
 import * as JsonApi from './interfaces/JsonApi';
+import { Record } from './Record';
 import { Store } from './Store';
 export declare class Response {
     /**
@@ -132,7 +133,7 @@ export declare class Response {
      *
      * @memberOf Response
      */
-    replaceData(data: IModel): Response;
+    replaceData(data: Record): Response;
     /**
      * Function called when a link is beeing fetched. The returned value is cached
      *

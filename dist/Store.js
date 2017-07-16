@@ -212,7 +212,7 @@ var Store = (function (_super) {
                 // it's only possible to update items with one ore more refs. Early exit
                 return;
             }
-            if (items) {
+            if (items && record) {
                 var models = utils_1.mapItems(items, function (_a) {
                     var id = _a.id, type = _a.type;
                     return _this.find(type, id) || id;

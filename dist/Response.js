@@ -60,16 +60,20 @@ var Response = (function () {
         if (record === data) {
             return this;
         }
+        var oldId = data.getRecordId();
+        var newId = record.getRecordId();
+        var type = record.getRecordType();
         if (this.__store) {
-            this.__store.remove(record.type, record.id);
+            this.__store.remove(type, newId);
         }
         data.update(record.toJS());
         // TODO: Refactor this to avoid using mobx-collection-store internals
-        var oldId = data['id'];
-        data['__data'].id = record.id;
+        data['__internal'].id = newId;
         if (this.__store) {
-            this.__store['__modelHash'][record.type][record.id] = this.__store['__modelHash'][record.type][oldId];
-            delete this.__store['__modelHash'][record.type][oldId];
+            var modelHash = this.__store['__modelHash'][type];
+            var oldModel = modelHash[oldId];
+            modelHash[newId] = oldModel;
+            delete modelHash[oldId];
         }
         return new Response(this.__response, this.__store, this.__options, data);
     };

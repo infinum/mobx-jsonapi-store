@@ -53,7 +53,7 @@ describe('General', () => {
 
   it('should find an event', () => {
     const store = new TestStore();
-    store.sync({
+    const ev = store.sync({
       data: {
         attributes: {
           name: 'Demo',
@@ -61,11 +61,11 @@ describe('General', () => {
         id: 1,
         type: 'events',
       },
-    });
+    }) as Event;
 
     const event = store.find<Event>('events', 1);
-    expect(event.id).to.equal(1);
-    expect(event.type).to.equal('events');
+    expect(event.getRecordId()).to.equal(1);
+    expect(event.getRecordType()).to.equal('events');
     expect(event.name).to.equal('Demo');
   });
 
@@ -205,7 +205,7 @@ describe('General', () => {
     const event = store.find<Event>('events', 1);
     expect(event.name).to.equal('Demo');
     expect(event.images[0].name).to.equal('Header');
-    expect(event.images[0].event.id).to.equal(1);
+    expect(event.images[0].event.getRecordId()).to.equal(1);
   });
 
   it('should return a event with all associated objects', () => {
@@ -300,7 +300,7 @@ describe('General', () => {
     const event = store.find<Event>('events', 1);
     expect(event.organisers.length).to.equal(2);
     expect(event.images.length).to.equal(3);
-    expect(event.organisers[0].image.id).to.equal(2);
+    expect(event.organisers[0].image.getRecordId()).to.equal(2);
   });
 
   it('should remove an event', () => {
@@ -313,7 +313,7 @@ describe('General', () => {
     });
 
     const event = store.find<Event>('events', 1);
-    expect(event.id).to.equal(1);
+    expect(event.getRecordId()).to.equal(1);
     store.remove('events', 1);
     const event2 = store.find<Event>('events', 1);
     expect(event2).to.equal(null);
@@ -510,7 +510,7 @@ describe('General', () => {
     const photos = store.findAll<Photo>('photo');
     const selected = photos.filter((photo) => photo.selected);
     expect(selected.length).to.equal(1);
-    expect(selected[0].id).to.equal(2);
+    expect(selected[0].getRecordId()).to.equal(2);
   });
 
   it('should support generic records', () => {
@@ -534,7 +534,7 @@ describe('General', () => {
     }) as Record;
 
     expect(user['name']).to.equal('John');
-    expect(user['self'].id).to.equal(1);
+    expect(user['self'].getRecordId()).to.equal(1);
     expect(store.findAll('user').length).to.equal(1);
   });
 });

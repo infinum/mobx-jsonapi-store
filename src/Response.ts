@@ -198,24 +198,29 @@ export class Response {
    *
    * @memberOf Response
    */
-  public replaceData(data: IModel): Response {
+  public replaceData(data: Record): Response {
     const record: Record = this.data as Record;
     if (record === data) {
       return this;
     }
 
+    const oldId = data.getRecordId();
+    const newId = record.getRecordId();
+    const type = record.getRecordType();
+
     if (this.__store) {
-      this.__store.remove(record.type, record.id);
+      this.__store.remove(type, newId);
     }
 
     data.update(record.toJS());
 
     // TODO: Refactor this to avoid using mobx-collection-store internals
-    const oldId = data['id'];
-    data['__data'].id = record.id;
+    data['__internal'].id = newId;
     if (this.__store) {
-      this.__store['__modelHash'][record.type][record.id] = this.__store['__modelHash'][record.type][oldId];
-      delete this.__store['__modelHash'][record.type][oldId];
+      const modelHash = this.__store['__modelHash'][type];
+      const oldModel = modelHash[oldId];
+      modelHash[newId] = oldModel;
+      delete modelHash[oldId];
     }
 
     return new Response(this.__response, this.__store, this.__options, data);

@@ -47,9 +47,13 @@ describe('Network basics', () => {
     const userData = user.toJsonApi();
     expect(userData.type).to.equal('user');
 
-    const wrongEvent = new Event({type: 'evil-event', name: 'Test'});
+    const wrongEvent = new Event({
+      name: 'Test',
+      type: 'foo',
+    }, 'evil-event');
     const wrongEventData = wrongEvent.toJsonApi();
     expect(wrongEventData.type).to.equal('evil-event');
+    expect(wrongEventData.attributes.type).to.equal('foo');
   });
 
   it('should support storeFetch override', async () => {
@@ -168,9 +172,10 @@ describe('Network basics', () => {
     });
 
     const image = await event.fetchLink('image');
-    expect(image.data['id']).to.equal(1);
-    expect(image.data['type']).to.equal('image');
-    expect(image.data['url']).to.equal('http://example.com/1.jpg');
+    const imageData = image.data  as Image;
+    expect(imageData.getRecordId()).to.equal(1);
+    expect(imageData.getRecordType()).to.equal('image');
+    expect(imageData['url']).to.equal('http://example.com/1.jpg');
   });
 
   it('should recover if no link defined', async () => {
@@ -204,9 +209,10 @@ describe('Network basics', () => {
     });
 
     const image = await event.fetchRelationshipLink('image', 'self');
-    expect(image.data['id']).to.equal(1);
-    expect(image.data['type']).to.equal('image');
-    expect(image.data['url']).to.equal('http://example.com/1.jpg');
+    const imageData = image.data  as Image;
+    expect(imageData.getRecordId()).to.equal(1);
+    expect(imageData.getRecordType()).to.equal('image');
+    expect(imageData['url']).to.equal('http://example.com/1.jpg');
 
   });
 
@@ -231,7 +237,7 @@ describe('Network basics', () => {
 
     const response = await store.fetchAll('event');
     const event = response.data as Event;
-    expect(event.type).to.equal('event');
+    expect(event.getRecordType()).to.equal('event');
   });
 
   it('should support functional endpoint', async () => {
@@ -255,7 +261,7 @@ describe('Network basics', () => {
 
     const response = await store.fetchAll('event');
     const event = response.data as Event;
-    expect(event.type).to.equal('event');
+    expect(event.getRecordType()).to.equal('event');
   });
 
   it('should prepend config.baseUrl to the request url', async () => {

@@ -57,7 +57,7 @@ describe('Reported issues', () => {
 
       const org = response.data[0] as OrganizationRecord;
 
-      expect(org.id).to.equal('ORG-A');
+      expect(org.getRecordId()).to.equal('ORG-A');
       expect(org.units).to.be.an('array');
     });
   });
@@ -94,9 +94,8 @@ describe('Reported issues', () => {
       const store = new Store();
       const record = new Record({
         password: 'hunter2',
-        type: 'sessions',
         username: 'foobar',
-      });
+      }, 'sessions');
       store.add(record);
 
       mockApi({

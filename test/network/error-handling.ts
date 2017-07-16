@@ -25,9 +25,9 @@ describe('error handling', () => {
       url: 'event',
     });
 
-    const fetch = store.fetchAll('event');
+    const fetchRes = store.fetchAll('event');
 
-    return fetch.then(
+    return fetchRes.then(
       () => expect(true).to.equal(false),
       (response) => {
         const err = response.error;
@@ -46,9 +46,9 @@ describe('error handling', () => {
       url: 'event',
     });
 
-    const fetch = store.fetchAll('event');
+    const fetchRes = store.fetchAll('event');
 
-    return fetch.then(
+    return fetchRes.then(
       () => expect(true).to.equal(false),
       (response) => expect(response.error).to.have.all.keys(['name', 'message', 'type']),
     );
@@ -62,9 +62,9 @@ describe('error handling', () => {
       url: 'event',
     });
 
-    const fetch = store.fetchAll('event');
+    const fetchRes = store.fetchAll('event');
 
-    return fetch.then(
+    return fetchRes.then(
       () => expect(true).to.equal(false),
       (response) => expect(response.error[0]).to.be.an('object'),
     );
@@ -75,8 +75,7 @@ describe('error handling', () => {
 
     const record = new Record({
       title: 'Test',
-      type: 'event',
-    });
+    }, 'event');
     store.add(record);
 
     mockApi({
@@ -85,9 +84,9 @@ describe('error handling', () => {
       url: 'event',
     });
 
-    const fetch = record.save();
+    const fetchRes = record.save();
 
-    return fetch.then(
+    return fetchRes.then(
       () => expect(true).to.equal(false),
       (response) => expect(response.error[0]).to.be.an('object'),
     );
@@ -109,9 +108,9 @@ describe('error handling', () => {
       url: 'event/1',
     });
 
-    const fetch = response.data[0].remove();
+    const fetchRes = response.data[0].remove();
 
-    return fetch.then(
+    return fetchRes.then(
       () => expect(true).to.equal(false),
       (resp) => expect(resp.error[0]).to.be.an('object'),
     );

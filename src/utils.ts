@@ -39,9 +39,10 @@ export function mapItems<T>(data: object|Array<object>, fn: Function): T|Array<T
  */
 export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   const data: IDictionary<any> = {
-    __internal: {},
-    id: record.id,
-    type: record.type,
+    __internal: {
+      id: record.id,
+      type: record.type,
+    },
   };
 
   objectForEach(record.attributes, (key) => {

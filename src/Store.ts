@@ -243,7 +243,7 @@ export class Store extends NetworkStore {
         // it's only possible to update items with one ore more refs. Early exit
         return;
       }
-      if (items) {
+      if (items && record) {
         const models: IModel|Array<IModel> = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
         const itemType: string = items instanceof Array ? items[0].type : items.type;
         record.assignRef(ref, models, itemType);
