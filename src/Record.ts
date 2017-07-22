@@ -239,7 +239,12 @@ export class Record extends Model implements IModel {
     const refs: IDictionary<string> = this['__refs'];
     objectForEach(refs, (key: string) => {
       data.relationships = data.relationships || {};
-      const rel = mapItems(this[`${key}Id`], (id: number|string) => ({id, type: refs[key]}));
+      const rel = mapItems(this[`${key}Id`], (id: number|string) => {
+        if (!id && id !== 0) {
+          return null;
+        }
+        return {id, type: refs[key]};
+      });
       data.relationships[key] = {data: rel} as JsonApi.IRelationship;
 
       delete data.attributes[key];

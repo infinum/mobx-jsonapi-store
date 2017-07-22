@@ -173,7 +173,12 @@ var Record = (function (_super) {
         var refs = this['__refs'];
         utils_1.objectForEach(refs, function (key) {
             data.relationships = data.relationships || {};
-            var rel = utils_1.mapItems(_this[key + "Id"], function (id) { return ({ id: id, type: refs[key] }); });
+            var rel = utils_1.mapItems(_this[key + "Id"], function (id) {
+                if (!id && id !== 0) {
+                    return null;
+                }
+                return { id: id, type: refs[key] };
+            });
             data.relationships[key] = { data: rel };
             delete data.attributes[key];
             delete data.attributes[key + "Id"];

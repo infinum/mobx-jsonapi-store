@@ -133,4 +133,47 @@ describe('Reported issues', () => {
       expect(store.find('sessions', 12345)).to.equal(session);
     });
   });
+
+  describe('wrong toJsonApi references when null', () => {
+      class UnitRecord extends Record {
+        public static type = 'units';
+        public static refs = { organization: 'organizations' };
+
+        public organization?: OrganizationRecord;
+        public organizationId?: number|string;
+      }
+
+      class OrganizationRecord extends Record {
+        public static type = 'organizations';
+        public static refs = {
+          units: {
+            model: 'units',
+            property: 'organization',
+          },
+        };
+
+        public name: string;
+        public units: Array<UnitRecord>;
+      }
+
+      class ApiStore extends Store {
+        public static types = [OrganizationRecord, UnitRecord];
+
+        public organizations: Array<OrganizationRecord>;
+        public units: Array<UnitRecord>;
+      }
+
+      const store = new ApiStore();
+      const unit = new UnitRecord();
+
+      expect(unit.toJsonApi().relationships.organization.data).to.equal(null);
+
+      store.add(unit);
+
+      expect(unit.toJsonApi().relationships.organization.data).to.equal(null);
+
+      unit.organization = new OrganizationRecord({name: 'Foo'});
+      expect(unit.toJsonApi().relationships.organization.data['id']).to.equal(unit.organizationId);
+      expect(unit.toJsonApi().relationships.organization.data['type']).to.equal('organizations');
+  });
 });
