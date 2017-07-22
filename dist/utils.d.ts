@@ -47,3 +47,11 @@ export declare function assign(target: object, ...args: Array<object>): object;
  * @returns {T} value
  */
 export declare function getValue<T>(target: T | (() => T)): T;
+/**
+ * Get all object keys
+ *
+ * @export
+ * @param {object} obj Object to process
+ * @returns {Array<string>} List of object keys
+ */
+export declare function keys(obj: object): Array<string>;

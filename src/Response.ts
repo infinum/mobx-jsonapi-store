@@ -11,7 +11,7 @@ import * as JsonApi from './interfaces/JsonApi';
 import {NetworkStore} from './NetworkStore';
 import {Record} from './Record';
 import {Store} from './Store';
-import {flattenRecord} from './utils';
+import {flattenRecord, keys} from './utils';
 
 import {fetchLink, read} from './NetworkUtils';
 
@@ -251,8 +251,8 @@ export class Response {
    */
   private __updateReferences(oldId, newId) {
     this.__store['__data'].map((model) => {
-      const keys = Object.keys(model['__data']);
-      keys.map((key) => {
+      const keyList = keys(model['__data']);
+      keyList.map((key) => {
         const keyId = `${key}Id`;
         if (key in model && keyId in model) {
           if (isObservableArray(model[keyId])) {

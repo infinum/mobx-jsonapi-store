@@ -100,8 +100,8 @@ var Response = (function () {
      */
     Response.prototype.__updateReferences = function (oldId, newId) {
         this.__store['__data'].map(function (model) {
-            var keys = Object.keys(model['__data']);
-            keys.map(function (key) {
+            var keyList = utils_1.keys(model['__data']);
+            keyList.map(function (key) {
                 var keyId = key + "Id";
                 if (key in model && keyId in model) {
                     if (mobx_1.isObservableArray(model[keyId])) {

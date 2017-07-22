@@ -117,3 +117,20 @@ function getValue(target) {
     return target;
 }
 exports.getValue = getValue;
+/**
+ * Get all object keys
+ *
+ * @export
+ * @param {object} obj Object to process
+ * @returns {Array<string>} List of object keys
+ */
+function keys(obj) {
+    var keyList = [];
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            keyList.push(key);
+        }
+    }
+    return keyList;
+}
+exports.keys = keys;

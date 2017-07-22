@@ -126,3 +126,20 @@ export function getValue<T>(target: T|(() => T)): T {
 
   return target;
 }
+
+/**
+ * Get all object keys
+ *
+ * @export
+ * @param {object} obj Object to process
+ * @returns {Array<string>} List of object keys
+ */
+export function keys(obj: object): Array<string> {
+  const keyList = [];
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      keyList.push(key);
+    }
+  }
+  return keyList;
+}
