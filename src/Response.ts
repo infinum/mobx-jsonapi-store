@@ -1,4 +1,4 @@
-import {computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
+import {action, computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
 import {IModel} from 'mobx-collection-store';
 
 import IDictionary from './interfaces/IDictionary';
@@ -198,7 +198,7 @@ export class Response {
    *
    * @memberOf Response
    */
-  public replaceData(data: Record): Response {
+  @action public replaceData(data: Record): Response {
     const record: Record = this.data as Record;
     if (record === data) {
       return this;
