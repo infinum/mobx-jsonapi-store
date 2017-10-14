@@ -21,7 +21,7 @@ var NetworkStore_1 = require("./NetworkStore");
 var NetworkUtils_1 = require("./NetworkUtils");
 var Record_1 = require("./Record");
 var utils_1 = require("./utils");
-var Store = (function (_super) {
+var Store = /** @class */ (function (_super) {
     __extends(Store, _super);
     function Store() {
         var _this = _super !== null && _super.apply(this, arguments) || this;

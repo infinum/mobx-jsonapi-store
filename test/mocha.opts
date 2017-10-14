@@ -1,4 +1,4 @@
---compilers ts-node/register
+--require ts-node/register
 --full-trace
 --check-leaks
 --recursive

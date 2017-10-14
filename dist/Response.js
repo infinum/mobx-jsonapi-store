@@ -10,7 +10,7 @@ var mobx_1 = require("mobx");
 var Record_1 = require("./Record");
 var utils_1 = require("./utils");
 var NetworkUtils_1 = require("./NetworkUtils");
-var Response = (function () {
+var Response = /** @class */ (function () {
     function Response(response, store, options, overrideData) {
         var _this = this;
         /**

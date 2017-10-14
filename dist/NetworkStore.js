@@ -13,7 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_collection_store_1 = require("mobx-collection-store");
 var NetworkUtils_1 = require("./NetworkUtils");
 var utils_1 = require("./utils");
-var NetworkStore = (function (_super) {
+var NetworkStore = /** @class */ (function (_super) {
     __extends(NetworkStore, _super);
     function NetworkStore() {
         return _super !== null && _super.apply(this, arguments) || this;

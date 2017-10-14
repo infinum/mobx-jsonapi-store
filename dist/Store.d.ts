@@ -12,7 +12,7 @@ export declare class Store extends NetworkStore {
      *
      * @memberOf Store
      */
-    static types: typeof Record[];
+    static types: (typeof Record)[];
     /**
      * Should the cache be used for API calls when possible
      *
