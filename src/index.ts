@@ -14,4 +14,6 @@ export {default as IRawResponse} from './interfaces/IRawResponse';
 export {default as IRequestOptions} from './interfaces/IRequestOptions';
 export {default as IResponseHeaders} from './interfaces/IResponseHeaders';
 
+export {default as ParamArrayType} from './enums/ParamArrayType';
+
 export {ICollection, IModel, IModelConstructor, IReferences} from 'mobx-collection-store';

@@ -1,3 +1,4 @@
+import ParamArrayType from './enums/ParamArrayType';
 import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
@@ -20,6 +21,7 @@ export interface IConfigType {
     baseUrl: string;
     defaultHeaders: IHeaders;
     fetchReference: Function;
+    paramArrayType: ParamArrayType;
     storeFetch: StoreFetchType;
 }
 export declare const config: IConfigType;

@@ -3,7 +3,7 @@ import * as fetch from 'isomorphic-fetch';
 
 // tslint:disable:no-string-literal
 
-import {config, Record, Store} from '../../src';
+import {config, ParamArrayType, Record, Store} from '../../src';
 
 import mockApi from '../utils/api';
 import {Event, Image, Organiser, Photo, TestStore, User} from '../utils/setup';
@@ -147,5 +147,71 @@ describe('params', () => {
 
     expect(events.data).to.be.an('array');
     expect(events.data['length']).to.equal(4);
+  });
+
+  describe('Param array types', () => {
+    afterEach(() => {
+      config.paramArrayType = ParamArrayType.COMMA_SEPARATED;
+    });
+
+    it('should work with coma separated values', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({filter: {a: '1,2', b: '3'}}),
+        url: 'event',
+      });
+
+      config.paramArrayType = ParamArrayType.COMMA_SEPARATED;
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {filter: {a: [1, 2], b: 3}});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
+
+    it('should work with multiple params', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({filter: {a: ['1', '2'], b: '3'}}),
+        url: 'event',
+      });
+
+      config.paramArrayType = ParamArrayType.MULTIPLE_PARAMS;
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {filter: {a: [1, 2], b: 3}});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
+
+    it('should work with multiple params', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({filter: {'a.0': '1', 'a.1': '2', 'b': '3'}}),
+        url: 'event',
+      });
+
+      config.paramArrayType = ParamArrayType.OBJECT_PATH;
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {filter: {a: [1, 2], b: 3}});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
+
+    it('should work with multiple params', async () => {
+      mockApi({
+        name: 'events-1',
+        query: (q) => expect(q).to.eql({filter: {a: ['1', '2'], b: '3'}}),
+        url: 'event',
+      });
+
+      config.paramArrayType = ParamArrayType.PARAM_ARRAY;
+      const store = new Store();
+      const events = await store.fetchAll('event', false, {filter: {a: [1, 2], b: 3}});
+
+      expect(events.data).to.be.an('array');
+      expect(events.data['length']).to.equal(4);
+    });
   });
 });

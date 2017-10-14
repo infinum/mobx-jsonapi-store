@@ -1,3 +1,4 @@
+import ParamArrayType from './enums/ParamArrayType';
 import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
@@ -32,6 +33,7 @@ export interface IConfigType {
   baseUrl: string;
   defaultHeaders: IHeaders;
   fetchReference: Function;
+  paramArrayType: ParamArrayType;
   storeFetch: StoreFetchType;
 }
 
@@ -49,8 +51,11 @@ export const config: IConfigType = {
   /* istanbul ignore next */
   fetchReference: isBrowser && window.fetch.bind(window),
 
+  /** Determines how will the request param arrays be stringified */
+  paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
+
   /**
-   * Base implementation of the fetch function (can be overriden)
+   * Base implementation of the fetch function (can be overridden)
    *
    * @param {string} method API call method
    * @param {string} url API call URL
@@ -109,7 +114,7 @@ export const config: IConfigType = {
       });
   },
   /**
-   * Base implementation of the stateful fetch function (can be overriden)
+   * Base implementation of the stateful fetch function (can be overridden)
    *
    * @param {IStoreFetchOpts} options API request options
    * @returns {Promise<Response>} Resolves with a response object

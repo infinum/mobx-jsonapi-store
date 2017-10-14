@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_collection_store_1 = require("mobx-collection-store");
+var ParamArrayType_1 = require("./enums/ParamArrayType");
 var NetworkUtils_1 = require("./NetworkUtils");
 var utils_1 = require("./utils");
 var NetworkStore = /** @class */ (function (_super) {
@@ -83,7 +84,21 @@ var NetworkStore = /** @class */ (function (_super) {
         if (scope === void 0) { scope = ''; }
         var list = [];
         utils_1.objectForEach(params, function (key) {
-            if (typeof params[key] === 'object') {
+            if (params[key] instanceof Array) {
+                if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.OBJECT_PATH) {
+                    list.push.apply(list, _this.__parametrize(params[key], key + "."));
+                }
+                else if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.COMMA_SEPARATED) {
+                    list.push({ key: "" + scope + key, value: params[key].join(',') });
+                }
+                else if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.MULTIPLE_PARAMS) {
+                    list.push.apply(list, params[key].map(function (param) { return ({ key: "" + scope + key, value: param }); }));
+                }
+                else if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.PARAM_ARRAY) {
+                    list.push.apply(list, params[key].map(function (param) { return ({ key: "" + scope + key + "][", value: param }); }));
+                }
+            }
+            else if (typeof params[key] === 'object') {
                 list.push.apply(list, _this.__parametrize(params[key], key + "."));
             }
             else {

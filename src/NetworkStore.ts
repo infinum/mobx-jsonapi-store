@@ -1,5 +1,6 @@
 import {Collection, IModelConstructor} from 'mobx-collection-store';
 
+import ParamArrayType from './enums/ParamArrayType';
 import IDictionary from './interfaces/IDictionary';
 import IFilters from './interfaces/IFilters';
 import IHeaders from './interfaces/IHeaders';
@@ -102,7 +103,17 @@ export class NetworkStore extends Collection {
     const list = [];
 
     objectForEach(params, (key: string) => {
-      if (typeof params[key] === 'object') {
+      if (params[key] instanceof Array) {
+        if (config.paramArrayType === ParamArrayType.OBJECT_PATH) {
+          list.push(...this.__parametrize(params[key], `${key}.`));
+        } else if (config.paramArrayType === ParamArrayType.COMMA_SEPARATED) {
+          list.push({key: `${scope}${key}`, value: params[key].join(',')});
+        } else if (config.paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
+          list.push(...params[key].map((param) => ({key: `${scope}${key}`, value: param})));
+        } else if (config.paramArrayType === ParamArrayType.PARAM_ARRAY) {
+          list.push(...params[key].map((param) => ({key: `${scope}${key}][`, value: param})));
+        }
+      } else if (typeof params[key] === 'object') {
         list.push(...this.__parametrize(params[key], `${key}.`));
       } else {
         list.push({key: `${scope}${key}`, value: params[key]});
