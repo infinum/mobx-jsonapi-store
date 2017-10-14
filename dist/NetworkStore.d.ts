@@ -30,6 +30,10 @@ export declare class NetworkStore extends Collection {
     protected __prepareSort(sort?: string | Array<string>): Array<string>;
     protected __prepareIncludes(include?: string | Array<string>): Array<string>;
     protected __prepareFields(fields: IDictionary<string | Array<string>>): Array<string>;
+    protected __prepareRawParams(params: Array<{
+        key: string;
+        value: string;
+    } | string>): Array<string>;
     protected __prefixUrl(url: any): string;
     protected __appendParams(url: string, params: Array<string>): string;
     private __parametrize(params, scope?);

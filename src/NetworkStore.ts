@@ -49,6 +49,7 @@ export class NetworkStore extends Collection {
       ...this.__prepareSort(options && options.sort),
       ...this.__prepareIncludes(options && options.include),
       ...this.__prepareFields((options && options.fields) || {}),
+      ...this.__prepareRawParams((options && options.params) || []),
     ];
 
     const baseUrl: string = this.__appendParams(this.__prefixUrl(url), params);
@@ -75,6 +76,15 @@ export class NetworkStore extends Collection {
     });
 
     return list;
+  }
+
+  protected __prepareRawParams(params: Array<{key: string, value: string}|string>): Array<string> {
+    return params.map((param) => {
+      if (typeof param === 'string') {
+        return param;
+      }
+      return `${param.key}=${param.value}`;
+    });
   }
 
   protected __prefixUrl(url) {

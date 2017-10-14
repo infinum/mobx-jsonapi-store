@@ -41,7 +41,7 @@ var NetworkStore = (function (_super) {
             : type;
         var url = id ? path + "/" + id : "" + path;
         var headers = options ? options.headers : {};
-        var params = this.__prepareFilters((options && options.filter) || {}).concat(this.__prepareSort(options && options.sort), this.__prepareIncludes(options && options.include), this.__prepareFields((options && options.fields) || {}));
+        var params = this.__prepareFilters((options && options.filter) || {}).concat(this.__prepareSort(options && options.sort), this.__prepareIncludes(options && options.include), this.__prepareFields((options && options.fields) || {}), this.__prepareRawParams((options && options.params) || []));
         var baseUrl = this.__appendParams(this.__prefixUrl(url), params);
         return { data: data, headers: headers, url: baseUrl };
     };
@@ -60,6 +60,14 @@ var NetworkStore = (function (_super) {
             list.push("fields[" + key + "]=" + fields[key]);
         });
         return list;
+    };
+    NetworkStore.prototype.__prepareRawParams = function (params) {
+        return params.map(function (param) {
+            if (typeof param === 'string') {
+                return param;
+            }
+            return param.key + "=" + param.value;
+        });
     };
     NetworkStore.prototype.__prefixUrl = function (url) {
         return "" + NetworkUtils_1.config.baseUrl + url;

@@ -131,4 +131,21 @@ describe('params', () => {
     expect(events.data).to.be.an('array');
     expect(events.data['length']).to.equal(4);
   });
+
+  it('should support raw params', async () => {
+    mockApi({
+      name: 'events-1',
+      query: (q) => expect(q).to.eql({a: '1', b: '2', c: '3', sort: 'name'}),
+      url: 'event',
+    });
+
+    const store = new Store();
+    const events = await store.fetchAll('event', false, {
+      params: ['a=1', 'b=2', {key: 'c', value: '3'}],
+      sort: 'name',
+    });
+
+    expect(events.data).to.be.an('array');
+    expect(events.data['length']).to.equal(4);
+  });
 });
