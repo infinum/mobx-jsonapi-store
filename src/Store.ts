@@ -149,6 +149,12 @@ export class Store extends NetworkStore {
     return Promise.resolve(true);
   }
 
+  public reset() {
+    super.reset();
+    this.__cache.fetch = {};
+    this.__cache.fetchAll = {};
+  }
+
   public request(url: string, method: string = 'GET', data?: object, options?: IRequestOptions): Promise<Response> {
     return fetch({url: this.__prefixUrl(url), options, data, method, store: this});
   }

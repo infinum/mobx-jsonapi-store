@@ -124,6 +124,11 @@ var Store = /** @class */ (function (_super) {
         }
         return Promise.resolve(true);
     };
+    Store.prototype.reset = function () {
+        _super.prototype.reset.call(this);
+        this.__cache.fetch = {};
+        this.__cache.fetchAll = {};
+    };
     Store.prototype.request = function (url, method, data, options) {
         if (method === void 0) { method = 'GET'; }
         return NetworkUtils_1.fetch({ url: this.__prefixUrl(url), options: options, data: data, method: method, store: this });
