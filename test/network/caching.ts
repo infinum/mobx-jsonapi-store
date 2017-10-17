@@ -318,5 +318,19 @@ describe('caching', () => {
       expect(events2.data).to.be.an('array');
       expect(events2.data['length']).to.equal(4);
     });
+
+    it('should reset chache when resseting the store', async () => {
+      const store = new Store();
+
+      mockApi({name: 'event-1', url: 'event'});
+      await store.fetchAll('event');
+
+      store.reset();
+
+      const mockedApi = mockApi({name: 'event-1', url: 'event'});
+      await store.fetchAll('event');
+
+      expect(mockedApi.isDone()).to.equal(true);
+    });
   });
 });
