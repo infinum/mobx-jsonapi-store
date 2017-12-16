@@ -11,9 +11,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_collection_store_1 = require("mobx-collection-store");
+var ParamArrayType_1 = require("./enums/ParamArrayType");
 var NetworkUtils_1 = require("./NetworkUtils");
 var utils_1 = require("./utils");
-var NetworkStore = (function (_super) {
+var NetworkStore = /** @class */ (function (_super) {
     __extends(NetworkStore, _super);
     function NetworkStore() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -41,7 +42,7 @@ var NetworkStore = (function (_super) {
             : type;
         var url = id ? path + "/" + id : "" + path;
         var headers = options ? options.headers : {};
-        var params = this.__prepareFilters((options && options.filter) || {}).concat(this.__prepareSort(options && options.sort), this.__prepareIncludes(options && options.include), this.__prepareFields((options && options.fields) || {}));
+        var params = this.__prepareFilters((options && options.filter) || {}).concat(this.__prepareSort(options && options.sort), this.__prepareIncludes(options && options.include), this.__prepareFields((options && options.fields) || {}), this.__prepareRawParams((options && options.params) || []));
         var baseUrl = this.__appendParams(this.__prefixUrl(url), params);
         return { data: data, headers: headers, url: baseUrl };
     };
@@ -61,6 +62,14 @@ var NetworkStore = (function (_super) {
         });
         return list;
     };
+    NetworkStore.prototype.__prepareRawParams = function (params) {
+        return params.map(function (param) {
+            if (typeof param === 'string') {
+                return param;
+            }
+            return param.key + "=" + param.value;
+        });
+    };
     NetworkStore.prototype.__prefixUrl = function (url) {
         return "" + NetworkUtils_1.config.baseUrl + url;
     };
@@ -75,7 +84,21 @@ var NetworkStore = (function (_super) {
         if (scope === void 0) { scope = ''; }
         var list = [];
         utils_1.objectForEach(params, function (key) {
-            if (typeof params[key] === 'object') {
+            if (params[key] instanceof Array) {
+                if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.OBJECT_PATH) {
+                    list.push.apply(list, _this.__parametrize(params[key], key + "."));
+                }
+                else if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.COMMA_SEPARATED) {
+                    list.push({ key: "" + scope + key, value: params[key].join(',') });
+                }
+                else if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.MULTIPLE_PARAMS) {
+                    list.push.apply(list, params[key].map(function (param) { return ({ key: "" + scope + key, value: param }); }));
+                }
+                else if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.PARAM_ARRAY) {
+                    list.push.apply(list, params[key].map(function (param) { return ({ key: "" + scope + key + "][", value: param }); }));
+                }
+            }
+            else if (typeof params[key] === 'object') {
                 list.push.apply(list, _this.__parametrize(params[key], key + "."));
             }
             else {

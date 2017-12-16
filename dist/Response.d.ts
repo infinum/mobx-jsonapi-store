@@ -5,6 +5,7 @@ import IRawResponse from './interfaces/IRawResponse';
 import IRequestOptions from './interfaces/IRequestOptions';
 import IResponseHeaders from './interfaces/IResponseHeaders';
 import * as JsonApi from './interfaces/JsonApi';
+import { Record } from './Record';
 import { Store } from './Store';
 export declare class Response {
     /**
@@ -132,7 +133,26 @@ export declare class Response {
      *
      * @memberOf Response
      */
-    replaceData(data: IModel): Response;
+    replaceData(data: Record): Response;
+    /**
+     * Update references in the store
+     *
+     * @private
+     * @param {any} type Record type
+     * @param {any} oldId Old redord ID
+     * @param {any} newId New record ID
+     * @memberof Response
+     */
+    private __updateStoreReferences(type, oldId, newId);
+    /**
+     * Update models that reference the updated model
+     *
+     * @private
+     * @param {any} oldId Old record ID
+     * @param {any} newId new record ID
+     * @memberof Response
+     */
+    private __updateReferences(oldId, newId);
     /**
      * Function called when a link is beeing fetched. The returned value is cached
      *

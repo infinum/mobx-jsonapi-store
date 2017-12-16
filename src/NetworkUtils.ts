@@ -1,3 +1,4 @@
+import ParamArrayType from './enums/ParamArrayType';
 import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
@@ -32,7 +33,10 @@ export interface IConfigType {
   baseUrl: string;
   defaultHeaders: IHeaders;
   fetchReference: Function;
+  paramArrayType: ParamArrayType;
   storeFetch: StoreFetchType;
+  transformRequest: (options: IStoreFetchOpts) => IStoreFetchOpts;
+  transformResponse: (response: IRawResponse) => IRawResponse;
 }
 
 export const config: IConfigType = {
@@ -46,10 +50,14 @@ export const config: IConfigType = {
   },
 
   /** Reference of the fetch method that should be used */
+  /* istanbul ignore next */
   fetchReference: isBrowser && window.fetch.bind(window),
 
+  /** Determines how will the request param arrays be stringified */
+  paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
+
   /**
-   * Base implementation of the fetch function (can be overriden)
+   * Base implementation of the fetch function (can be overridden)
    *
    * @param {string} method API call method
    * @param {string} url API call URL
@@ -108,20 +116,32 @@ export const config: IConfigType = {
       });
   },
   /**
-   * Base implementation of the stateful fetch function (can be overriden)
+   * Base implementation of the stateful fetch function (can be overridden)
    *
-   * @param {IStoreFetchOpts} options API request options
+   * @param {IStoreFetchOpts} reqOptions API request options
    * @returns {Promise<Response>} Resolves with a response object
    */
-  storeFetch({
-    url,
-    options,
-    data,
-    method = 'GET',
-    store,
-  }: IStoreFetchOpts): Promise<LibResponse> {
+  storeFetch(reqOptions: IStoreFetchOpts): Promise<LibResponse> {
+    const {
+      url,
+      options,
+      data,
+      method = 'GET',
+      store,
+    } = config.transformRequest(reqOptions);
+
     return config.baseFetch(method, url, data, options && options.headers)
-      .then((response: IRawResponse) => new LibResponse(response, store, options));
+      .then((response: IRawResponse) => {
+        return new LibResponse(config.transformResponse(response), store, options);
+      });
+  },
+
+  transformRequest(options: IStoreFetchOpts): IStoreFetchOpts {
+    return options;
+  },
+
+  transformResponse(response: IRawResponse): IRawResponse {
+    return response;
   },
 };
 
@@ -251,6 +271,8 @@ export function fetchLink(
 ): Promise<LibResponse> {
   if (link) {
     const href: string = typeof link === 'object' ? link.href : link;
+
+    /* istanbul ignore else */
     if (href) {
       return read(store, href, requestHeaders, options);
     }
@@ -260,6 +282,8 @@ export function fetchLink(
 
 export function handleResponse(record: Record, prop?: string): (LibResponse) => Record {
   return (response: LibResponse): Record => {
+
+    /* istanbul ignore if */
     if (response.error) {
       throw response.error;
     }

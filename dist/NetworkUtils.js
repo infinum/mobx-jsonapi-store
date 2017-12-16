@@ -8,6 +8,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var ParamArrayType_1 = require("./enums/ParamArrayType");
 var Response_1 = require("./Response");
 var utils_1 = require("./utils");
 exports.config = {
@@ -18,9 +19,12 @@ exports.config = {
         'content-type': 'application/vnd.api+json',
     },
     /** Reference of the fetch method that should be used */
+    /* istanbul ignore next */
     fetchReference: utils_1.isBrowser && window.fetch.bind(window),
+    /** Determines how will the request param arrays be stringified */
+    paramArrayType: ParamArrayType_1.default.COMMA_SEPARATED,
     /**
-     * Base implementation of the fetch function (can be overriden)
+     * Base implementation of the fetch function (can be overridden)
      *
      * @param {string} method API call method
      * @param {string} url API call URL
@@ -71,15 +75,23 @@ exports.config = {
         });
     },
     /**
-     * Base implementation of the stateful fetch function (can be overriden)
+     * Base implementation of the stateful fetch function (can be overridden)
      *
-     * @param {IStoreFetchOpts} options API request options
+     * @param {IStoreFetchOpts} reqOptions API request options
      * @returns {Promise<Response>} Resolves with a response object
      */
-    storeFetch: function (_a) {
-        var url = _a.url, options = _a.options, data = _a.data, _b = _a.method, method = _b === void 0 ? 'GET' : _b, store = _a.store;
+    storeFetch: function (reqOptions) {
+        var _a = exports.config.transformRequest(reqOptions), url = _a.url, options = _a.options, data = _a.data, _b = _a.method, method = _b === void 0 ? 'GET' : _b, store = _a.store;
         return exports.config.baseFetch(method, url, data, options && options.headers)
-            .then(function (response) { return new Response_1.Response(response, store, options); });
+            .then(function (response) {
+            return new Response_1.Response(exports.config.transformResponse(response), store, options);
+        });
+    },
+    transformRequest: function (options) {
+        return options;
+    },
+    transformResponse: function (response) {
+        return response;
     },
 };
 function fetch(options) {
@@ -181,6 +193,7 @@ exports.remove = remove;
 function fetchLink(link, store, requestHeaders, options) {
     if (link) {
         var href = typeof link === 'object' ? link.href : link;
+        /* istanbul ignore else */
         if (href) {
             return read(store, href, requestHeaders, options);
         }
@@ -190,6 +203,7 @@ function fetchLink(link, store, requestHeaders, options) {
 exports.fetchLink = fetchLink;
 function handleResponse(record, prop) {
     return function (response) {
+        /* istanbul ignore if */
         if (response.error) {
             throw response.error;
         }

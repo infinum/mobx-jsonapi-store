@@ -8,6 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 function objectForEach(obj, fn) {
     for (var key in obj) {
+        /* istanbul ignore else */
         if (obj.hasOwnProperty(key)) {
             fn(key);
         }
@@ -36,9 +37,10 @@ exports.mapItems = mapItems;
  */
 function flattenRecord(record) {
     var data = {
-        __internal: {},
-        id: record.id,
-        type: record.type,
+        __internal: {
+            id: record.id,
+            type: record.type,
+        },
     };
     objectForEach(record.attributes, function (key) {
         data[key] = record.attributes[key];
@@ -54,12 +56,14 @@ function flattenRecord(record) {
         }
     });
     objectForEach(record.links, function (key) {
+        /* istanbul ignore else */
         if (record.links[key]) {
             data.__internal.links = data.__internal.links || {};
             data.__internal.links[key] = record.links[key];
         }
     });
     objectForEach(record.meta, function (key) {
+        /* istanbul ignore else */
         if (record.meta[key]) {
             data.__internal.meta = data.__internal.meta || {};
             data.__internal.meta[key] = record.meta[key];
@@ -87,6 +91,7 @@ function assign(target) {
     args.forEach(function (nextSource) {
         if (nextSource != null) {
             for (var nextKey in nextSource) {
+                /* istanbul ignore else */
                 if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
                     target[nextKey] = nextSource[nextKey];
                 }
@@ -112,3 +117,20 @@ function getValue(target) {
     return target;
 }
 exports.getValue = getValue;
+/**
+ * Get all object keys
+ *
+ * @export
+ * @param {object} obj Object to process
+ * @returns {Array<string>} List of object keys
+ */
+function keys(obj) {
+    var keyList = [];
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            keyList.push(key);
+        }
+    }
+    return keyList;
+}
+exports.keys = keys;

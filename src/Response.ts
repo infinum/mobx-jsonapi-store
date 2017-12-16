@@ -1,4 +1,4 @@
-import {computed, extendObservable, IComputedValue} from 'mobx';
+import {action, computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
 import {IModel} from 'mobx-collection-store';
 
 import IDictionary from './interfaces/IDictionary';
@@ -11,7 +11,7 @@ import * as JsonApi from './interfaces/JsonApi';
 import {NetworkStore} from './NetworkStore';
 import {Record} from './Record';
 import {Store} from './Store';
-import {flattenRecord} from './utils';
+import {flattenRecord, keys} from './utils';
 
 import {fetchLink, read} from './NetworkUtils';
 
@@ -160,9 +160,12 @@ export class Response {
     } else if (response.data) {
       // The case when a record is not in a store and save/remove are used
       const resp = response.data;
+
+      /* istanbul ignore if */
       if (resp.data instanceof Array) {
         throw new Error('A save/remove operation should not return an array of results');
       }
+
       this.data = overrideData || new Record(flattenRecord(resp.data));
     }
 
@@ -181,6 +184,10 @@ export class Response {
     extendObservable(this, linkGetter);
 
     Object.freeze(this);
+
+    if (this.error) {
+      throw this;
+    }
   }
 
   /**
@@ -191,27 +198,74 @@ export class Response {
    *
    * @memberOf Response
    */
-  public replaceData(data: IModel): Response {
+  @action public replaceData(data: Record): Response {
     const record: Record = this.data as Record;
     if (record === data) {
       return this;
     }
 
+    const oldId = data.getRecordId();
+    const newId = record.getRecordId();
+    const type = record.getRecordType();
+
     if (this.__store) {
-      this.__store.remove(record.type, record.id);
+      this.__store.remove(type, newId);
     }
 
     data.update(record.toJS());
 
     // TODO: Refactor this to avoid using mobx-collection-store internals
-    const oldId = data['id'];
-    data['__data'].id = record.id;
-    if (this.__store) {
-      this.__store['__modelHash'][record.type][record.id] = this.__store['__modelHash'][record.type][oldId];
-      delete this.__store['__modelHash'][record.type][oldId];
-    }
+    data['__internal'].id = newId;
+    this.__updateStoreReferences(type, oldId, newId);
 
     return new Response(this.__response, this.__store, this.__options, data);
+  }
+
+  /**
+   * Update references in the store
+   *
+   * @private
+   * @param {any} type Record type
+   * @param {any} oldId Old redord ID
+   * @param {any} newId New record ID
+   * @memberof Response
+   */
+  private __updateStoreReferences(type, oldId, newId) {
+    if (this.__store) {
+      const modelHash = this.__store['__modelHash'][type];
+      const oldModel = modelHash[oldId];
+      modelHash[newId] = oldModel;
+      delete modelHash[oldId];
+
+      this.__updateReferences(oldId, newId);
+    }
+  }
+
+  /**
+   * Update models that reference the updated model
+   *
+   * @private
+   * @param {any} oldId Old record ID
+   * @param {any} newId new record ID
+   * @memberof Response
+   */
+  private __updateReferences(oldId, newId) {
+    this.__store['__data'].map((model) => {
+      const keyList = keys(model['__data']);
+      keyList.map((key) => {
+        const keyId = `${key}Id`;
+        if (key in model && keyId in model) {
+          if (isObservableArray(model[keyId])) {
+            const index = model[keyId].indexOf(oldId);
+            if (index > -1) {
+              model[keyId][index] = newId;
+            }
+          } else if (model[keyId] === oldId) {
+            model[keyId] = newId;
+          }
+        }
+      });
+    });
   }
 
   /**
@@ -225,7 +279,10 @@ export class Response {
    */
   private __fetchLink(name) {
     if (!this.__cache[name]) {
+
+      /* istanbul ignore next */
       const link: JsonApi.ILink = name in this.links ? this.links[name] : null;
+
       this.__cache[name] = fetchLink(link, this.__store, this.requestHeaders, this.__options);
     }
     return this.__cache[name];

@@ -1,3 +1,4 @@
+import ParamArrayType from './enums/ParamArrayType';
 import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
@@ -20,7 +21,10 @@ export interface IConfigType {
     baseUrl: string;
     defaultHeaders: IHeaders;
     fetchReference: Function;
+    paramArrayType: ParamArrayType;
     storeFetch: StoreFetchType;
+    transformRequest: (options: IStoreFetchOpts) => IStoreFetchOpts;
+    transformResponse: (response: IRawResponse) => IRawResponse;
 }
 export declare const config: IConfigType;
 export declare function fetch(options: IStoreFetchOpts): Promise<LibResponse>;

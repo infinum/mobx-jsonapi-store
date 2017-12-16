@@ -149,6 +149,12 @@ export class Store extends NetworkStore {
     return Promise.resolve(true);
   }
 
+  public reset() {
+    super.reset();
+    this.__cache.fetch = {};
+    this.__cache.fetchAll = {};
+  }
+
   public request(url: string, method: string = 'GET', data?: object, options?: IRequestOptions): Promise<Response> {
     return fetch({url: this.__prefixUrl(url), options, data, method, store: this});
   }
@@ -183,9 +189,12 @@ export class Store extends NetworkStore {
    * @memberOf Store
    */
   private __handleErrors(response: Response) {
+
+    /* istanbul ignore if */
     if (response.error) {
       throw response.error;
     }
+
     return response;
   }
 
@@ -214,6 +223,7 @@ export class Store extends NetworkStore {
 
     // In case a record is not a real record
     // TODO: Figure out when this happens and try to handle it better
+    /* istanbul ignore else */
     if (record && typeof record.setPersisted === 'function') {
       record.setPersisted(true);
     }
@@ -239,10 +249,10 @@ export class Store extends NetworkStore {
         // it's only possible to update items with one ore more refs. Early exit
         return;
       }
-      if (items) {
+      if (items && record) {
         const models: IModel|Array<IModel> = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
-        const type: string = items instanceof Array ? items[0].type : items.type;
-        record.assignRef(ref, models, type);
+        const itemType: string = items instanceof Array ? items[0].type : items.type;
+        record.assignRef(ref, models, itemType);
       }
     });
   }

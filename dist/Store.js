@@ -21,7 +21,7 @@ var NetworkStore_1 = require("./NetworkStore");
 var NetworkUtils_1 = require("./NetworkUtils");
 var Record_1 = require("./Record");
 var utils_1 = require("./utils");
-var Store = (function (_super) {
+var Store = /** @class */ (function (_super) {
     __extends(Store, _super);
     function Store() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -124,6 +124,11 @@ var Store = (function (_super) {
         }
         return Promise.resolve(true);
     };
+    Store.prototype.reset = function () {
+        _super.prototype.reset.call(this);
+        this.__cache.fetch = {};
+        this.__cache.fetchAll = {};
+    };
     Store.prototype.request = function (url, method, data, options) {
         if (method === void 0) { method = 'GET'; }
         return NetworkUtils_1.fetch({ url: this.__prefixUrl(url), options: options, data: data, method: method, store: this });
@@ -156,6 +161,7 @@ var Store = (function (_super) {
      * @memberOf Store
      */
     Store.prototype.__handleErrors = function (response) {
+        /* istanbul ignore if */
         if (response.error) {
             throw response.error;
         }
@@ -186,6 +192,7 @@ var Store = (function (_super) {
         }
         // In case a record is not a real record
         // TODO: Figure out when this happens and try to handle it better
+        /* istanbul ignore else */
         if (record && typeof record.setPersisted === 'function') {
             record.setPersisted(true);
         }
@@ -210,13 +217,13 @@ var Store = (function (_super) {
                 // it's only possible to update items with one ore more refs. Early exit
                 return;
             }
-            if (items) {
+            if (items && record) {
                 var models = utils_1.mapItems(items, function (_a) {
                     var id = _a.id, type = _a.type;
                     return _this.find(type, id) || id;
                 });
-                var type = items instanceof Array ? items[0].type : items.type;
-                record.assignRef(ref, models, type);
+                var itemType = items instanceof Array ? items[0].type : items.type;
+                record.assignRef(ref, models, itemType);
             }
         });
     };

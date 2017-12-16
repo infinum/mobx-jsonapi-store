@@ -9,6 +9,8 @@ import * as JsonApi from './interfaces/JsonApi';
  */
 export function objectForEach(obj: object, fn: Function): void {
   for (const key in obj) {
+
+    /* istanbul ignore else */
     if (obj.hasOwnProperty(key)) {
       fn(key);
     }
@@ -37,9 +39,10 @@ export function mapItems<T>(data: object|Array<object>, fn: Function): T|Array<T
  */
 export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   const data: IDictionary<any> = {
-    __internal: {},
-    id: record.id,
-    type: record.type,
+    __internal: {
+      id: record.id,
+      type: record.type,
+    },
   };
 
   objectForEach(record.attributes, (key) => {
@@ -60,6 +63,8 @@ export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   });
 
   objectForEach(record.links, (key) => {
+
+    /* istanbul ignore else */
     if (record.links[key]) {
       data.__internal.links = data.__internal.links || {};
       data.__internal.links[key] = record.links[key];
@@ -67,6 +72,8 @@ export function flattenRecord(record: JsonApi.IRecord): IDictionary<any> {
   });
 
   objectForEach(record.meta, (key) => {
+
+    /* istanbul ignore else */
     if (record.meta[key]) {
       data.__internal.meta = data.__internal.meta || {};
       data.__internal.meta[key] = record.meta[key];
@@ -92,6 +99,8 @@ export function assign(target: object, ...args: Array<object>) {
   args.forEach((nextSource: object) => {
     if (nextSource != null) {
       for (const nextKey in nextSource) {
+
+        /* istanbul ignore else */
         if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
           target[nextKey] = nextSource[nextKey];
         }
@@ -116,4 +125,21 @@ export function getValue<T>(target: T|(() => T)): T {
   }
 
   return target;
+}
+
+/**
+ * Get all object keys
+ *
+ * @export
+ * @param {object} obj Object to process
+ * @returns {Array<string>} List of object keys
+ */
+export function keys(obj: object): Array<string> {
+  const keyList = [];
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      keyList.push(key);
+    }
+  }
+  return keyList;
 }

@@ -12,7 +12,7 @@ export declare class Store extends NetworkStore {
      *
      * @memberOf Store
      */
-    static types: typeof Record[];
+    static types: (typeof Record)[];
     /**
      * Should the cache be used for API calls when possible
      *
@@ -73,6 +73,7 @@ export declare class Store extends NetworkStore {
      * @memberOf Store
      */
     destroy(type: string, id: number | string, options?: IRequestOptions): Promise<boolean>;
+    reset(): void;
     request(url: string, method?: string, data?: object, options?: IRequestOptions): Promise<Response>;
     removeAll<T extends IModel>(type: string): Array<T>;
     /**

@@ -12,3 +12,5 @@ exports.Record = Record_1.Record;
 var Response_1 = require("./Response");
 exports.Response = Response_1.Response;
 __export(require("./NetworkUtils"));
+var ParamArrayType_1 = require("./enums/ParamArrayType");
+exports.ParamArrayType = ParamArrayType_1.default;

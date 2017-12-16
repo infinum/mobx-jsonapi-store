@@ -5,8 +5,8 @@ import * as nodeUrl from 'url';
 import {constant, isFunction} from 'lodash';
 import * as nock from 'nock';
 
-import IDictionary from '../src/interfaces/IDictionary';
-import {config} from '../src/NetworkUtils';
+import IDictionary from '../../src/interfaces/IDictionary';
+import {config} from '../../src/NetworkUtils';
 
 /**
  * Create a stream from a mock file
@@ -15,7 +15,7 @@ import {config} from '../src/NetworkUtils';
  * @return {Stream} Mock stream
  */
 function getMockStream(name: string): fs.ReadStream {
-  const testPath = path.join(__dirname, `mock/${name}.json`);
+  const testPath = path.join(__dirname, `../mock/${name}.json`);
   return fs.createReadStream(testPath);
 }
 

@@ -7,8 +7,8 @@ import {computed} from 'mobx';
 
 import {config, Record, Store} from '../src';
 
-import mockApi from './api';
-import {Event, Image, Organiser, Photo, TestStore, User} from './setup';
+import mockApi from './utils/api';
+import {Event, Image, Organiser, Photo, TestStore, User} from './utils/setup';
 
 describe('Reported issues', () => {
   beforeEach(() => {
@@ -57,7 +57,7 @@ describe('Reported issues', () => {
 
       const org = response.data[0] as OrganizationRecord;
 
-      expect(org.id).to.equal('ORG-A');
+      expect(org.getRecordId()).to.equal('ORG-A');
       expect(org.units).to.be.an('array');
     });
   });
@@ -94,9 +94,8 @@ describe('Reported issues', () => {
       const store = new Store();
       const record = new Record({
         password: 'hunter2',
-        type: 'sessions',
         username: 'foobar',
-      });
+      }, 'sessions');
       store.add(record);
 
       mockApi({
@@ -133,5 +132,48 @@ describe('Reported issues', () => {
       expect(store.length).to.equal(1);
       expect(store.find('sessions', 12345)).to.equal(session);
     });
+  });
+
+  describe('wrong toJsonApi references when null', () => {
+      class UnitRecord extends Record {
+        public static type = 'units';
+        public static refs = { organization: 'organizations' };
+
+        public organization?: OrganizationRecord;
+        public organizationId?: number|string;
+      }
+
+      class OrganizationRecord extends Record {
+        public static type = 'organizations';
+        public static refs = {
+          units: {
+            model: 'units',
+            property: 'organization',
+          },
+        };
+
+        public name: string;
+        public units: Array<UnitRecord>;
+      }
+
+      class ApiStore extends Store {
+        public static types = [OrganizationRecord, UnitRecord];
+
+        public organizations: Array<OrganizationRecord>;
+        public units: Array<UnitRecord>;
+      }
+
+      const store = new ApiStore();
+      const unit = new UnitRecord();
+
+      expect(unit.toJsonApi().relationships.organization.data).to.equal(null);
+
+      store.add(unit);
+
+      expect(unit.toJsonApi().relationships.organization.data).to.equal(null);
+
+      unit.organization = new OrganizationRecord({name: 'Foo'});
+      expect(unit.toJsonApi().relationships.organization.data['id']).to.equal(unit.organizationId);
+      expect(unit.toJsonApi().relationships.organization.data['type']).to.equal('organizations');
   });
 });

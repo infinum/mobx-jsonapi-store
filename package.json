@@ -1,6 +1,6 @@
 {
   "name": "mobx-jsonapi-store",
-  "version": "3.9.0",
+  "version": "4.0.0",
   "description": "JSON API Store for MobX",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -53,26 +53,27 @@
     ]
   },
   "license": "MIT",
+  "dependencies": {
+    "mobx-collection-store": "^2.0.0"
+  },
   "devDependencies": {
-    "@types/mocha": "^2.2.41",
-    "@types/nock": "^8.2.1",
-    "@types/node": "^8.0.5",
-    "chai": "^4.0.2",
-    "husky": "^0.14.1",
+    "@types/mocha": "^2.2.44",
+    "@types/nock": "^9.1.0",
+    "@types/node": "^8.5.1",
+    "chai": "^4.1.2",
+    "husky": "^0.14.3",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
-    "mobx": "^3.1.16",
-    "mobx-collection-store": "^1.3.3",
-    "mocha": "^4.0.0",
-    "nock": "^9.0.13",
-    "nodemon": "^1.11.0",
-    "nyc": "^11.0.3",
-    "ts-node": "^3.1.0",
-    "tslint": "^5.4.3",
-    "typescript": "^2.4.1"
+    "mobx": "^3.4.1",
+    "mocha": "^4.0.1",
+    "nock": "^9.1.4",
+    "nodemon": "^1.13.3",
+    "nyc": "^11.3.0",
+    "ts-node": "^4.0.2",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
   },
   "peerDependencies": {
-    "mobx": "^2.6.0 || ^3",
-    "mobx-collection-store": "^1.3.3"
+    "mobx": "^3.0.0"
   }
 }
