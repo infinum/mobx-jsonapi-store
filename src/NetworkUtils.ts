@@ -35,6 +35,8 @@ export interface IConfigType {
   fetchReference: Function;
   paramArrayType: ParamArrayType;
   storeFetch: StoreFetchType;
+  transformRequest: (options: IStoreFetchOpts) => IStoreFetchOpts;
+  transformResponse: (response: IRawResponse) => IRawResponse;
 }
 
 export const config: IConfigType = {
@@ -116,18 +118,30 @@ export const config: IConfigType = {
   /**
    * Base implementation of the stateful fetch function (can be overridden)
    *
-   * @param {IStoreFetchOpts} options API request options
+   * @param {IStoreFetchOpts} reqOptions API request options
    * @returns {Promise<Response>} Resolves with a response object
    */
-  storeFetch({
-    url,
-    options,
-    data,
-    method = 'GET',
-    store,
-  }: IStoreFetchOpts): Promise<LibResponse> {
+  storeFetch(reqOptions: IStoreFetchOpts): Promise<LibResponse> {
+    const {
+      url,
+      options,
+      data,
+      method = 'GET',
+      store,
+    } = config.transformRequest(reqOptions);
+
     return config.baseFetch(method, url, data, options && options.headers)
-      .then((response: IRawResponse) => new LibResponse(response, store, options));
+      .then((response: IRawResponse) => {
+        return new LibResponse(config.transformResponse(response), store, options);
+      });
+  },
+
+  transformRequest(options: IStoreFetchOpts) {
+    return options;
+  },
+
+  transformResponse(response: IRawResponse) {
+    return response;
   },
 };
 

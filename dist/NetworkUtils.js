@@ -77,13 +77,21 @@ exports.config = {
     /**
      * Base implementation of the stateful fetch function (can be overridden)
      *
-     * @param {IStoreFetchOpts} options API request options
+     * @param {IStoreFetchOpts} reqOptions API request options
      * @returns {Promise<Response>} Resolves with a response object
      */
-    storeFetch: function (_a) {
-        var url = _a.url, options = _a.options, data = _a.data, _b = _a.method, method = _b === void 0 ? 'GET' : _b, store = _a.store;
+    storeFetch: function (reqOptions) {
+        var _a = exports.config.transformRequest(reqOptions), url = _a.url, options = _a.options, data = _a.data, _b = _a.method, method = _b === void 0 ? 'GET' : _b, store = _a.store;
         return exports.config.baseFetch(method, url, data, options && options.headers)
-            .then(function (response) { return new Response_1.Response(response, store, options); });
+            .then(function (response) {
+            return new Response_1.Response(exports.config.transformResponse(response), store, options);
+        });
+    },
+    transformRequest: function (options) {
+        return options;
+    },
+    transformResponse: function (response) {
+        return response;
     },
 };
 function fetch(options) {
