@@ -9,12 +9,16 @@ import mockApi from '../utils/api';
 import {Event, Image, Organiser, Photo, TestStore, User} from '../utils/setup';
 
 const baseStoreFetch = config.storeFetch;
+const baseTransformRequest = config.transformRequest;
+const baseTransformResponse = config.transformResponse;
 
 describe('Network basics', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
     config.baseUrl = 'http://example.com/';
     config.storeFetch = baseStoreFetch;
+    config.transformRequest = baseTransformRequest;
+    config.transformResponse = baseTransformResponse;
   });
 
   it('should fetch the basic data', async () => {
@@ -75,6 +79,49 @@ describe('Network basics', () => {
 
     expect(events.data).to.be.an('array');
     expect(hasCustomStoreFetchBeenCalled).to.equal(true);
+  });
+
+  it('should support transformRequest hook', async () => {
+    mockApi({
+      name: 'events-1',
+      url: 'event/all',
+    });
+
+    let hasTransformRequestHookBeenCalled = false;
+
+    config.transformRequest = (opts) => {
+      expect(opts.store).to.equal(store);
+      hasTransformRequestHookBeenCalled = true;
+      return {...opts, url: `${opts.url}/all`};
+    };
+
+    const store = new Store();
+    const events = await store.fetchAll('event');
+
+    expect(events.data).to.be.an('array');
+    expect(hasTransformRequestHookBeenCalled).to.equal(true);
+  });
+
+  it('should support transformResponse hook', async () => {
+    mockApi({
+      name: 'events-1',
+      url: 'event',
+    });
+
+    let hasTransformResponseHookBeenCalled = false;
+
+    config.transformResponse = (opts) => {
+      expect(opts.status).to.equal(200);
+      hasTransformResponseHookBeenCalled = true;
+      return {...opts, status: 201};
+    };
+
+    const store = new Store();
+    const events = await store.fetchAll('event');
+
+    expect(events.data).to.be.an('array');
+    expect(events.status).to.equal(201);
+    expect(hasTransformResponseHookBeenCalled).to.equal(true);
   });
 
   it('should save the jsonapi data', async () => {

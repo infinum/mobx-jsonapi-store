@@ -136,11 +136,11 @@ export const config: IConfigType = {
       });
   },
 
-  transformRequest(options: IStoreFetchOpts) {
+  transformRequest(options: IStoreFetchOpts): IStoreFetchOpts {
     return options;
   },
 
-  transformResponse(response: IRawResponse) {
+  transformResponse(response: IRawResponse): IRawResponse {
     return response;
   },
 };
