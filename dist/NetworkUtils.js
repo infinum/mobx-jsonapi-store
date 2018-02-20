@@ -84,7 +84,8 @@ exports.config = {
         var _a = exports.config.transformRequest(reqOptions), url = _a.url, options = _a.options, data = _a.data, _b = _a.method, method = _b === void 0 ? 'GET' : _b, store = _a.store;
         return exports.config.baseFetch(method, url, data, options && options.headers)
             .then(function (response) {
-            return new Response_1.Response(exports.config.transformResponse(response), store, options);
+            var storeResponse = utils_1.assign(response, { store: store });
+            return new Response_1.Response(exports.config.transformResponse(storeResponse), store, options);
         });
     },
     transformRequest: function (options) {

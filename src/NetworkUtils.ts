@@ -132,7 +132,8 @@ export const config: IConfigType = {
 
     return config.baseFetch(method, url, data, options && options.headers)
       .then((response: IRawResponse) => {
-        return new LibResponse(config.transformResponse(response), store, options);
+        const storeResponse = assign(response, {store});
+        return new LibResponse(config.transformResponse(storeResponse), store, options);
       });
   },
 
