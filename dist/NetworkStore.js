@@ -41,7 +41,7 @@ var NetworkStore = /** @class */ (function (_super) {
             ? (utils_1.getValue(model['endpoint']) || model['baseUrl'] || model.type)
             : type;
         var url = id ? path + "/" + id : "" + path;
-        var headers = options ? options.headers : {};
+        var headers = (options ? options.headers : {}) || {};
         var params = this.__prepareFilters((options && options.filter) || {}).concat(this.__prepareSort(options && options.sort), this.__prepareIncludes(options && options.include), this.__prepareFields((options && options.fields) || {}), this.__prepareRawParams((options && options.params) || []));
         var baseUrl = this.__appendParams(this.__prefixUrl(url), params);
         return { data: data, headers: headers, url: baseUrl };

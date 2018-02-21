@@ -43,7 +43,7 @@ export class NetworkStore extends Collection {
       : type;
 
     const url: string = id ? `${path}/${id}` : `${path}`;
-    const headers: IDictionary<string> = options ? options.headers : {};
+    const headers: IDictionary<string> = (options ? options.headers : {}) || {};
 
     const params: Array<string> = [
       ...this.__prepareFilters((options && options.filter) || {}),
