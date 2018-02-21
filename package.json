@@ -1,6 +1,6 @@
 {
   "name": "mobx-jsonapi-store",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "JSON API Store for MobX",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
