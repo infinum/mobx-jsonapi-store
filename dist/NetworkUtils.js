@@ -20,7 +20,7 @@ exports.config = {
     },
     /** Reference of the fetch method that should be used */
     /* istanbul ignore next */
-    fetchReference: utils_1.isBrowser && window.fetch.bind(window),
+    fetchReference: utils_1.isBrowser && window.fetch && window.fetch.bind(window),
     /** Determines how will the request param arrays be stringified */
     paramArrayType: ParamArrayType_1.default.COMMA_SEPARATED,
     /**

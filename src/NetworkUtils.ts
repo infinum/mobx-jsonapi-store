@@ -51,7 +51,7 @@ export const config: IConfigType = {
 
   /** Reference of the fetch method that should be used */
   /* istanbul ignore next */
-  fetchReference: isBrowser && window.fetch.bind(window),
+  fetchReference: isBrowser && window.fetch && window.fetch.bind(window),
 
   /** Determines how will the request param arrays be stringified */
   paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
