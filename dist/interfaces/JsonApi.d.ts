@@ -19,7 +19,7 @@ interface IError {
     status?: number;
     code?: string;
     title?: string;
-    details?: string;
+    detail?: string;
     source?: {
         pointer?: string;
         parameter?: string;
