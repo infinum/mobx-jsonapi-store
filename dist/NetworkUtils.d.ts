@@ -20,6 +20,7 @@ export interface IConfigType {
     baseFetch: FetchType;
     baseUrl: string;
     defaultHeaders: IHeaders;
+    defaultFetchOptions: IDictionary<any>;
     fetchReference: Function;
     paramArrayType: ParamArrayType;
     storeFetch: StoreFetchType;

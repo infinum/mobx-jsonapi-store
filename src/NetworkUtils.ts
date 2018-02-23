@@ -32,6 +32,7 @@ export interface IConfigType {
   baseFetch: FetchType;
   baseUrl: string;
   defaultHeaders: IHeaders;
+  defaultFetchOptions: IDictionary<any>;
   fetchReference: Function;
   paramArrayType: ParamArrayType;
   storeFetch: StoreFetchType;
@@ -48,6 +49,9 @@ export const config: IConfigType = {
   defaultHeaders: {
     'content-type': 'application/vnd.api+json',
   },
+
+  /* Default options that will be passed to fetchReference */
+  defaultFetchOptions: {},
 
   /** Reference of the fetch method that should be used */
   /* istanbul ignore next */
@@ -83,11 +87,12 @@ export const config: IConfigType = {
     return request
       .then(() => {
         const reqHeaders: IHeaders = assign({}, config.defaultHeaders, requestHeaders) as IHeaders;
-        return this.fetchReference(url, {
+        const options = assign({}, config.defaultFetchOptions, {
           body: isBodySupported && JSON.stringify(body) || undefined,
           headers: reqHeaders,
           method,
         });
+        return this.fetchReference(url, options);
       })
       .then((response: Response) => {
         status = response.status;

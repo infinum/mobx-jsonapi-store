@@ -18,6 +18,8 @@ exports.config = {
     defaultHeaders: {
         'content-type': 'application/vnd.api+json',
     },
+    /* Default options that will be passed to fetchReference */
+    defaultFetchOptions: {},
     /** Reference of the fetch method that should be used */
     /* istanbul ignore next */
     fetchReference: utils_1.isBrowser && window.fetch && window.fetch.bind(window),
@@ -43,11 +45,12 @@ exports.config = {
         return request
             .then(function () {
             var reqHeaders = utils_1.assign({}, exports.config.defaultHeaders, requestHeaders);
-            return _this.fetchReference(url, {
+            var options = utils_1.assign({}, exports.config.defaultFetchOptions, {
                 body: isBodySupported && JSON.stringify(body) || undefined,
                 headers: reqHeaders,
                 method: method,
             });
+            return _this.fetchReference(url, options);
         })
             .then(function (response) {
             status = response.status;
