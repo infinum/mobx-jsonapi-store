@@ -286,7 +286,7 @@ export function fetchLink(
   return Promise.resolve(new LibResponse({data: null}, store));
 }
 
-export function handleResponse(record: Record, prop?: string): (LibResponse) => Record {
+export function handleResponse(record: Record, prop?: string): (response: LibResponse) => Record {
   return (response: LibResponse): Record => {
 
     /* istanbul ignore if */
