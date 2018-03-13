@@ -86,4 +86,4 @@ export declare function remove(store: Store, url: string, headers?: IHeaders, op
  * @returns {Promise<LibResponse>} Response promise
  */
 export declare function fetchLink(link: JsonApi.ILink, store: Store, requestHeaders?: IDictionary<string>, options?: IRequestOptions): Promise<LibResponse>;
-export declare function handleResponse(record: Record, prop?: string): (LibResponse) => Record;
+export declare function handleResponse(record: Record, prop?: string): (response: LibResponse) => Record;
