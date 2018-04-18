@@ -93,7 +93,7 @@ var Response = /** @class */ (function () {
             var oldModel = modelHash[oldId];
             modelHash[newId] = oldModel;
             delete modelHash[oldId];
-            this.__updateReferences(oldId, newId);
+            this.__updateReferences(type, oldId, newId);
         }
     };
     /**
@@ -104,12 +104,14 @@ var Response = /** @class */ (function () {
      * @param {any} newId new record ID
      * @memberof Response
      */
-    Response.prototype.__updateReferences = function (oldId, newId) {
+    Response.prototype.__updateReferences = function (type, oldId, newId) {
         this.__store['__data'].map(function (model) {
             var keyList = utils_1.keys(model['__data']);
             keyList.map(function (key) {
                 var keyId = key + "Id";
-                if (key in model && keyId in model) {
+                var refs = model.__refs || model.static.refs;
+                var refsType = refs && refs[key];
+                if (key in model && keyId in model && refsType === type) {
                     if (mobx_1.isObservableArray(model[keyId])) {
                         var index = model[keyId].indexOf(oldId);
                         if (index > -1) {

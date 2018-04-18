@@ -152,7 +152,7 @@ export declare class Response {
      * @param {any} newId new record ID
      * @memberof Response
      */
-    private __updateReferences(oldId, newId);
+    private __updateReferences(type, oldId, newId);
     /**
      * Function called when a link is beeing fetched. The returned value is cached
      *

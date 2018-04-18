@@ -254,7 +254,8 @@ export class Response {
       const keyList = keys(model['__data']);
       keyList.map((key) => {
         const keyId = `${key}Id`;
-        const refsType = model.static.refs && model.static.refs[key];
+        const refs = model.__refs || model.static.refs;
+        const refsType = refs && refs[key];
         if (key in model && keyId in model && refsType === type) {
           if (isObservableArray(model[keyId])) {
             const index = model[keyId].indexOf(oldId);
