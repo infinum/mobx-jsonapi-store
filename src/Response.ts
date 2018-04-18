@@ -237,7 +237,7 @@ export class Response {
       modelHash[newId] = oldModel;
       delete modelHash[oldId];
 
-      this.__updateReferences(oldId, newId);
+      this.__updateReferences(type, oldId, newId);
     }
   }
 
@@ -249,12 +249,13 @@ export class Response {
    * @param {any} newId new record ID
    * @memberof Response
    */
-  private __updateReferences(oldId, newId) {
+  private __updateReferences(type, oldId, newId) {
     this.__store['__data'].map((model) => {
       const keyList = keys(model['__data']);
       keyList.map((key) => {
         const keyId = `${key}Id`;
-        if (key in model && keyId in model) {
+        const refsType = model.static.refs && model.static.refs[key];
+        if (key in model && keyId in model && refsType === type) {
           if (isObservableArray(model[keyId])) {
             const index = model[keyId].indexOf(oldId);
             if (index > -1) {
