@@ -9,7 +9,7 @@ import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
 
 import {NetworkStore} from './NetworkStore';
-import {fetch, read, remove} from './NetworkUtils';
+import {fetch, prefixUrl, read} from './NetworkUtils';
 import {Record} from './Record';
 import {Response} from './Response';
 import {flattenRecord, mapItems} from './utils';
@@ -156,7 +156,7 @@ export class Store extends NetworkStore {
   }
 
   public request(url: string, method: string = 'GET', data?: object, options?: IRequestOptions): Promise<Response> {
-    return fetch({url: this.__prefixUrl(url), options, data, method, store: this});
+    return fetch({url: prefixUrl(url), options, data, method, store: this});
   }
 
   public removeAll<T extends IModel>(type: string): Array<T> {

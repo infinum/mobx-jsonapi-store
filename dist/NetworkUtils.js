@@ -230,3 +230,73 @@ function handleResponse(record, prop) {
     };
 }
 exports.handleResponse = handleResponse;
+function __prepareFilters(filters) {
+    return __parametrize(filters).map(function (item) { return "filter[" + item.key + "]=" + item.value; });
+}
+function __prepareSort(sort) {
+    return sort ? ["sort=" + sort] : [];
+}
+function __prepareIncludes(include) {
+    return include ? ["include=" + include] : [];
+}
+function __prepareFields(fields) {
+    var list = [];
+    utils_1.objectForEach(fields, function (key) {
+        list.push("fields[" + key + "]=" + fields[key]);
+    });
+    return list;
+}
+function __prepareRawParams(params) {
+    return params.map(function (param) {
+        if (typeof param === 'string') {
+            return param;
+        }
+        return param.key + "=" + param.value;
+    });
+}
+function prefixUrl(url) {
+    return "" + exports.config.baseUrl + url;
+}
+exports.prefixUrl = prefixUrl;
+function __appendParams(url, params) {
+    if (params.length) {
+        url += '?' + params.join('&');
+    }
+    return url;
+}
+function __parametrize(params, scope) {
+    if (scope === void 0) { scope = ''; }
+    var list = [];
+    utils_1.objectForEach(params, function (key) {
+        if (params[key] instanceof Array) {
+            if (exports.config.paramArrayType === ParamArrayType_1.default.OBJECT_PATH) {
+                list.push.apply(list, __parametrize(params[key], key + "."));
+            }
+            else if (exports.config.paramArrayType === ParamArrayType_1.default.COMMA_SEPARATED) {
+                list.push({ key: "" + scope + key, value: params[key].join(',') });
+            }
+            else if (exports.config.paramArrayType === ParamArrayType_1.default.MULTIPLE_PARAMS) {
+                list.push.apply(list, params[key].map(function (param) { return ({ key: "" + scope + key, value: param }); }));
+            }
+            else if (exports.config.paramArrayType === ParamArrayType_1.default.PARAM_ARRAY) {
+                list.push.apply(list, params[key].map(function (param) { return ({ key: "" + scope + key + "][", value: param }); }));
+            }
+        }
+        else if (typeof params[key] === 'object') {
+            list.push.apply(list, __parametrize(params[key], key + "."));
+        }
+        else {
+            list.push({ key: "" + scope + key, value: params[key] });
+        }
+    });
+    return list;
+}
+function buildUrl(type, id, model, options) {
+    var path = model
+        ? (utils_1.getValue(model['endpoint']) || model['baseUrl'] || model.type)
+        : type;
+    var url = id ? path + "/" + id : "" + path;
+    var params = __prepareFilters((options && options.filter) || {}).concat(__prepareSort(options && options.sort), __prepareIncludes(options && options.include), __prepareFields((options && options.fields) || {}), __prepareRawParams((options && options.params) || []));
+    return __appendParams(prefixUrl(url), params);
+}
+exports.buildUrl = buildUrl;

@@ -4,7 +4,7 @@ import IDictionary from './interfaces/IDictionary';
 import IRequestOptions from './interfaces/IRequestOptions';
 import * as JsonApi from './interfaces/JsonApi';
 
-import {config, create, fetchLink, handleResponse, remove, update} from './NetworkUtils';
+import {buildUrl, create, fetchLink, handleResponse, remove, update} from './NetworkUtils';
 import {Response} from './Response';
 import {Store} from './Store';
 import {getValue, mapItems, objectForEach} from './utils';
@@ -262,15 +262,16 @@ export class Record extends Model implements IModel {
    * Saves (creates or updates) the record to the server
    *
    * @param {IRequestOptions} [options] Server options
+   * @param {boolean} [ignoreSelf=false] Should the self link be ignored if it exists
    * @returns {Promise<Record>} Returns the record is successful or rejects with an error
    *
    * @memberOf Record
    */
-  public save(options?: IRequestOptions): Promise<Record> {
+  public save(options?: IRequestOptions, ignoreSelf: boolean = false): Promise<Record> {
     const store: Store = this.__collection as Store;
     const data: JsonApi.IRecord = this.toJsonApi();
     const requestMethod: Function = this.__persisted ? update : create;
-    return requestMethod(store, this.__getUrl(), {data}, options && options.headers)
+    return requestMethod(store, this.__getUrl(options, ignoreSelf), {data}, options && options.headers)
       .then(handleResponse(this));
   }
 
@@ -303,17 +304,18 @@ export class Record extends Model implements IModel {
    * Remove the records from the server and store
    *
    * @param {IRequestOptions} [options] Server options
+   * @param {boolean} [ignoreSelf=false] Should the self link be ignored if it exists
    * @returns {Promise<boolean>} Resolves true if successfull or rejects if there was an error
    *
    * @memberOf Record
    */
-  public remove(options?: IRequestOptions): Promise<boolean> {
+  public remove(options?: IRequestOptions, ignoreSelf: boolean = false): Promise<boolean> {
     const store: Store = this.__collection as Store;
     if (!this.__persisted) {
       this.__collection.remove(this.getRecordType(), this.getRecordId());
       return Promise.resolve(true);
     }
-    return remove(store, this.__getUrl(), options && options.headers)
+    return remove(store, this.__getUrl(options, ignoreSelf), options && options.headers)
       .then((response: Response) => {
 
         /* istanbul ignore if */
@@ -350,10 +352,10 @@ export class Record extends Model implements IModel {
    *
    * @memberOf Record
    */
-  private __getUrl(): string {
+  private __getUrl(options?: IRequestOptions, ignoreSelf?: boolean): string {
 
     const links: IDictionary<JsonApi.ILink> = this.getLinks();
-    if (links && links.self) {
+    if (!ignoreSelf && links && links.self) {
       const self: JsonApi.ILink = links.self;
 
       /* istanbul ignore next */
@@ -361,10 +363,8 @@ export class Record extends Model implements IModel {
     }
 
     /* istanbul ignore next */
-    const url = getValue<string>(this.static.endpoint) || this.getRecordType() || this.static.type;
+    const type = getValue<string>(this.static.endpoint) || this.getRecordType() || this.static.type;
 
-    return this.__persisted
-      ? `${config.baseUrl}${url}/${this.getRecordId()}`
-      : `${config.baseUrl}${url}`;
+    return buildUrl(type, this.__persisted ? this.getRecordId() : null, null, options);
   }
 }

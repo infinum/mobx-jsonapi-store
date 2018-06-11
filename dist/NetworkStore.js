@@ -11,9 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_collection_store_1 = require("mobx-collection-store");
-var ParamArrayType_1 = require("./enums/ParamArrayType");
 var NetworkUtils_1 = require("./NetworkUtils");
-var utils_1 = require("./utils");
 var NetworkStore = /** @class */ (function (_super) {
     __extends(NetworkStore, _super);
     function NetworkStore() {
@@ -37,75 +35,9 @@ var NetworkStore = /** @class */ (function (_super) {
      */
     NetworkStore.prototype.__prepareQuery = function (type, id, data, options) {
         var model = this.static.types.filter(function (item) { return item.type === type; })[0];
-        var path = model
-            ? (utils_1.getValue(model['endpoint']) || model['baseUrl'] || model.type)
-            : type;
-        var url = id ? path + "/" + id : "" + path;
         var headers = (options ? options.headers : {}) || {};
-        var params = this.__prepareFilters((options && options.filter) || {}).concat(this.__prepareSort(options && options.sort), this.__prepareIncludes(options && options.include), this.__prepareFields((options && options.fields) || {}), this.__prepareRawParams((options && options.params) || []));
-        var baseUrl = this.__appendParams(this.__prefixUrl(url), params);
-        return { data: data, headers: headers, url: baseUrl };
-    };
-    NetworkStore.prototype.__prepareFilters = function (filters) {
-        return this.__parametrize(filters).map(function (item) { return "filter[" + item.key + "]=" + item.value; });
-    };
-    NetworkStore.prototype.__prepareSort = function (sort) {
-        return sort ? ["sort=" + sort] : [];
-    };
-    NetworkStore.prototype.__prepareIncludes = function (include) {
-        return include ? ["include=" + include] : [];
-    };
-    NetworkStore.prototype.__prepareFields = function (fields) {
-        var list = [];
-        utils_1.objectForEach(fields, function (key) {
-            list.push("fields[" + key + "]=" + fields[key]);
-        });
-        return list;
-    };
-    NetworkStore.prototype.__prepareRawParams = function (params) {
-        return params.map(function (param) {
-            if (typeof param === 'string') {
-                return param;
-            }
-            return param.key + "=" + param.value;
-        });
-    };
-    NetworkStore.prototype.__prefixUrl = function (url) {
-        return "" + NetworkUtils_1.config.baseUrl + url;
-    };
-    NetworkStore.prototype.__appendParams = function (url, params) {
-        if (params.length) {
-            url += '?' + params.join('&');
-        }
-        return url;
-    };
-    NetworkStore.prototype.__parametrize = function (params, scope) {
-        var _this = this;
-        if (scope === void 0) { scope = ''; }
-        var list = [];
-        utils_1.objectForEach(params, function (key) {
-            if (params[key] instanceof Array) {
-                if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.OBJECT_PATH) {
-                    list.push.apply(list, _this.__parametrize(params[key], key + "."));
-                }
-                else if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.COMMA_SEPARATED) {
-                    list.push({ key: "" + scope + key, value: params[key].join(',') });
-                }
-                else if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.MULTIPLE_PARAMS) {
-                    list.push.apply(list, params[key].map(function (param) { return ({ key: "" + scope + key, value: param }); }));
-                }
-                else if (NetworkUtils_1.config.paramArrayType === ParamArrayType_1.default.PARAM_ARRAY) {
-                    list.push.apply(list, params[key].map(function (param) { return ({ key: "" + scope + key + "][", value: param }); }));
-                }
-            }
-            else if (typeof params[key] === 'object') {
-                list.push.apply(list, _this.__parametrize(params[key], key + "."));
-            }
-            else {
-                list.push({ key: "" + scope + key, value: params[key] });
-            }
-        });
-        return list;
+        var url = NetworkUtils_1.buildUrl(type, id, model, options);
+        return { data: data, headers: headers, url: url };
     };
     return NetworkStore;
 }(mobx_collection_store_1.Collection));

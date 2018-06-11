@@ -3,12 +3,10 @@ import * as fetch from 'isomorphic-fetch';
 
 // tslint:disable:no-string-literal
 
-import {config, ParamArrayType, Record, Store} from '../../src';
+import {config, ParamArrayType, Store} from '../../src';
 
 import mockApi from '../utils/api';
-import {Event, Image, Organiser, Photo, TestStore, User} from '../utils/setup';
-
-const baseStoreFetch = config.storeFetch;
+import {Event, TestStore} from '../utils/setup';
 
 describe('params', () => {
   beforeEach(() => {
@@ -98,6 +96,21 @@ describe('params', () => {
 
     expect(events.data).to.be.an('array');
     expect(events.data['length']).to.equal(4);
+  });
+
+  it('should support saving with inclusion of related resources', async () => {
+    const req = mockApi({
+      method: 'POST',
+      name: 'event-1',
+      query: (q) => expect(q).to.eql({include: 'bar'}),
+      url: 'events',
+    });
+
+    const store = new TestStore();
+    const event = store.add<Event>({}, Event.type);
+    await event.save({include: 'bar'});
+    expect(event.getRecordId()).to.equal(12345);
+    expect(req.isDone()).to.equal(true);
   });
 
   it('should support sparse fields', async () => {

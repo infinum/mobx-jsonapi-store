@@ -1,5 +1,8 @@
+import {IModelConstructor} from 'mobx-collection-store';
+
 import ParamArrayType from './enums/ParamArrayType';
 import IDictionary from './interfaces/IDictionary';
+import IFilters from './interfaces/IFilters';
 import IHeaders from './interfaces/IHeaders';
 import IRawResponse from './interfaces/IRawResponse';
 import IRequestOptions from './interfaces/IRequestOptions';
@@ -9,7 +12,7 @@ import * as JsonApi from './interfaces/JsonApi';
 import {Record} from './Record';
 import {Response as LibResponse} from './Response';
 import {Store} from './Store';
-import {assign, isBrowser} from './utils';
+import {assign, getValue, isBrowser, objectForEach} from './utils';
 
 export type FetchType = (
   method: string,
@@ -309,4 +312,93 @@ export function handleResponse(record: Record, prop?: string): (response: LibRes
       return response.replaceData(record).data as Record;
     }
   };
+}
+
+function __prepareFilters(filters: IFilters): Array<string> {
+  return __parametrize(filters).map((item) => `filter[${item.key}]=${item.value}`);
+}
+
+function __prepareSort(sort?: string|Array<string>): Array<string> {
+  return sort ? [`sort=${sort}`] : [];
+}
+
+function __prepareIncludes(include?: string|Array<string>): Array<string> {
+  return include ? [`include=${include}`] : [];
+}
+
+function __prepareFields(fields: IDictionary<string|Array<string>>): Array<string> {
+  const list = [];
+
+  objectForEach(fields, (key: string) => {
+    list.push(`fields[${key}]=${fields[key]}`);
+  });
+
+  return list;
+}
+
+function __prepareRawParams(params: Array<{key: string, value: string}|string>): Array<string> {
+  return params.map((param) => {
+    if (typeof param === 'string') {
+      return param;
+    }
+    return `${param.key}=${param.value}`;
+  });
+}
+
+export function prefixUrl(url) {
+  return `${config.baseUrl}${url}`;
+}
+
+function __appendParams(url: string, params: Array<string>): string {
+  if (params.length) {
+    url += '?' + params.join('&');
+  }
+  return url;
+}
+
+function __parametrize(params: object, scope: string = ''): Array<{key: string, value: string}> {
+  const list = [];
+
+  objectForEach(params, (key: string) => {
+    if (params[key] instanceof Array) {
+      if (config.paramArrayType === ParamArrayType.OBJECT_PATH) {
+        list.push(...__parametrize(params[key], `${key}.`));
+      } else if (config.paramArrayType === ParamArrayType.COMMA_SEPARATED) {
+        list.push({key: `${scope}${key}`, value: params[key].join(',')});
+      } else if (config.paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
+        list.push(...params[key].map((param) => ({key: `${scope}${key}`, value: param})));
+      } else if (config.paramArrayType === ParamArrayType.PARAM_ARRAY) {
+        list.push(...params[key].map((param) => ({key: `${scope}${key}][`, value: param})));
+      }
+    } else if (typeof params[key] === 'object') {
+      list.push(...__parametrize(params[key], `${key}.`));
+    } else {
+      list.push({key: `${scope}${key}`, value: params[key]});
+    }
+  });
+
+  return list;
+}
+
+export function buildUrl(
+  type: number|string,
+  id?: number|string,
+  model?: IModelConstructor,
+  options?: IRequestOptions,
+) {
+  const path: string = model
+    ? (getValue<string>(model['endpoint']) || model['baseUrl'] || model.type)
+    : type;
+
+  const url: string = id ? `${path}/${id}` : `${path}`;
+
+  const params: Array<string> = [
+    ...__prepareFilters((options && options.filter) || {}),
+    ...__prepareSort(options && options.sort),
+    ...__prepareIncludes(options && options.include),
+    ...__prepareFields((options && options.fields) || {}),
+    ...__prepareRawParams((options && options.params) || []),
+  ];
+
+  return __appendParams(prefixUrl(url), params);
 }

@@ -1,3 +1,4 @@
+import { IModelConstructor } from 'mobx-collection-store';
 import ParamArrayType from './enums/ParamArrayType';
 import IDictionary from './interfaces/IDictionary';
 import IHeaders from './interfaces/IHeaders';
@@ -87,3 +88,5 @@ export declare function remove(store: Store, url: string, headers?: IHeaders, op
  */
 export declare function fetchLink(link: JsonApi.ILink, store: Store, requestHeaders?: IDictionary<string>, options?: IRequestOptions): Promise<LibResponse>;
 export declare function handleResponse(record: Record, prop?: string): (response: LibResponse) => Record;
+export declare function prefixUrl(url: any): string;
+export declare function buildUrl(type: number | string, id?: number | string, model?: IModelConstructor, options?: IRequestOptions): string;

@@ -192,15 +192,17 @@ var Record = /** @class */ (function (_super) {
      * Saves (creates or updates) the record to the server
      *
      * @param {IRequestOptions} [options] Server options
+     * @param {boolean} [ignoreSelf=false] Should the self link be ignored if it exists
      * @returns {Promise<Record>} Returns the record is successful or rejects with an error
      *
      * @memberOf Record
      */
-    Record.prototype.save = function (options) {
+    Record.prototype.save = function (options, ignoreSelf) {
+        if (ignoreSelf === void 0) { ignoreSelf = false; }
         var store = this.__collection;
         var data = this.toJsonApi();
         var requestMethod = this.__persisted ? NetworkUtils_1.update : NetworkUtils_1.create;
-        return requestMethod(store, this.__getUrl(), { data: data }, options && options.headers)
+        return requestMethod(store, this.__getUrl(options, ignoreSelf), { data: data }, options && options.headers)
             .then(NetworkUtils_1.handleResponse(this));
     };
     Record.prototype.saveRelationship = function (relationship, options) {
@@ -223,18 +225,20 @@ var Record = /** @class */ (function (_super) {
      * Remove the records from the server and store
      *
      * @param {IRequestOptions} [options] Server options
+     * @param {boolean} [ignoreSelf=false] Should the self link be ignored if it exists
      * @returns {Promise<boolean>} Resolves true if successfull or rejects if there was an error
      *
      * @memberOf Record
      */
-    Record.prototype.remove = function (options) {
+    Record.prototype.remove = function (options, ignoreSelf) {
         var _this = this;
+        if (ignoreSelf === void 0) { ignoreSelf = false; }
         var store = this.__collection;
         if (!this.__persisted) {
             this.__collection.remove(this.getRecordType(), this.getRecordId());
             return Promise.resolve(true);
         }
-        return NetworkUtils_1.remove(store, this.__getUrl(), options && options.headers)
+        return NetworkUtils_1.remove(store, this.__getUrl(options, ignoreSelf), options && options.headers)
             .then(function (response) {
             /* istanbul ignore if */
             if (response.error) {
@@ -265,18 +269,16 @@ var Record = /** @class */ (function (_super) {
      *
      * @memberOf Record
      */
-    Record.prototype.__getUrl = function () {
+    Record.prototype.__getUrl = function (options, ignoreSelf) {
         var links = this.getLinks();
-        if (links && links.self) {
+        if (!ignoreSelf && links && links.self) {
             var self_1 = links.self;
             /* istanbul ignore next */
             return typeof self_1 === 'string' ? self_1 : self_1.href;
         }
         /* istanbul ignore next */
-        var url = utils_1.getValue(this.static.endpoint) || this.getRecordType() || this.static.type;
-        return this.__persisted
-            ? "" + NetworkUtils_1.config.baseUrl + url + "/" + this.getRecordId()
-            : "" + NetworkUtils_1.config.baseUrl + url;
+        var type = utils_1.getValue(this.static.endpoint) || this.getRecordType() || this.static.type;
+        return NetworkUtils_1.buildUrl(type, this.__persisted ? this.getRecordId() : null, null, options);
     };
     /**
      * Type property of the record class

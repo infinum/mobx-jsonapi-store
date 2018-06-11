@@ -136,21 +136,23 @@ export declare class Record extends Model implements IModel {
      * Saves (creates or updates) the record to the server
      *
      * @param {IRequestOptions} [options] Server options
+     * @param {boolean} [ignoreSelf=false] Should the self link be ignored if it exists
      * @returns {Promise<Record>} Returns the record is successful or rejects with an error
      *
      * @memberOf Record
      */
-    save(options?: IRequestOptions): Promise<Record>;
+    save(options?: IRequestOptions, ignoreSelf?: boolean): Promise<Record>;
     saveRelationship(relationship: string, options?: IRequestOptions): Promise<Record>;
     /**
      * Remove the records from the server and store
      *
      * @param {IRequestOptions} [options] Server options
+     * @param {boolean} [ignoreSelf=false] Should the self link be ignored if it exists
      * @returns {Promise<boolean>} Resolves true if successfull or rejects if there was an error
      *
      * @memberOf Record
      */
-    remove(options?: IRequestOptions): Promise<boolean>;
+    remove(options?: IRequestOptions, ignoreSelf?: boolean): Promise<boolean>;
     /**
      * Set the persisted status of the record
      *
@@ -167,5 +169,5 @@ export declare class Record extends Model implements IModel {
      *
      * @memberOf Record
      */
-    private __getUrl();
+    private __getUrl(options?, ignoreSelf?);
 }

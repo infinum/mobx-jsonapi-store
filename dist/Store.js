@@ -131,7 +131,7 @@ var Store = /** @class */ (function (_super) {
     };
     Store.prototype.request = function (url, method, data, options) {
         if (method === void 0) { method = 'GET'; }
-        return NetworkUtils_1.fetch({ url: this.__prefixUrl(url), options: options, data: data, method: method, store: this });
+        return NetworkUtils_1.fetch({ url: NetworkUtils_1.prefixUrl(url), options: options, data: data, method: method, store: this });
     };
     Store.prototype.removeAll = function (type) {
         var models = _super.prototype.removeAll.call(this, type);
