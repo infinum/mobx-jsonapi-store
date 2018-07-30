@@ -11,20 +11,18 @@
     },
     "relationships": {
       "image": {
-        "data": [{
-          "type": "image",
-          "id": "1"
-        }, {
+        "data": {
           "type": "image",
           "id": "2"
-        }],
-        "links": {
-          "self": "http://example.com/images/1"
-        },
-        "meta": {
-          "foo": "bar"
         }
       }
     }
-  }
+  },
+  "included": [{
+    "id": 2,
+    "type": "image",
+    "attributes": {
+      "url": "http://example.com/2.jpg"
+    }
+  }]
 }

@@ -135,6 +135,7 @@ describe('Reported issues', () => {
   });
 
   describe('wrong toJsonApi references when null', () => {
+    it('should work', () => {
       class UnitRecord extends Record {
         public static type = 'units';
         public static refs = { organization: 'organizations' };
@@ -175,5 +176,123 @@ describe('Reported issues', () => {
       unit.organization = new OrganizationRecord({name: 'Foo'});
       expect(unit.toJsonApi().relationships.organization.data['id']).to.equal(unit.organizationId);
       expect(unit.toJsonApi().relationships.organization.data['type']).to.equal('organizations');
+    });
+  });
+
+  describe('Issue #84 - Server response with null reference', () => {
+    it('should remove the reference if null', async () => {
+      class EventRecord extends Record {
+        public static type = 'event';
+        public static refs = { image: 'image' };
+
+        public image?: ImageRecord|Array<ImageRecord>;
+      }
+
+      class ImageRecord extends Record {
+        public static type = 'image';
+
+        public name: string;
+        public event: Array<EventRecord>;
+      }
+
+      class ApiStore extends Store {
+        public static types = [ImageRecord, EventRecord];
+
+        public image: Array<ImageRecord>;
+        public event: Array<EventRecord>;
+      }
+
+      const store = new ApiStore();
+
+      mockApi({
+        name: 'issue-84a',
+        url: 'event/1',
+      });
+
+      const response = await store.fetch('event', 1);
+
+      const event = response.data as EventRecord;
+
+      expect(event.image).to.equal(store.image[0]);
+
+      mockApi({
+        name: 'issue-84b',
+        url: 'event/1',
+      });
+      await store.fetch('event', 1, true);
+      expect(event.image).to.equal(null);
+
+      mockApi({
+        name: 'issue-84a',
+        url: 'event/1',
+      });
+      await store.fetch('event', 1, true);
+      expect(event.image).to.equal(store.image[0]);
+
+      mockApi({
+        name: 'issue-84d',
+        url: 'event/1',
+      });
+      await store.fetch('event', 1, true);
+      expect(event.image['length']).to.equal(1);
+      expect(event.image[0]).to.equal(store.image[0]);
+
+      mockApi({
+        name: 'issue-84e',
+        url: 'event/1',
+      });
+      await store.fetch('event', 1, true);
+      expect(event.image['length']).to.equal(0);
+    });
+
+    it('should update the reference if not null', async () => {
+      class EventRecord extends Record {
+        public static type = 'event';
+        public static refs = { image: 'image' };
+
+        public image?: ImageRecord;
+      }
+
+      class ImageRecord extends Record {
+        public static type = 'image';
+
+        public name: string;
+        public event: Array<EventRecord>;
+      }
+
+      class ApiStore extends Store {
+        public static types = [ImageRecord, EventRecord];
+
+        public image: Array<ImageRecord>;
+        public event: Array<EventRecord>;
+      }
+
+      const store = new ApiStore();
+
+      mockApi({
+        name: 'issue-84a',
+        url: 'event/1',
+      });
+
+      const response = await store.fetch('event', 1);
+
+      const event = response.data as EventRecord;
+
+      expect(event.image).to.equal(store.image[0]);
+
+      mockApi({
+        name: 'issue-84c',
+        url: 'event/1',
+      });
+      await store.fetch('event', 1, true);
+      expect(event.image).to.equal(store.image[1]);
+
+      mockApi({
+        name: 'issue-84a',
+        url: 'event/1',
+      });
+      await store.fetch('event', 1, true);
+      expect(event.image).to.equal(store.image[0]);
+    });
   });
 });

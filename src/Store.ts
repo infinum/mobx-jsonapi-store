@@ -244,15 +244,22 @@ export class Store extends NetworkStore {
     const record: IModel = this.find(obj.type, obj.id);
     const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
     refs.forEach((ref: string) => {
-      const items = obj.relationships[ref].data;
-      if (items instanceof Array && items.length < 1) {
-        // it's only possible to update items with one ore more refs. Early exit
+      if (!('data' in obj.relationships[ref])) {
         return;
       }
-      if (items && record) {
-        const models: IModel|Array<IModel> = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
-        const itemType: string = items instanceof Array ? items[0].type : items.type;
-        record.assignRef(ref, models, itemType);
+      const items = obj.relationships[ref].data;
+      if (items instanceof Array && items.length < 1) {
+        if (!(ref in record) || ref in record['__data']) { // Hack to check if it's not a back ref
+          record.assignRef(ref, []);
+        }
+      } else if (record) {
+        if (items) {
+          const models: IModel|Array<IModel> = mapItems<IModel>(items, ({id, type}) => this.find(type, id) || id);
+          const itemType: string = items instanceof Array ? items[0].type : items.type;
+          record.assignRef(ref, models, itemType);
+        } else {
+          record.assignRef(ref, null);
+        }
       }
     });
   }

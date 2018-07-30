@@ -212,18 +212,27 @@ var Store = /** @class */ (function (_super) {
         var record = this.find(obj.type, obj.id);
         var refs = obj.relationships ? Object.keys(obj.relationships) : [];
         refs.forEach(function (ref) {
-            var items = obj.relationships[ref].data;
-            if (items instanceof Array && items.length < 1) {
-                // it's only possible to update items with one ore more refs. Early exit
+            if (!('data' in obj.relationships[ref])) {
                 return;
             }
-            if (items && record) {
-                var models = utils_1.mapItems(items, function (_a) {
-                    var id = _a.id, type = _a.type;
-                    return _this.find(type, id) || id;
-                });
-                var itemType = items instanceof Array ? items[0].type : items.type;
-                record.assignRef(ref, models, itemType);
+            var items = obj.relationships[ref].data;
+            if (items instanceof Array && items.length < 1) {
+                if (!(ref in record) || ref in record['__data']) {
+                    record.assignRef(ref, []);
+                }
+            }
+            else if (record) {
+                if (items) {
+                    var models = utils_1.mapItems(items, function (_a) {
+                        var id = _a.id, type = _a.type;
+                        return _this.find(type, id) || id;
+                    });
+                    var itemType = items instanceof Array ? items[0].type : items.type;
+                    record.assignRef(ref, models, itemType);
+                }
+                else {
+                    record.assignRef(ref, null);
+                }
             }
         });
     };

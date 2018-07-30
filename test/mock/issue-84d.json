@@ -14,17 +14,15 @@
         "data": [{
           "type": "image",
           "id": "1"
-        }, {
-          "type": "image",
-          "id": "2"
-        }],
-        "links": {
-          "self": "http://example.com/images/1"
-        },
-        "meta": {
-          "foo": "bar"
-        }
+        }]
       }
     }
-  }
+  },
+  "included": [{
+    "id": 1,
+    "type": "image",
+    "attributes": {
+      "url": "http://example.com/1.jpg"
+    }
+  }]
 }

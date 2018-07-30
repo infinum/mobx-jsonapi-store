@@ -265,14 +265,14 @@ describe('Network basics', () => {
 
   it('should support endpoint', async () => {
     // tslint:disable-next-line:max-classes-per-file
-    class Event extends Record {
+    class EventModel extends Record {
       public static type = 'event';
       public static endpoint = 'foo/event';
     }
 
     // tslint:disable-next-line:max-classes-per-file
     class Collection extends Store {
-      public static types = [Event];
+      public static types = [EventModel];
     }
 
     const store = new Collection();
@@ -283,20 +283,20 @@ describe('Network basics', () => {
     });
 
     const response = await store.fetchAll('event');
-    const event = response.data as Event;
+    const event = response.data as EventModel;
     expect(event.getRecordType()).to.equal('event');
   });
 
   it('should support functional endpoint', async () => {
     // tslint:disable-next-line:max-classes-per-file
-    class Event extends Record {
+    class EventModel extends Record {
       public static type = 'event';
       public static endpoint = () => 'foo/event';
     }
 
     // tslint:disable-next-line:max-classes-per-file
     class Collection extends Store {
-      public static types = [Event];
+      public static types = [EventModel];
     }
 
     const store = new Collection();
@@ -307,7 +307,7 @@ describe('Network basics', () => {
     });
 
     const response = await store.fetchAll('event');
-    const event = response.data as Event;
+    const event = response.data as EventModel;
     expect(event.getRecordType()).to.equal('event');
   });
 
