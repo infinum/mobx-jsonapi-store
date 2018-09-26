@@ -143,7 +143,7 @@ export declare class Response {
      * @param {any} newId New record ID
      * @memberof Response
      */
-    private __updateStoreReferences(type, oldId, newId);
+    private __updateStoreReferences;
     /**
      * Update models that reference the updated model
      *
@@ -152,7 +152,7 @@ export declare class Response {
      * @param {any} newId new record ID
      * @memberof Response
      */
-    private __updateReferences(type, oldId, newId);
+    private __updateReferences;
     /**
      * Function called when a link is beeing fetched. The returned value is cached
      *
@@ -162,5 +162,5 @@ export declare class Response {
      *
      * @memberOf Response
      */
-    private __fetchLink(name);
+    private __fetchLink;
 }

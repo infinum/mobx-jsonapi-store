@@ -85,7 +85,7 @@ export declare class Store extends NetworkStore {
      *
      * @memberof Store
      */
-    private __doFetch(query, options?);
+    private __doFetch;
     /**
      * Function used to handle response errors
      *
@@ -95,7 +95,7 @@ export declare class Store extends NetworkStore {
      *
      * @memberOf Store
      */
-    private __handleErrors(response);
+    private __handleErrors;
     /**
      * Add a new JSON API record to the store
      *
@@ -105,7 +105,7 @@ export declare class Store extends NetworkStore {
      *
      * @memberOf Store
      */
-    private __addRecord(obj);
+    private __addRecord;
     /**
      * Update the relationships between models
      *
@@ -115,7 +115,7 @@ export declare class Store extends NetworkStore {
      *
      * @memberOf Store
      */
-    private __updateRelationships(obj);
+    private __updateRelationships;
     /**
      * Iterate trough JSON API response models
      *
@@ -126,5 +126,5 @@ export declare class Store extends NetworkStore {
      *
      * @memberOf Store
      */
-    private __iterateEntries(body, fn);
+    private __iterateEntries;
 }

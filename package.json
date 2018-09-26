@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc --outDir ./dist --experimentalDecorators --target es5 --module commonjs --declaration --pretty --lib 'dom','es5','scripthost','es2015.promise' src/index.ts",
+    "build": "tsc --outDir ./dist --experimentalDecorators --target es5 --module commonjs --declaration --skipLibCheck --lib 'dom','es5','scripthost','es2015.promise' --pretty src/index.ts",
     "test": "NODE_ENV=test nyc mocha",
     "lint": "tslint './src/**/*.ts'",
     "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha",
@@ -57,21 +57,21 @@
     "mobx-collection-store": "^2.0.0"
   },
   "devDependencies": {
-    "@types/mocha": "^5.0.0",
-    "@types/nock": "^9.1.0",
-    "@types/node": "^10.0.3",
-    "chai": "^4.1.2",
+    "@types/mocha": "^5.2.5",
+    "@types/nock": "^9.3.0",
+    "@types/node": "^10.11.0",
+    "chai": "^4.2.0",
     "husky": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
-    "lodash": "^4.17.4",
-    "mobx": "^3.4.1",
-    "mocha": "^5.0.0",
+    "lodash": "^4.17.11",
+    "mobx": "^3.6.2",
+    "mocha": "^5.2.0",
     "nock": "^10.0.0",
-    "nodemon": "^1.13.3",
-    "nyc": "^11.3.0",
-    "ts-node": "^7.0.0",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.2"
+    "nodemon": "^1.18.4",
+    "nyc": "^13.0.1",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3"
   },
   "peerDependencies": {
     "mobx": "^3.0.0"

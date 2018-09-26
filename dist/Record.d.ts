@@ -117,12 +117,12 @@ export declare class Record extends Model implements IModel {
      * @memberOf Record
      */
     /**
-     * Set the persisted state
-     *
-     * @private
-     *
-     * @memberOf Record
-     */
+    * Set the persisted state
+    *
+    * @private
+    *
+    * @memberOf Record
+    */
     private __persisted;
     /**
      * Serialize the record into JSON API format
@@ -169,5 +169,5 @@ export declare class Record extends Model implements IModel {
      *
      * @memberOf Record
      */
-    private __getUrl(options?, ignoreSelf?);
+    private __getUrl;
 }

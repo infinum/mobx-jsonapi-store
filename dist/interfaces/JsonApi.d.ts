@@ -46,4 +46,4 @@ interface IResponse {
     jsonapi?: IJsonApiObject;
 }
 declare type IRequest = IResponse;
-export { IIdentifier, IJsonApiObject, ILink, IError, IRelationship, IRecord, IResponse, IRequest };
+export { IIdentifier, IJsonApiObject, ILink, IError, IRelationship, IRecord, IResponse, IRequest, };
