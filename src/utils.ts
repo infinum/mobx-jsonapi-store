@@ -121,6 +121,7 @@ export function assign(target: object, ...args: Array<object>) {
  */
 export function getValue<T>(target: T|(() => T)): T {
   if (typeof target === 'function') {
+    // @ts-ignore
     return target();
   }
 

@@ -93,11 +93,11 @@ describe('caching', () => {
       });
 
       // tslint:disable-next-line:max-classes-per-file
-      class TestStore extends Store {
+      class TestStore2 extends Store {
         public static cache = false;
       }
 
-      const store = new TestStore();
+      const store = new TestStore2();
       const events = await store.fetch('event', 12345);
       const event = events.data as Event;
 
@@ -246,11 +246,11 @@ describe('caching', () => {
       });
 
       // tslint:disable-next-line:max-classes-per-file
-      class TestStore extends Store {
+      class TestStore2 extends Store {
         public static cache = false;
       }
 
-      const store = new TestStore();
+      const store = new TestStore2();
       const events = await store.fetchAll('event');
 
       expect(events.data).to.be.an('array');

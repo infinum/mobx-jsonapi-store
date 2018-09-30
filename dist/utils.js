@@ -112,6 +112,7 @@ exports.assign = assign;
  */
 function getValue(target) {
     if (typeof target === 'function') {
+        // @ts-ignore
         return target();
     }
     return target;
