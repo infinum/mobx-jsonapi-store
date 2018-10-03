@@ -340,4 +340,19 @@ describe('Network basics', () => {
     expect(record['title']).to.equal('Test 1');
   });
 
+  it('should support meta fields with falsy values', async () => {
+    mockApi({
+      name: 'issue-falsy-meta-value',
+      url: 'event/1',
+    });
+
+    const store = new Store();
+    const events = await store.fetch('event', 1);
+
+    const record = events.data as Record;
+
+    expect(record.getMeta()).to.be.an('object');
+    expect(record.getMeta()['count']).to.equal(0);
+  });
+
 });
