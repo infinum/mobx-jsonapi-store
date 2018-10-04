@@ -64,7 +64,7 @@ function flattenRecord(record) {
     });
     objectForEach(record.meta, function (key) {
         /* istanbul ignore else */
-        if (record.meta[key]) {
+        if (record.meta[key] !== undefined) {
             data.__internal.meta = data.__internal.meta || {};
             data.__internal.meta[key] = record.meta[key];
         }
