@@ -265,6 +265,14 @@ var Record = /** @class */ (function (_super) {
         this.__persisted = state;
     };
     /**
+     * Get the persisted status of the record
+     *
+     * @memberOf Record
+     */
+    Record.prototype.getPersisted = function () {
+        return this.__persisted;
+    };
+    /**
      * Get the URL that should be used for the API calls
      *
      * @private

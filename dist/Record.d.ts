@@ -162,6 +162,12 @@ export declare class Record extends Model implements IModel {
      */
     setPersisted(state: boolean): void;
     /**
+     * Get the persisted status of the record
+     *
+     * @memberOf Record
+     */
+    getPersisted(): boolean;
+    /**
      * Get the URL that should be used for the API calls
      *
      * @private

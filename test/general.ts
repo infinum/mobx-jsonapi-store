@@ -537,4 +537,25 @@ describe('General', () => {
     expect(user['self'].getRecordId()).to.equal(1);
     expect(store.findAll('user').length).to.equal(1);
   });
+  it('should get persisted state', () => {
+    const store = new TestStore();
+
+    store.sync({
+      data: [
+        {
+          attributes: {},
+          id: 123,
+          type: 'user',
+        },
+      ],
+    });
+
+    const persistedUser = store.find<User>('user');
+
+    const newUser: User = new User();
+    store.add<User>(newUser, 'user');
+
+    expect(persistedUser.getPersisted()).to.equal(true);
+    expect(newUser.getPersisted()).to.equal(false);
+  });
 });
