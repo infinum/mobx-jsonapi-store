@@ -345,6 +345,15 @@ export class Record extends Model implements IModel {
   }
 
   /**
+   * Get the persisted status of the record
+   *
+   * @memberOf Record
+   */
+  public getPersisted(): boolean {
+    return this.__persisted;
+  }
+
+  /**
    * Get the URL that should be used for the API calls
    *
    * @private
