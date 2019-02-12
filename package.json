@@ -59,7 +59,7 @@
   "devDependencies": {
     "@types/mocha": "^5.2.5",
     "@types/nock": "^9.3.0",
-    "@types/node": "^10.12.10",
+    "@types/node": "^11.9.0",
     "chai": "^4.2.0",
     "husky": "^1.2.0",
     "isomorphic-fetch": "^2.2.1",
