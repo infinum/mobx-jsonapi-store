@@ -2,6 +2,16 @@
 
 JSON API Store for MobX
 
+## Deprecation and migration
+
+`mobx-jsonapi-store` and `mobx-collection-store` are deprecated in favor of [`datx`](https://github.com/infinum/datx) - it follows the same concepts, but adds support for MobX 4 and 5, better TypeScript support and more extensibility.
+
+If you're new to the libraries, check out the datx [examples](https://github.com/infinum/datx/tree/master/examples) and [docs](https://github.com/infinum/datx/wiki).
+
+If you already use `mobx-jsonapi-store`, check out the [migration guide](https://github.com/infinum/datx/wiki/Migration-from-mobx-jsonapi-store).
+
+-------
+
 Don't need any [JSON API](http://jsonapi.org/) specific features? Check out [mobx-collection-store](https://github.com/infinum/mobx-collection-store).
 
 **Can be used with [Redux DevTools](https://github.com/infinum/mobx-jsonapi-store/wiki/Redux-DevTools).**
