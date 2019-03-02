@@ -8,8 +8,12 @@
     "build": "tsc --outDir ./dist --experimentalDecorators --target es5 --module commonjs --declaration --skipLibCheck --lib 'dom','es5','scripthost','es2015.promise' --pretty src/index.ts",
     "test": "NODE_ENV=test nyc mocha",
     "lint": "tslint './src/**/*.ts'",
-    "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha",
-    "precommit": "npm run lint && npm test && npm run build && git add dist/"
+    "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm test && npm run build && git add dist/"
+    }
   },
   "repository": {
     "type": "git",
@@ -57,21 +61,21 @@
     "mobx-collection-store": "^2.0.0"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.5",
-    "@types/nock": "^9.3.0",
-    "@types/node": "^11.9.0",
+    "@types/mocha": "^5.2.6",
+    "@types/nock": "^9.3.1",
+    "@types/node": "^11.10.4",
     "chai": "^4.2.0",
-    "husky": "^1.2.0",
+    "husky": "^1.3.1",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.11",
     "mobx": "^3.6.2",
-    "mocha": "^6.0.0",
-    "nock": "^10.0.2",
-    "nodemon": "^1.18.7",
-    "nyc": "^13.1.0",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
-    "typescript": "^3.1.6"
+    "mocha": "^6.0.2",
+    "nock": "^10.0.6",
+    "nodemon": "^1.18.10",
+    "nyc": "^13.3.0",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.13.1",
+    "typescript": "^3.3.3333"
   },
   "peerDependencies": {
     "mobx": "^3.0.0"
